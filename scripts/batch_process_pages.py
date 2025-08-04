@@ -184,15 +184,17 @@ if __name__ == "__main__":
         ]
     )
     
-    # Configuration - Focus on miniature-force-sensors (any number of datasheets)
-    TARGET_SUBCATEGORY = "miniature-force-sensors"
+    # Configuration - Process all unprocessed pages
+    TARGET_SUBCATEGORY = None  # Process all subcategories
     TARGET_DATASHEET_COUNT = None  # Process pages with any number of datasheets
     BATCH_SIZE = 5
     
     # Add timestamp separator
     logger.info("=" * 60)
     logger.info(f"Batch processing started at {datetime.now()}")
-    if TARGET_DATASHEET_COUNT is None:
+    if TARGET_SUBCATEGORY is None:
+        logger.info("Target: All unprocessed pages (any subcategory, any number of datasheets)")
+    elif TARGET_DATASHEET_COUNT is None:
         logger.info(f"Target: {TARGET_SUBCATEGORY} (any number of datasheets)")
     else:
         logger.info(f"Target: {TARGET_SUBCATEGORY} with {TARGET_DATASHEET_COUNT} datasheet(s)")
