@@ -334,9 +334,7 @@ async def process_document_and_upload_to_lightrag(pdf_path: str, page_id: int, d
             # Use RAGAnything to process the document
             processing_result = await rag_instance.process_document_complete(
                 pdf_path,
-                doc_id=f"page_{page_id}_datasheet_{datasheet_id}",
-                enable_ocr=True,
-                enable_image_processing=True
+                doc_id=f"page_{page_id}_datasheet_{datasheet_id}"
             )
             
             # Extract the processed content
@@ -456,9 +454,7 @@ async def process_document_with_raganything(pdf_path: str, page_id: int, datashe
             # Use RAGAnything to process the document
             processing_result = await rag_instance.process_document_complete(
                 pdf_path,
-                doc_id=f"page_{page_id}_datasheet_{datasheet_id}",
-                enable_ocr=True,
-                enable_image_processing=True
+                doc_id=f"page_{page_id}_datasheet_{datasheet_id}"
             )
             
             # Extract the processed content
@@ -601,6 +597,71 @@ async def upload_image_to_supabase(image_data: bytes, filename: str, page_id: in
                 
     except Exception as e:
         logger.error(f"Error uploading image to Supabase: {e}")
+        return None
+
+async def upload_processed_document_to_supabase(content: str, page_data: dict, processing_metadata: dict, bucket: str = "documents") -> str:
+    """Upload processed document with images and metadata to Supabase documents bucket"""
+    try:
+        import tempfile
+        import json
+        
+        # Extract page information
+        page_id = page_data.get('id')
+        url = page_data.get('url', '')
+        
+        # Create document filename from URL
+        url_parts = url.rstrip('/').split('/')
+        page_name = url_parts[-1] if url_parts else f"page_{page_id}"
+        document_filename = f"{page_name}_processed_document.md"
+        
+        # Create storage path based on page URL structure
+        # e.g., sensors/gyroscope-sensors/standard-gyroscopes/crh03-series-gyroscope/
+        storage_path = f"pages/{page_name}/{document_filename}"
+        
+        # Create comprehensive document with metadata header
+        full_document = f"""---
+title: "{page_data.get('image_title', page_name)}"
+page_id: {page_id}
+url: "{url}"
+business_area: "{page_data.get('business_area', '')}"
+category: "{page_data.get('category', '')}"
+subcategory: "{page_data.get('subcategory', '')}"
+page_type: "{page_data.get('page_type', '')}"
+processed_at: "{datetime.now().isoformat()}"
+processing_metadata: {json.dumps(processing_metadata)}
+---
+
+{content}
+"""
+        
+        # Create temporary file
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.md', delete=False, encoding='utf-8') as tmp_file:
+            tmp_file.write(full_document)
+            tmp_file_path = tmp_file.name
+        
+        try:
+            # Upload to Supabase storage
+            with open(tmp_file_path, 'rb') as f:
+                response = supabase.storage.from_(bucket).upload(storage_path, f)
+            
+            if response:
+                # Get public URL
+                public_url = supabase.storage.from_(bucket).get_public_url(storage_path)
+                logger.info(f"Processed document uploaded to Supabase: {public_url}")
+                return public_url
+            else:
+                logger.error("Failed to upload processed document to Supabase storage")
+                return None
+                
+        finally:
+            # Clean up temporary file
+            try:
+                os.unlink(tmp_file_path)
+            except:
+                pass
+                
+    except Exception as e:
+        logger.error(f"Error uploading processed document to Supabase: {e}")
         return None
 
 async def upload_to_supabase_storage(file_path: str, bucket: str = "processed-documents") -> str:

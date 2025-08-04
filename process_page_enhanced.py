@@ -242,7 +242,32 @@ The parent product page is available in {len(url_lang)} languages:
 ---
 *Datasheet ID {datasheet_id} for Page ID {page_id} - Processed {datetime.now().isoformat()}*"""
             
-            return content
+                return enhanced_content
+            else:
+                # If processing failed, create a basic content structure
+                filename = os.path.basename(pdf_url)
+                product_name = filename.replace('.pdf', '').replace('-', ' ').replace('_', ' ').title()
+                
+                fallback_content = f"""# Technical Datasheet: {product_name}
+
+## Document Metadata
+- **Document Type:** Technical Datasheet PDF (Processing Failed)
+- **Datasheet ID:** {datasheet_id}
+- **Parent Page ID:** {page_id}
+- **Parent Product URL:** {parent_url}
+- **PDF Document:** {filename}
+- **Processing Status:** RAGAnything processing failed, basic content generated
+
+## Processing Error
+{processing_result.get('error', 'Unknown processing error')}
+
+## Basic Content
+This is a technical datasheet for {product_name} from Althen Sensors. Due to processing limitations, detailed content extraction was not available.
+
+---
+*Basic content generated - Page ID {page_id} - {datetime.now().isoformat()}*"""
+                
+                return fallback_content
             
         except Exception as e:
             print(f"   Error processing PDF: {e}")
@@ -447,12 +472,33 @@ This combined document ensures all related information is connected in the knowl
                     web_content, pdf_contents, page_id, page_url, page_data
                 )
                 
+                # Upload to Supabase documents bucket with proper structure
+                from raganything_api_service import upload_processed_document_to_supabase
+                
+                processing_metadata = {
+                    "mode": "combined",
+                    "pdf_count": len(pdf_contents),
+                    "content_length": len(combined_content),
+                    "processing_timestamp": datetime.now().isoformat(),
+                    "source": "enhanced_processor"
+                }
+                
+                print("   Uploading to Supabase documents bucket...")
+                supabase_doc_url = await upload_processed_document_to_supabase(
+                    combined_content, page_data, processing_metadata
+                )
+                
+                if supabase_doc_url:
+                    print(f"   [OK] Document uploaded to Supabase: {supabase_doc_url}")
+                
+                # Upload to LightRAG server
                 source_id = f"Page_{page_id}_Combined_{len(pdf_contents)}_Datasheets"
                 if await self.upload_to_lightrag(combined_content, source_id):
                     results["uploads"].append({
                         "type": "combined",
                         "page_id": page_id,
-                        "datasheet_count": len(pdf_contents)
+                        "datasheet_count": len(pdf_contents),
+                        "supabase_document_url": supabase_doc_url
                     })
                     content_uploaded = True
                     
