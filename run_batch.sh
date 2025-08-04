@@ -6,11 +6,12 @@
 # Set working directory
 cd /workspace/althen-rag-system || exit 1
 
-# Activate virtual environment if it exists
-if [ -d "/venv/main" ]; then
-    source /venv/main/bin/activate
-elif [ -d "venv" ]; then
-    source venv/bin/activate
+# Use the Python from the venv directly (no need to activate)
+PYTHON_PATH="/venv/main/bin/python"
+
+# Fallback to system python if venv not available
+if [ ! -f "$PYTHON_PATH" ]; then
+    PYTHON_PATH="python"
 fi
 
 # Set environment variables (load from .env if exists)
@@ -23,7 +24,7 @@ echo "===========================================" >> cron.log
 echo "Starting batch at $(date)" >> cron.log
 
 # Run the batch processing
-python scripts/batch_process_pages.py >> cron.log 2>&1
+$PYTHON_PATH scripts/batch_process_pages.py >> cron.log 2>&1
 
 # Check exit status
 if [ $? -eq 0 ]; then
