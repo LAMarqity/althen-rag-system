@@ -27,66 +27,28 @@ from scripts.raganything_api_service import (
 )
 
 def scrape_web_content(url: str, max_length: int = 10000) -> str:
-    """Extract ONLY visible text from headings, paragraphs, tables, and lists"""
+    """Extract ONLY text from H and P tags"""
     try:
         logger.info(f"Scraping web content from: {url}")
         response = requests.get(url, timeout=30)
         soup = BeautifulSoup(response.content, 'html.parser')
         
-        # Remove unwanted elements
-        for element in soup(["script", "style", "footer", "nav", "aside", "header", "noscript"]):
-            element.extract()
-        
         content_parts = []
         
-        # Extract ONLY visible text from specific elements
-        for element in soup.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'table', 'ul', 'ol']):
-            # Skip hidden elements
-            style = element.get('style', '')
-            if 'display:none' in style or 'visibility:hidden' in style:
-                continue
-                
-            css_class = ' '.join(element.get('class', []))
-            if any(hidden in css_class.lower() for hidden in ['hidden', 'd-none', 'sr-only']):
-                continue
-            
-            if element.name in ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']:
-                # Extract heading text only
-                text = element.get_text(strip=True)
-                if text:
-                    level = int(element.name[1])
-                    content_parts.append('#' * level + ' ' + text)
-            
-            elif element.name == 'p':
-                # Extract paragraph text only
-                text = element.get_text(strip=True)
-                if text and len(text) > 10:
-                    content_parts.append(text)
-            
-            elif element.name == 'table':
-                # Extract table as markdown
-                table_text = convert_table_to_markdown(element)
-                if table_text.strip():
-                    content_parts.append(table_text)
-            
-            elif element.name in ['ul', 'ol']:
-                # Extract list items text only
-                list_items = []
-                for li in element.find_all('li'):
-                    text = li.get_text(strip=True)
-                    if text:
-                        list_items.append(f"- {text}")
-                if list_items:
-                    content_parts.append('\n'.join(list_items))
+        # Extract ONLY from H and P tags
+        for element in soup.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p']):
+            text = element.get_text(strip=True)
+            if text and len(text) > 10:
+                content_parts.append(text)
         
-        # Join all text content
+        # Join all text
         web_content = '\n\n'.join(content_parts)
         
         # Limit content length
         if len(web_content) > max_length:
             web_content = web_content[:max_length] + "..."
         
-        logger.info(f"Extracted {len(web_content)} characters of visible text content")
+        logger.info(f"Extracted {len(web_content)} characters from H and P tags only")
         return web_content
         
     except Exception as e:
