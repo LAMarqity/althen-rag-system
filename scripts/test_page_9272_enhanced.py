@@ -27,34 +27,35 @@ from scripts.raganything_api_service import (
 
 async def main():
     """Main processing function"""
-    page_id = 9272
-    
-    # Initialize
-    logger.info("Initializing connections...")
-    supabase_client = get_supabase_client()
-    await initialize_rag()
-    
-    # Get page data
-    logger.info(f"Getting page data for {page_id}...")
-    page_response = supabase_client.table("new_pages_index").select("*").eq("id", page_id).execute()
-    if not page_response.data:
-        logger.error(f"Page {page_id} not found")
-        return
+    try:
+        page_id = 9272
         
-    page_data = page_response.data[0]
-    logger.info(f"Found page: {page_data['title']}")
-    
-    # Get datasheets
-    datasheets_response = supabase_client.table("new_datasheets_index").select("*").eq("page_id", page_id).execute()
-    datasheets = datasheets_response.data
-    logger.info(f"Found {len(datasheets)} datasheets")
-    
-    if not datasheets:
-        logger.error("No datasheets found")
-        return
+        # Initialize
+        logger.info("Initializing connections...")
+        supabase_client = get_supabase_client()
+        await initialize_rag()
         
-    # Process first datasheet
-    datasheet = datasheets[0]
+        # Get page data
+        logger.info(f"Getting page data for {page_id}...")
+        page_response = supabase_client.table("new_pages_index").select("*").eq("id", page_id).execute()
+        if not page_response.data:
+            logger.error(f"Page {page_id} not found")
+            return
+            
+        page_data = page_response.data[0]
+        logger.info(f"Found page: {page_data['title']}")
+        
+        # Get datasheets
+        datasheets_response = supabase_client.table("new_datasheets_index").select("*").eq("page_id", page_id).execute()
+        datasheets = datasheets_response.data
+        logger.info(f"Found {len(datasheets)} datasheets")
+        
+        if not datasheets:
+            logger.error("No datasheets found")
+            return
+        
+        # Process first datasheet
+        datasheet = datasheets[0]
     logger.info(f"Processing datasheet: {datasheet['filename']}")
     
     # Download PDF
