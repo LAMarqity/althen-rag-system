@@ -371,6 +371,10 @@ Source: {page_url}
                     pdf_name = os.path.splitext(os.path.basename(pdf_path))[0]
                     mineru_output_dir = f"output/{pdf_name}"
                     
+                    # Get context for all images FIRST
+                    content_list_file = f"{mineru_output_dir}/auto/{pdf_name}_content_list.json"
+                    images_context_map = extract_images_with_context(content_list_file)
+                    
                     # Process ALL images
                     images_dir = f"{mineru_output_dir}/auto/images"
                     image_url_map = {}
@@ -426,10 +430,6 @@ Source: {page_url}
                                     logger.info(f"Uploaded {i+1}/{len(image_files)} images")
                         
                         logger.info(f"Successfully uploaded {len(image_url_map)} images")
-                    
-                    # Get context for all images
-                    content_list_file = f"{mineru_output_dir}/auto/{pdf_name}_content_list.json"
-                    images_context_map = extract_images_with_context(content_list_file)
                     
                     # Read original markdown and enhance alt text
                     markdown_file = f"{mineru_output_dir}/auto/{pdf_name}.md"
