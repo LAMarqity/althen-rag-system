@@ -27,42 +27,75 @@ from scripts.raganything_api_service import (
 )
 
 def scrape_web_content(url: str, max_length: int = 10000) -> str:
-    """Scrape and clean web content from URL, preserving table structure"""
+    """Scrape and clean web content from URL, focusing on main content after H1"""
     try:
         logger.info(f"Scraping web content from: {url}")
         response = requests.get(url, timeout=30)
         soup = BeautifulSoup(response.content, 'html.parser')
         
-        # Remove script and style elements
-        for script in soup(["script", "style"]):
-            script.extract()
+        # Remove unwanted elements
+        for element in soup(["script", "style", "footer", "nav", "aside", "header"]):
+            element.extract()
         
-        # Convert tables to markdown-like format BEFORE extracting text
-        for table in soup.find_all('table'):
-            table_markdown = convert_table_to_markdown(table)
-            table.replace_with(table_markdown)
+        # Find the first H1 to start content extraction
+        h1 = soup.find('h1')
+        if not h1:
+            logger.warning("No H1 found, extracting from entire page")
+            content_root = soup
+        else:
+            # Get the parent container of H1 to extract content from that section
+            content_root = h1.parent if h1.parent else soup
         
-        # Get text content (now tables are converted to markdown)
-        text = soup.get_text()
+        # Extract content in order: headings, paragraphs, and tables
+        content_parts = []
         
-        # Clean up text but preserve table formatting
-        lines = []
-        for line in text.splitlines():
-            line = line.strip()
-            if line:
-                # Preserve table separator lines
-                if line.startswith('|') or line.startswith('-'):
-                    lines.append(line)
-                else:
-                    lines.append(line)
+        # Get all relevant elements after/including H1
+        relevant_elements = content_root.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'table', 'ul', 'ol'])
         
-        web_content = '\n'.join(lines)
+        h1_found = False
+        for element in relevant_elements:
+            # Start extracting after we find H1
+            if element.name == 'h1':
+                h1_found = True
+            
+            if h1_found:
+                if element.name in ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']:
+                    # Add heading with markdown formatting
+                    level = int(element.name[1])
+                    heading_text = element.get_text(strip=True)
+                    if heading_text:
+                        content_parts.append('#' * level + ' ' + heading_text)
+                
+                elif element.name == 'p':
+                    # Add paragraph content
+                    para_text = element.get_text(strip=True)
+                    if para_text and len(para_text) > 10:  # Skip very short paragraphs
+                        content_parts.append(para_text)
+                
+                elif element.name == 'table':
+                    # Convert table to markdown
+                    table_markdown = convert_table_to_markdown(element)
+                    if table_markdown.strip():
+                        content_parts.append(table_markdown)
+                
+                elif element.name in ['ul', 'ol']:
+                    # Handle lists
+                    list_items = []
+                    for li in element.find_all('li'):
+                        item_text = li.get_text(strip=True)
+                        if item_text:
+                            list_items.append(f"- {item_text}")
+                    if list_items:
+                        content_parts.append('\n'.join(list_items))
+        
+        # Join all content parts
+        web_content = '\n\n'.join(content_parts)
         
         # Limit content length
         if len(web_content) > max_length:
             web_content = web_content[:max_length] + "..."
         
-        logger.info(f"Extracted {len(web_content)} characters of web content with table preservation")
+        logger.info(f"Extracted {len(web_content)} characters of focused web content with {len([p for p in content_parts if p.startswith('|')])} tables")
         return web_content
         
     except Exception as e:
