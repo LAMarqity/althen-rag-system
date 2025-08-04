@@ -88,7 +88,11 @@ async def process_page_with_mineru_extraction(page_id: int):
     
     # Initialize connections
     supabase_client = get_supabase_client()
-    rag_instance = await initialize_rag()
+    await initialize_rag()
+    
+    # Import the initialized instance
+    from scripts.raganything_api_service import rag_instance as imported_rag_instance
+    rag_instance = imported_rag_instance
     
     # Get page data
     page_response = supabase_client.table("new_pages_index").select("*").eq("id", page_id).execute()
