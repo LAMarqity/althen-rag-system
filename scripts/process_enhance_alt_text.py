@@ -27,28 +27,58 @@ from scripts.raganything_api_service import (
 )
 
 def scrape_web_content(url: str, max_length: int = 10000) -> str:
-    """Extract ONLY text from H and P tags"""
+    """Extract content using regex patterns after first H1"""
     try:
         logger.info(f"Scraping web content from: {url}")
         response = requests.get(url, timeout=30)
-        soup = BeautifulSoup(response.content, 'html.parser')
+        html_data = response.text
         
-        content_parts = []
+        # Find first H1 and take everything after it
+        h1_match = re.search(r'<h1[^>]*>.*?</h1>', html_data, re.IGNORECASE | re.DOTALL)
+        if h1_match:
+            # Take everything after first H1
+            content_after_h1 = html_data[h1_match.end():]
+        else:
+            # If no H1 found, take all content
+            content_after_h1 = html_data
         
-        # Extract ONLY from H and P tags
-        for element in soup.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p']):
-            text = element.get_text(strip=True)
-            if text and len(text) > 10:
-                content_parts.append(text)
+        # Patterns for different elements
+        patterns = [
+            r'<(h[1-6])[^>]*>(.*?)</\1>',  # H-tags
+            r'<p[^>]*>(.*?)</p>',          # P-tags
+            r'<li[^>]*>(.*?)</li>',        # List items (bullets)
+            r'<td[^>]*>(.*?)</td>',        # Table cells
+            r'<th[^>]*>(.*?)</th>'         # Table headers
+        ]
         
-        # Join all text
-        web_content = '\n\n'.join(content_parts)
+        # Collect all matches
+        all_matches = []
+        for pattern in patterns:
+            matches = re.findall(pattern, content_after_h1, re.IGNORECASE | re.DOTALL)
+            for match in matches:
+                if isinstance(match, tuple):
+                    content = match[1] if len(match) > 1 else match[0]
+                else:
+                    content = match
+                all_matches.append(content)
+        
+        # Clean the texts
+        cleaned_texts = []
+        for content in all_matches:
+            # Remove all HTML tags
+            clean_text = re.sub(r'<[^>]+>', '', content)
+            # Remove extra whitespace
+            clean_text = re.sub(r'\s+', ' ', clean_text).strip()
+            if clean_text and len(clean_text) > 10:
+                cleaned_texts.append(clean_text)
+        
+        web_content = '\n\n'.join(cleaned_texts)
         
         # Limit content length
         if len(web_content) > max_length:
             web_content = web_content[:max_length] + "..."
         
-        logger.info(f"Extracted {len(web_content)} characters from H and P tags only")
+        logger.info(f"Extracted {len(web_content)} characters using regex patterns")
         return web_content
         
     except Exception as e:
