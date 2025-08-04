@@ -19,8 +19,7 @@ sys.path.insert(0, str(project_root))
 from scripts.raganything_api_service import (
     get_supabase_client,
     logger,
-    initialize_rag,
-    rag_instance
+    initialize_rag
 )
 
 async def main():
@@ -34,6 +33,12 @@ async def main():
         logger.info("Initializing connections...")
         supabase_client = get_supabase_client()
         await initialize_rag()
+        
+        # Import the initialized instance
+        from scripts.raganything_api_service import rag_instance
+        if rag_instance is None:
+            logger.error("RAG instance is None after initialization")
+            return
         
         # Get page data
         logger.info(f"Getting page data for {page_id}...")
