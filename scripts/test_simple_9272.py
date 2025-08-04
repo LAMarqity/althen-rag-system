@@ -43,7 +43,9 @@ async def main():
             return
             
         page_data = page_response.data[0]
-        logger.info(f"Found page: {page_data['title']}")
+        logger.info(f"Found page data: {list(page_data.keys())}")
+        page_title = page_data.get('title') or page_data.get('name') or page_data.get('url', 'Unknown')
+        logger.info(f"Found page: {page_title}")
         
         # Get datasheets
         datasheets_response = supabase_client.table("new_datasheets_index").select("*").eq("page_id", page_id).execute()
