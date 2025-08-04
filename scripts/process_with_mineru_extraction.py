@@ -242,17 +242,37 @@ async def process_page_with_mineru(page_id: int):
                 logger.info(f"Successfully uploaded to LightRAG server: {result.get('message', 'Success')}")
                 track_id = result.get('track_id', 'N/A')
                 logger.info(f"LightRAG track ID: {track_id}")
+                lightrag_track_id = track_id
             else:
                 logger.warning(f"LightRAG upload failed: {response.status_code} - {response.text}")
+                lightrag_track_id = None
                 
         except Exception as lightrag_error:
             logger.warning(f"LightRAG upload failed: {lightrag_error}")
+            lightrag_track_id = None
         
-        # Mark as processed
-        supabase_client.table("new_pages_index").update({
+        # Mark page as processed with LightRAG track_id
+        page_update_data = {
             "rag_ingested": True,
             "rag_ingested_at": "now()"
-        }).eq("id", page_id).execute()
+        }
+        if 'lightrag_track_id' in locals() and lightrag_track_id and lightrag_track_id != 'N/A':
+            page_update_data["lightrag_track_id"] = lightrag_track_id
+            
+        supabase_client.table("new_pages_index").update(page_update_data).eq("id", page_id).execute()
+        
+        # Mark associated datasheets as processed
+        if 'datasheets' in locals() and datasheets:
+            for datasheet in datasheets:
+                datasheet_update_data = {
+                    "rag_ingested": True,
+                    "rag_ingested_at": "now()"
+                }
+                if 'lightrag_track_id' in locals() and lightrag_track_id and lightrag_track_id != 'N/A':
+                    datasheet_update_data["lightrag_track_id"] = lightrag_track_id
+                    
+                supabase_client.table("new_datasheets_index").update(datasheet_update_data).eq("id", datasheet['id']).execute()
+                logger.info(f"Marked datasheet {datasheet['id']} as processed")
         
         logger.info("Page marked as processed")
         
