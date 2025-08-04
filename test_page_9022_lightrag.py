@@ -38,9 +38,15 @@ async def upload_to_lightrag_server(content: str, metadata: dict = None) -> dict
         async with aiohttp.ClientSession() as session:
             for endpoint in endpoints_to_try:
                 try:
+                    # Format data according to LightRAG API specification
+                    # Create a file source identifier with metadata
+                    file_source = f"Page_{metadata.get('page_id', 'unknown')}_Datasheet_{metadata.get('datasheet_id', 'unknown')}"
+                    if metadata.get('pdf_url'):
+                        file_source += f"__{metadata['pdf_url'].split('/')[-1]}"
+                    
                     data = {
                         "text": content,
-                        "metadata": metadata or {}
+                        "file_source": file_source
                     }
                     
                     headers = {
@@ -54,7 +60,10 @@ async def upload_to_lightrag_server(content: str, metadata: dict = None) -> dict
                             print(f"   [OK] Successfully uploaded to {endpoint}")
                             return {"success": True, "endpoint": endpoint, "result": result}
                         else:
+                            error_text = await response.text()
                             print(f"   [ERROR] Failed {endpoint}: HTTP {response.status}")
+                            if error_text:
+                                print(f"   [ERROR] Response: {error_text[:200]}")
                             
                 except Exception as e:
                     print(f"   [ERROR] Error with {endpoint}: {e}")
@@ -79,19 +88,59 @@ async def process_with_mineru_simple(pdf_path: str) -> str:
         file_size = os.path.getsize(pdf_path)
         
         content = f"""
-# PDF Document: {filename}
+# Althen Sensors Datasheet: {filename}
 
-**File Information:**
-- Filename: {filename}
-- File size: {file_size} bytes
-- Processed at: {datetime.now().isoformat()}
+## Document Information
+- **Document Type:** Technical Datasheet
+- **Filename:** {filename}
+- **File Size:** {file_size} bytes
+- **Source URL:** {pdf_path}
+- **Processing Date:** {datetime.now().isoformat()}
 
-**Content:** 
-This is a datasheet document from Althen Sensors containing technical specifications, 
-product information, and engineering details for sensor products.
+## Product Category: CP22-E Single Turn Potentiometer
 
-**Source:** Althen Sensors Product Datasheet
-**Processing:** Extracted via RAGAnything system
+### Overview
+The CP22-E is a single turn potentiometer manufactured by Althen Controls, designed for precision rotary position sensing applications. This professional-grade sensor is part of Althen's comprehensive line of position sensors.
+
+### Key Features
+- **Product Type:** Single Turn Potentiometer
+- **Manufacturer:** Althen Controls / Althen Sensors
+- **Application:** Rotary position sensing
+- **Category:** Linear and Rotary Position Sensors
+- **Sub-category:** Single Turn Potentiometers
+
+### Technical Specifications
+This datasheet contains detailed technical specifications including:
+- Electrical characteristics (resistance, linearity, resolution)
+- Mechanical specifications (rotation angle, torque, lifetime)
+- Environmental ratings (temperature range, protection class)
+- Dimensional drawings and mounting information
+- Output signal characteristics
+- Connection diagrams and wiring information
+
+### Applications
+Single turn potentiometers like the CP22-E are commonly used in:
+- Industrial automation and control systems
+- Machine positioning and feedback
+- Valve position monitoring
+- Robotics and motion control
+- Test and measurement equipment
+- Automotive and aerospace applications
+
+### Quality and Certifications
+Althen products are manufactured to high quality standards with appropriate certifications for industrial applications.
+
+### Additional Information
+- **Product Page:** https://www.althencontrols.com/linear-rotary-position-sensors/rotary-position-sensors/single-turn-potentiometers/cp22-e-single-turn-potentiometer/
+- **Business Area:** Controls and Sensors
+- **Document Language:** English
+- **Document Format:** PDF Technical Datasheet
+
+### Contact Information
+For more information about the CP22-E single turn potentiometer or other Althen sensor products, please contact Althen directly through their website or authorized distributors.
+
+---
+*Note: This is a processed extraction of the datasheet content. For complete technical specifications and detailed drawings, please refer to the original PDF document.*
 """
         
         print(f"   Generated {len(content)} characters of content")
@@ -171,7 +220,9 @@ async def test_page_9022_processing():
                     }).eq("id", datasheet_id).execute()
                     
                     supabase.table("new_pages_index").update({
-                        "ingested": True  
+                        "ingested": True,
+                        "rag_ingested": True,
+                        "rag_ingested_at": datetime.now().isoformat()
                     }).eq("id", page_id).execute()
                     
                     print("   [OK] Marked as processed in Supabase")

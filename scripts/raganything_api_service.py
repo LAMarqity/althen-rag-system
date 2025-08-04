@@ -281,9 +281,16 @@ async def upload_to_lightrag_server(content: str, metadata: dict = None) -> dict
     
     try:
         async with aiohttp.ClientSession() as session:
+            # Format according to LightRAG API specification
+            file_source = "Unknown"
+            if metadata:
+                file_source = f"Page_{metadata.get('page_id', 'unknown')}_Datasheet_{metadata.get('datasheet_id', 'unknown')}"
+                if metadata.get('pdf_path'):
+                    file_source += f"__{os.path.basename(metadata['pdf_path'])}"
+            
             data = {
                 "text": content,
-                "metadata": metadata or {}
+                "file_source": file_source
             }
             
             headers = {
