@@ -33,14 +33,23 @@ def scrape_web_content(url: str, max_length: int = 10000) -> str:
         response = requests.get(url, timeout=30)
         html_data = response.text
         
-        # Find first H1 and take everything after it
+        # Find first H1 and take everything from H1 onwards
         h1_match = re.search(r'<h1[^>]*>.*?</h1>', html_data, re.IGNORECASE | re.DOTALL)
         if h1_match:
-            # Take everything after first H1
-            content_after_h1 = html_data[h1_match.end():]
+            # Take everything from H1 onwards (including the H1)
+            content_after_h1 = html_data[h1_match.start():]
         else:
-            # If no H1 found, take all content
-            content_after_h1 = html_data
+            # If no H1 found, look for main content area
+            main_match = re.search(r'<main[^>]*>.*?</main>', html_data, re.IGNORECASE | re.DOTALL)
+            if main_match:
+                content_after_h1 = html_data[main_match.start():]
+            else:
+                # Last resort - try to find content div
+                content_match = re.search(r'<div[^>]*class="[^"]*content[^"]*"[^>]*>', html_data, re.IGNORECASE)
+                if content_match:
+                    content_after_h1 = html_data[content_match.start():]
+                else:
+                    content_after_h1 = html_data
         
         # Patterns for different elements
         patterns = [
