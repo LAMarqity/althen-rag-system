@@ -27,71 +27,51 @@ from scripts.raganything_api_service import (
 )
 
 def scrape_web_content(url: str, max_length: int = 10000) -> str:
-    """Extract main content by removing navigation and finding product description"""
+    """Extract main content using the new regex-based method"""
     try:
         logger.info(f"Scraping web content from: {url}")
         response = requests.get(url, timeout=30)
         html_data = response.text
         
-        # Remove navigation sections first
-        # Remove everything before the main product title
-        product_title_match = re.search(r'<h1[^>]*>([^<]+(?:Fiber Optic|Force|Strain|Pressure|Temperature|Sensor)[^<]+)</h1>', html_data, re.IGNORECASE)
-        if product_title_match:
-            # Start from the product title
-            content_section = html_data[product_title_match.start():]
-            
-            # Stop at footer or similar end sections
-            footer_patterns = [
-                r'<footer',
-                r'class="[^"]*footer',
-                r'<div[^>]*class="[^"]*newsletter',
-                r'Follow us',
-                r'Stay in touch'
-            ]
-            
-            for footer_pattern in footer_patterns:
-                footer_match = re.search(footer_pattern, content_section, re.IGNORECASE)
-                if footer_match:
-                    content_section = content_section[:footer_match.start()]
-                    break
+        # Find first H1 and take everything after it
+        h1_match = re.search(r'<h1[^>]*>.*?</h1>', html_data, re.IGNORECASE | re.DOTALL)
+        if h1_match:
+            # Take everything after first H1
+            content_after_h1 = html_data[h1_match.end():]
         else:
-            # Fallback: look for main content container
-            main_match = re.search(r'<main[^>]*>(.*?)</main>', html_data, re.IGNORECASE | re.DOTALL)
-            content_section = main_match.group(1) if main_match else html_data
-        
-        # Extract content using patterns
+            # If no H1 found, take entire content
+            content_after_h1 = html_data
+
+        # Patterns for different elements
         patterns = [
             r'<(h[1-6])[^>]*>(.*?)</\1>',  # H-tags
             r'<p[^>]*>(.*?)</p>',          # P-tags
-            r'<li[^>]*>(.*?)</li>',        # List items
+            r'<li[^>]*>(.*?)</li>',        # List items (bullets)
             r'<td[^>]*>(.*?)</td>',        # Table cells
             r'<th[^>]*>(.*?)</th>'         # Table headers
         ]
-        
+
+        # Collect all matches
         all_matches = []
         for pattern in patterns:
-            matches = re.findall(pattern, content_section, re.IGNORECASE | re.DOTALL)
+            matches = re.findall(pattern, content_after_h1, re.IGNORECASE | re.DOTALL)
             for match in matches:
                 if isinstance(match, tuple):
                     content = match[1] if len(match) > 1 else match[0]
                 else:
                     content = match
                 all_matches.append(content)
-        
-        # Clean and filter content
+
+        # Clean text
         cleaned_texts = []
-        navigation_keywords = ['menu', 'search', 'contact', 'call us', 'products', 'solutions', 'services', 'industries', 'about althen', 'projects', 'news', 'blog', 'follow us', 'linkedin', 'twitter', 'facebook']
-        
         for content in all_matches:
+            # Remove all HTML tags
             clean_text = re.sub(r'<[^>]+>', '', content)
+            # Remove extra whitespace
             clean_text = re.sub(r'\s+', ' ', clean_text).strip()
-            
-            # Skip navigation-like content
-            if clean_text and len(clean_text) > 15:
-                is_navigation = any(keyword in clean_text.lower() for keyword in navigation_keywords)
-                if not is_navigation and not clean_text.lower().startswith(('en ', 'de ', 'nl ', 'fr ', 'sv ')):
-                    cleaned_texts.append(clean_text)
-        
+            if clean_text:
+                cleaned_texts.append(clean_text)
+
         web_content = '\n\n'.join(cleaned_texts)
         
         if len(web_content) > max_length:
