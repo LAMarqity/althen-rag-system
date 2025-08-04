@@ -1,8 +1,14 @@
 {
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(python test_page_9022_lightrag.py:*)",
+      "Bash(python:*)"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": [
     "filesystem",
     "supabase"
-  ],
-  "enableAllProjectMcpServers": true,
-  "$schema": "https://json.schemastore.org/claude-code-settings.json"
+  ]
 }

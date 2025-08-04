@@ -14,10 +14,10 @@ class AlthenRAGService:
         self.supabase_key = os.getenv("SUPABASE_ANON_KEY")
         
         if not self.supabase_url or not self.supabase_key:
-            raise ValueError("❌ SUPABASE_URL and SUPABASE_ANON_KEY environment variables are required")
+            raise ValueError("[ERROR] SUPABASE_URL and SUPABASE_ANON_KEY environment variables are required")
         
         self.supabase = create_client(self.supabase_url, self.supabase_key)
-        logger.info("✅ Supabase client initialized")
+        logger.info("[OK] Supabase client initialized")
     
     def get_stats(self):
         try:
@@ -56,10 +56,10 @@ class AlthenRAGService:
                 .limit(3)\
                 .execute()
             
-            logger.info(f"📄 Found {len(response.data)} unprocessed pages")
+            logger.info(f"[PAGES] Found {len(response.data)} unprocessed pages")
             return response.data
         except Exception as e:
-            logger.error(f"❌ Error testing connection: {e}")
+            logger.error(f"[ERROR] Error testing connection: {e}")
             return []
 
     async def list_unprocessed(self, limit=5):
@@ -88,7 +88,7 @@ class AlthenRAGService:
             
             return result
         except Exception as e:
-            logger.error(f"❌ Error listing unprocessed: {e}")
+            logger.error(f"[ERROR] Error listing unprocessed: {e}")
             return []
 
     async def list_all_pages(self, limit=5):
@@ -101,7 +101,7 @@ class AlthenRAGService:
             
             return pages_response.data
         except Exception as e:
-            logger.error(f"❌ Error listing all pages: {e}")
+            logger.error(f"[ERROR] Error listing all pages: {e}")
             return []
 
     async def reset_pages_for_testing(self, limit=3):
@@ -127,7 +127,7 @@ class AlthenRAGService:
             
             return reset_results
         except Exception as e:
-            logger.error(f"❌ Error resetting pages: {e}")
+            logger.error(f"[ERROR] Error resetting pages: {e}")
             return []
 
     async def process_web_page_simple(self, page_record):
@@ -139,7 +139,7 @@ class AlthenRAGService:
             url = page_record.get("url")
             page_id = page_record.get("id")
             
-            logger.info(f"🌐 Processing page {page_id}: {url}")
+            logger.info(f"Processing page {page_id}: {url}")
             
             # Hämta webbsidan
             response = requests.get(url, timeout=30)
@@ -181,16 +181,16 @@ class AlthenRAGService:
             with open(page_file, 'w', encoding='utf-8') as f:
                 json.dump(page_data, f, indent=2, ensure_ascii=False)
             
-            logger.info(f"✅ Page {page_id} processed and saved")
+            logger.info(f"[OK] Page {page_id} processed and saved")
             return {"status": "success", "page_id": page_id, "content_length": len(clean_text)}
             
         except Exception as e:
-            logger.error(f"❌ Error processing page {page_id}: {e}")
+            logger.error(f"[ERROR] Error processing page {page_id}: {e}")
             return {"status": "error", "page_id": page_id, "message": str(e)}
 
     async def process_simple_batch(self, max_pages=2):
         """Processa en liten batch av sidor (utan RAG-Anything)"""
-        logger.info(f"🚀 Starting simple batch processing (max_pages: {max_pages})")
+        logger.info(f"[START] Starting simple batch processing (max_pages: {max_pages})")
         
         try:
             # Hämta oprocessade sidor
@@ -216,10 +216,10 @@ class AlthenRAGService:
                             .update({"ingested": True})\
                             .eq("id", page_id)\
                             .execute()
-                        logger.info(f"✅ Marked page {page_id} as processed")
+                        logger.info(f"[OK] Marked page {page_id} as processed")
                     
                 except Exception as e:
-                    logger.error(f"❌ Error processing page {page_id}: {e}")
+                    logger.error(f"[ERROR] Error processing page {page_id}: {e}")
                     results.append({"status": "error", "page_id": page_id, "message": str(e)})
             
             successful = len([r for r in results if r.get("status") == "success"])
@@ -232,7 +232,7 @@ class AlthenRAGService:
             }
             
         except Exception as e:
-            logger.error(f"❌ Error in batch processing: {e}")
+            logger.error(f"[ERROR] Error in batch processing: {e}")
             return {"error": str(e)}
 
 async def main():
@@ -263,14 +263,14 @@ async def main():
         service = AlthenRAGService()
         
         if args.command == 'stats':
-            print("📊 Getting statistics...")
+            print("[STATS] Getting statistics...")
             stats = service.get_stats()
             print(json.dumps(stats, indent=2))
             
         elif args.command == 'test':
-            print("🔗 Testing Supabase connection...")
+            print("Testing Supabase connection...")
             unprocessed = await service.test_connection()
-            print(f"✅ Found {len(unprocessed)} unprocessed pages")
+            print(f"[OK] Found {len(unprocessed)} unprocessed pages")
             
             if unprocessed:
                 print("\nSample page:")
@@ -284,7 +284,7 @@ async def main():
                 print("No unprocessed pages found or connection error.")
                 
         elif args.command == 'list':
-            print(f"📋 Listing {args.limit} unprocessed pages with datasheets...")
+            print(f"[PAGES] Listing {args.limit} unprocessed pages with datasheets...")
             items = await service.list_unprocessed(args.limit)
             
             if not items:
@@ -307,14 +307,14 @@ async def main():
                         print(f"     ... and {len(datasheets) - 2} more")
 
         elif args.command == 'all':
-            print(f"📋 Listing {args.limit} pages (all statuses)...")
+            print(f"[PAGES] Listing {args.limit} pages (all statuses)...")
             pages = await service.list_all_pages(args.limit)
             
             if not pages:
                 print("No pages found.")
             else:
                 for i, page in enumerate(pages, 1):
-                    ingested_status = "✅ Processed" if page.get('ingested') else "⏳ Not processed"
+                    ingested_status = "[PROCESSED]" if page.get('ingested') else "[PENDING]"
                     print(f"\n{i}. Page ID: {page.get('id')}")
                     print(f"   URL: {page.get('url')}")
                     print(f"   Business Area: {page.get('business_area')}")
@@ -323,11 +323,11 @@ async def main():
                     print(f"   Created: {page.get('created_at', '')[:19]}")
 
         elif args.command == 'reset':
-            print(f"🔄 Resetting {args.limit} pages for testing...")
+            print(f"Resetting {args.limit} pages for testing...")
             reset_pages = await service.reset_pages_for_testing(args.limit)
             
             if reset_pages:
-                print(f"✅ Reset {len(reset_pages)} pages:")
+                print(f"[OK] Reset {len(reset_pages)} pages:")
                 for page in reset_pages:
                     print(f"  - ID {page.get('id')}: {page.get('url')}")
                 print("\nNow you can test processing with 'python start.py test'")
@@ -335,14 +335,14 @@ async def main():
                 print("No pages found to reset.")
 
         elif args.command == 'simple':
-            print(f"🚀 Starting simple batch processing ({args.max_pages} pages)...")
+            print(f"[START] Starting simple batch processing ({args.max_pages} pages)...")
             result = await service.process_simple_batch(args.max_pages)
             print(json.dumps(result, indent=2, ensure_ascii=False))
         
         return 0
         
     except Exception as e:
-        logger.error(f"❌ Error: {e}")
+        logger.error(f"[ERROR] Error: {e}")
         import traceback
         traceback.print_exc()
         return 1

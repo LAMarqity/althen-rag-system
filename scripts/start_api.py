@@ -14,16 +14,16 @@ def load_environment():
     env_file = Path(".env")
     
     if env_file.exists():
-        print("✅ Loading environment from .env file")
+        print("[OK] Loading environment from .env file")
         try:
             from dotenv import load_dotenv
             load_dotenv()
         except ImportError:
-            print("⚠️ python-dotenv not available, install with: pip install python-dotenv")
+            print("[WARNING] python-dotenv not available, install with: pip install python-dotenv")
             return False
     else:
-        print("⚠️ No .env file found, using system environment variables")
-        print("💡 Create .env from .env.api.example for local configuration")
+        print("[WARNING] No .env file found, using system environment variables")
+        print("[INFO] Create .env from .env.api.example for local configuration")
     
     return True
 
@@ -46,14 +46,14 @@ def check_dependencies():
             missing_packages.append(package)
     
     if missing_packages:
-        print("❌ Missing required packages:")
+        print("[ERROR] Missing required packages:")
         for package in missing_packages:
             print(f"   - {package}")
-        print("\n📦 Install missing packages with:")
+        print("\n[INSTALL] Install missing packages with:")
         print("   pip install -r requirements_api.txt")
         return False
     
-    print("✅ All required dependencies available")
+    print("[OK] All required dependencies available")
     return True
 
 def check_configuration():
@@ -71,24 +71,24 @@ def check_configuration():
             missing_vars.append(var)
     
     if missing_vars:
-        print("⚠️ Missing environment variables:")
+        print("[WARNING] Missing environment variables:")
         for var in missing_vars:
             print(f"   - {var}")
-        print("\n💡 Set these in your .env file or environment")
+        print("\n[INFO] Set these in your .env file or environment")
         return False
     
-    print("✅ Configuration looks good")
+    print("[OK] Configuration looks good")
     return True
 
 def main():
     """Main startup function"""
-    print("🚀 Starting RAG API Service...")
+    print("[START] Starting RAG API Service...")
     print("=" * 50)
     
     # Change to scripts directory
     script_dir = Path(__file__).parent
     os.chdir(script_dir)
-    print(f"📁 Working directory: {script_dir.absolute()}")
+    print(f"[DIR] Working directory: {script_dir.absolute()}")
     
     # Load environment
     if not load_environment():
@@ -100,7 +100,7 @@ def main():
     
     # Check configuration
     if not check_configuration():
-        print("\n⚠️ Configuration issues detected, but service will start anyway...")
+        print("\n[WARNING] Configuration issues detected, but service will start anyway...")
         print("   Some features may not work properly")
     
     # Get configuration
@@ -108,20 +108,20 @@ def main():
     port = int(os.getenv("RAG_API_PORT", "8080"))
     lightrag_url = os.getenv("LIGHTRAG_SERVER_URL", "Unknown")
     
-    print("\n🔧 Service Configuration:")
+    print("\n[CONFIG] Service Configuration:")
     print(f"   Host: {host}")
     print(f"   Port: {port}")
     print(f"   LightRAG: {lightrag_url}")
     print(f"   API Key: {'Configured' if os.getenv('RAG_API_KEY') else 'Not Set'}")
     
-    print("\n📡 Service will be available at:")
+    print("\n[ACCESS] Service will be available at:")
     print(f"   Local: http://localhost:{port}")
     if host == "0.0.0.0":
         print(f"   Network: http://YOUR_IP:{port}")
     print(f"   Docs: http://localhost:{port}/docs")
     
     print("\n" + "=" * 50)
-    print("🚀 Starting API server...")
+    print("[START] Starting API server...")
     
     try:
         # Start the API service
@@ -129,9 +129,9 @@ def main():
             sys.executable, "rag_api_service.py"
         ], check=True)
     except KeyboardInterrupt:
-        print("\n🛑 Service stopped by user")
+        print("\n[STOP] Service stopped by user")
     except subprocess.CalledProcessError as e:
-        print(f"\n❌ Service failed to start: {e}")
+        print(f"\n[ERROR] Service failed to start: {e}")
         sys.exit(1)
 
 if __name__ == "__main__":

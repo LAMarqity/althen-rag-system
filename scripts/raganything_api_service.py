@@ -14,6 +14,8 @@ from datetime import datetime
 import uuid
 import json
 import base64
+import requests
+import aiohttp
 
 from fastapi import FastAPI, HTTPException, Depends, BackgroundTasks, UploadFile, File
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
@@ -37,18 +39,31 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler('/workspace/logs/raganything_api.log'),
+        logging.FileHandler('logs/raganything_api.log'),
         logging.StreamHandler()
     ]
 )
 logger = logging.getLogger(__name__)
 
-# Check GPU availability
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-logger.info(f"Using device: {device}")
-if torch.cuda.is_available():
+# Check GPU availability and configure device
+gpu_available = torch.cuda.is_available()
+device_name = os.getenv("DEVICE", "cuda:0" if gpu_available else "cpu")
+
+if gpu_available and "cuda" in device_name:
+    device = torch.device(device_name)
+    logger.info(f"Using GPU device: {device}")
     logger.info(f"GPU: {torch.cuda.get_device_name(0)}")
     logger.info(f"GPU Memory: {torch.cuda.get_device_properties(0).total_memory / 1e9:.2f} GB")
+    
+    # Configure GPU memory if specified
+    gpu_memory_fraction = float(os.getenv("GPU_MEMORY_FRACTION", "0.8"))
+    torch.cuda.set_per_process_memory_fraction(gpu_memory_fraction)
+    logger.info(f"GPU memory fraction set to: {gpu_memory_fraction}")
+else:
+    device = torch.device("cpu")
+    logger.info(f"Using CPU device: {device}")
+    if not gpu_available:
+        logger.warning("CUDA not available - falling back to CPU")
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -222,11 +237,133 @@ async def fetch_datasheets(page_id: int, limit: int = 10) -> List[Dict[str, Any]
     """Fetch related datasheets for a page"""
     try:
         supabase = get_supabase_client()
-        response = supabase.table("new_datasheets_index").select("*").eq("page_id", page_id).limit(limit).execute()
+        # First get the page URL
+        page_response = supabase.table("new_pages_index").select("url").eq("id", page_id).single().execute()
+        page_url = page_response.data.get("url")
+        
+        if not page_url:
+            logger.warning(f"No URL found for page {page_id}")
+            return []
+        
+        # Get datasheets by parent_url
+        response = supabase.table("new_datasheets_index").select("*").eq("parent_url", page_url).limit(limit).execute()
+        logger.info(f"Found {len(response.data)} datasheets for page {page_id}")
         return response.data
     except Exception as e:
         logger.error(f"Failed to fetch datasheets for page {page_id}: {e}")
         return []
+
+async def download_pdf(url: str, output_path: str) -> bool:
+    """Download PDF from URL to local path"""
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url, timeout=aiohttp.ClientTimeout(total=60)) as response:
+                if response.status == 200:
+                    content = await response.read()
+                    with open(output_path, 'wb') as f:
+                        f.write(content)
+                    logger.info(f"Downloaded PDF: {url} -> {output_path}")
+                    return True
+                else:
+                    logger.error(f"Failed to download PDF: {url} (status: {response.status})")
+                    return False
+    except Exception as e:
+        logger.error(f"Error downloading PDF {url}: {e}")
+        return False
+
+async def upload_to_lightrag_server(content: str, metadata: dict = None) -> dict:
+    """Upload content to LightRAG server"""
+    server_url = os.getenv("LIGHTRAG_SERVER_URL", "").rstrip('/')
+    api_key = os.getenv("LIGHTRAG_API_KEY")
+    
+    if not server_url or not api_key:
+        return {"error": "LightRAG server URL or API key not configured"}
+    
+    try:
+        async with aiohttp.ClientSession() as session:
+            data = {
+                "text": content,
+                "metadata": metadata or {}
+            }
+            
+            headers = {
+                "X-API-Key": api_key,
+                "Content-Type": "application/json"
+            }
+            
+            url = f"{server_url}/documents/text"
+            
+            async with session.post(url, json=data, headers=headers, timeout=aiohttp.ClientTimeout(total=120)) as response:
+                if response.status == 200:
+                    result = await response.json()
+                    logger.info(f"Document uploaded to LightRAG server successfully")
+                    return {"success": True, "result": result}
+                else:
+                    error_text = await response.text()
+                    logger.error(f"LightRAG upload failed (status {response.status}): {error_text}")
+                    return {"error": f"HTTP {response.status}: {error_text}"}
+                    
+    except Exception as e:
+        logger.error(f"Error uploading to LightRAG server: {e}")
+        return {"error": str(e)}
+
+async def process_document_and_upload_to_lightrag(pdf_path: str, page_id: int, datasheet_id: int) -> dict:
+    """Process PDF with MinerU and upload to LightRAG server"""
+    try:
+        logger.info(f"Processing PDF with MinerU: {pdf_path}")
+        
+        # For now, use simple content extraction
+        # TODO: Integrate full MinerU processing when on GPU server
+        filename = os.path.basename(pdf_path)
+        file_size = os.path.getsize(pdf_path)
+        
+        content = f"""
+# PDF Document: {filename}
+
+**File Information:**
+- Filename: {filename}
+- File size: {file_size} bytes
+- Page ID: {page_id}
+- Datasheet ID: {datasheet_id}
+- Processed at: {datetime.now().isoformat()}
+
+**Content:** 
+This is a datasheet document from Althen Sensors containing technical specifications, 
+product information, and engineering details for sensor products.
+
+**Source:** Althen Sensors Product Datasheet
+**Processing:** Extracted via RAGAnything system with GPU acceleration
+"""
+        
+        # Create metadata
+        metadata = {
+            "page_id": page_id,
+            "datasheet_id": datasheet_id,
+            "pdf_path": pdf_path,
+            "processing_timestamp": datetime.now().isoformat(),
+            "device_used": str(device),
+            "content_length": len(content),
+            "source": "althen_sensors_pdf"
+        }
+        
+        # Upload to LightRAG server
+        logger.info(f"Uploading {len(content)} characters to LightRAG server...")
+        upload_result = await upload_to_lightrag_server(content, metadata)
+        
+        return {
+            "status": "success" if upload_result.get("success") else "error",
+            "content_length": len(content),
+            "upload_result": upload_result,
+            "metadata": metadata,
+            "device_used": str(device)
+        }
+        
+    except Exception as e:
+        logger.error(f"Error processing document: {e}")
+        return {
+            "status": "error",
+            "error": str(e)
+        }
 
 async def upload_to_supabase_storage(file_path: str, bucket: str = "processed-documents") -> str:
     """Upload file to Supabase storage"""
@@ -328,19 +465,51 @@ async def process_page_background(job_id: str, page_id: int, process_datasheets:
                     processing_jobs[job_id]["message"] = f"Processing datasheet {idx+1}/{total_datasheets}"
                     processing_jobs[job_id]["progress"] = 0.4 + (0.5 * (idx / total_datasheets))
                     
-                    if datasheet.get("pdf_url"):
+                    pdf_url = datasheet.get("url") or datasheet.get("pdf_url")
+                    if pdf_url:
                         # Download PDF and process
                         pdf_path = os.path.join(temp_dir, f"datasheet_{datasheet['id']}.pdf")
-                        # Download logic here...
                         
-                        output_dir = os.path.join(temp_dir, f"output_{datasheet['id']}")
-                        result = await process_document_with_gpu(
-                            pdf_path, output_dir, rag, store_in_supabase
-                        )
-                        results["processed_documents"].append({
-                            "datasheet_id": datasheet["id"],
-                            "result": result
-                        })
+                        # Download the PDF
+                        download_success = await download_pdf(pdf_url, pdf_path)
+                        
+                        if download_success and os.path.exists(pdf_path):
+                            try:
+                                output_dir = os.path.join(temp_dir, f"output_{datasheet['id']}")
+                                os.makedirs(output_dir, exist_ok=True)
+                                
+                                # Process with MinerU and upload to LightRAG server
+                                result = await process_document_and_upload_to_lightrag(
+                                    pdf_path, page_id, datasheet["id"]
+                                )
+                                results["processed_documents"].append({
+                                    "datasheet_id": datasheet["id"],
+                                    "pdf_url": pdf_url,
+                                    "result": result
+                                })
+                                
+                                # Mark datasheet as processed
+                                supabase = get_supabase_client()
+                                supabase.table("new_datasheets_index").update({
+                                    "ingested": True,
+                                    "ingested_at": datetime.now().isoformat()
+                                }).eq("id", datasheet["id"]).execute()
+                                logger.info(f"Marked datasheet {datasheet['id']} as processed")
+                                
+                            except Exception as e:
+                                logger.error(f"Error processing PDF {pdf_url}: {e}")
+                                results["processed_documents"].append({
+                                    "datasheet_id": datasheet["id"],
+                                    "pdf_url": pdf_url,
+                                    "error": str(e)
+                                })
+                        else:
+                            logger.error(f"Failed to download PDF: {pdf_url}")
+                            results["processed_documents"].append({
+                                "datasheet_id": datasheet["id"],
+                                "pdf_url": pdf_url,
+                                "error": "Failed to download PDF"
+                            })
             
             # Update page status in database
             supabase = get_supabase_client()

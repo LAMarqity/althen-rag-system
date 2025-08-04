@@ -14,11 +14,11 @@ from bs4 import BeautifulSoup
 try:
     from dotenv import load_dotenv
     load_dotenv()
-    print("✅ Environment variables loaded")
+    print("[OK] Environment variables loaded")
 except ImportError:
-    print("⚠️ python-dotenv not installed")
+    print("[WARNING] python-dotenv not installed")
 except Exception as e:
-    print(f"❌ Error loading .env: {e}")
+    print(f"[ERROR] Error loading .env: {e}")
 
 # RAGAnything imports
 try:
@@ -28,7 +28,7 @@ try:
     RAG_ANYTHING_AVAILABLE = True
 except ImportError:
     RAG_ANYTHING_AVAILABLE = False
-    print("⚠️ RAGAnything not available - install with: pip install raganything")
+    print("[WARNING] RAGAnything not available - install with: pip install raganything")
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -40,7 +40,7 @@ class EnhancedRAGService:
         self.supabase_key = os.getenv("SUPABASE_ANON_KEY")
         
         if not self.supabase_url or not self.supabase_key:
-            raise ValueError("❌ SUPABASE_URL and SUPABASE_ANON_KEY environment variables are required")
+            raise ValueError("[ERROR] SUPABASE_URL and SUPABASE_ANON_KEY environment variables are required")
         
         self.supabase = create_client(self.supabase_url, self.supabase_key)
         
@@ -52,16 +52,16 @@ class EnhancedRAGService:
         self.working_dir = os.getenv("WORKING_DIR", "./rag_storage")
         Path(self.working_dir).mkdir(exist_ok=True)
             
-        logger.info("✅ Enhanced RAG Service initialized")
+        logger.info("[OK] Enhanced RAG Service initialized")
     
     def initialize_rag_anything(self):
         """Initialize RAGAnything with OpenAI functions"""
         if not RAG_ANYTHING_AVAILABLE:
-            logger.error("❌ RAGAnything not installed")
+            logger.error("[ERROR] RAGAnything not installed")
             return False
             
         if not self.openai_api_key:
-            logger.error("❌ OPENAI_API_KEY not found")
+            logger.error("[ERROR] OPENAI_API_KEY not found")
             return False
         
         try:
@@ -90,10 +90,10 @@ class EnhancedRAGService:
             
             # Then create RAGAnything with LightRAG instance
             self.rag_anything = RAGAnything(lightrag=lightrag_instance)
-            logger.info("✅ RAGAnything initialized")
+            logger.info("[OK] RAGAnything initialized")
             return True
         except Exception as e:
-            logger.error(f"❌ Failed to initialize RAGAnything: {e}")
+            logger.error(f"[ERROR] Failed to initialize RAGAnything: {e}")
             import traceback
             traceback.print_exc()
             return False
@@ -101,11 +101,11 @@ class EnhancedRAGService:
     async def get_page_with_datasheets(self, limit=1):
         """Get unprocessed pages that have datasheets"""
         try:
-            logger.info("🔍 Looking for unprocessed pages with datasheets...")
+            logger.info("[SEARCH] Looking for unprocessed pages with datasheets...")
             
             # Get unprocessed pages
             pages_response = self.supabase.table("new_pages_index").select("*").eq("ingested", False).limit(20).execute()
-            logger.info(f"📄 Found {len(pages_response.data)} unprocessed pages")
+            logger.info(f"[PAGES] Found {len(pages_response.data)} unprocessed pages")
             
             pages_with_datasheets = []
             for page in pages_response.data:
@@ -117,14 +117,14 @@ class EnhancedRAGService:
                         "page": page,
                         "datasheet_count": len(datasheets_response.data)
                     })
-                    logger.info(f"✅ Page {page['id']} has {len(datasheets_response.data)} datasheets")
+                    logger.info(f"[OK] Page {page['id']} has {len(datasheets_response.data)} datasheets")
             
             # Sort by datasheet count and limit
             pages_with_datasheets.sort(key=lambda x: x["datasheet_count"], reverse=True)
             return pages_with_datasheets[:limit]
             
         except Exception as e:
-            logger.error(f"❌ Error getting pages with datasheets: {e}")
+            logger.error(f"[ERROR] Error getting pages with datasheets: {e}")
             import traceback
             traceback.print_exc()
             return []
@@ -132,7 +132,7 @@ class EnhancedRAGService:
     async def scrape_page_content(self, url):
         """Scrape web page content"""
         try:
-            logger.info(f"🌐 Scraping page: {url}")
+            logger.info(f"Scraping page: {url}")
             
             response = requests.get(url, timeout=30)
             response.raise_for_status()
@@ -156,13 +156,13 @@ class EnhancedRAGService:
             }
             
         except Exception as e:
-            logger.error(f"❌ Error scraping page {url}: {e}")
+            logger.error(f"[ERROR] Error scraping page {url}: {e}")
             return None
     
     async def download_datasheet(self, datasheet_url):
         """Download and convert PDF datasheet to text"""
         try:
-            logger.info(f"📄 Downloading datasheet: {datasheet_url}")
+            logger.info(f"[DOWNLOAD] Downloading datasheet: {datasheet_url}")
             
             response = requests.get(datasheet_url, timeout=30)
             response.raise_for_status()
@@ -186,7 +186,7 @@ class EnhancedRAGService:
             }
             
         except Exception as e:
-            logger.error(f"❌ Error downloading datasheet {datasheet_url}: {e}")
+            logger.error(f"[ERROR] Error downloading datasheet {datasheet_url}: {e}")
             return None
     
     async def merge_content_for_rag(self, page_content, datasheets_data, page_record):
@@ -218,13 +218,13 @@ class EnhancedRAGService:
             return merged_content
             
         except Exception as e:
-            logger.error(f"❌ Error merging content: {e}")
+            logger.error(f"[ERROR] Error merging content: {e}")
             return None
     
     async def process_with_rag_anything(self, merged_content, output_dir):
         """Process merged content through RAGAnything"""
         if not self.rag_anything:
-            logger.error("❌ RAGAnything not initialized")
+            logger.error("[ERROR] RAGAnything not initialized")
             return None
         
         try:
@@ -250,41 +250,41 @@ TECHNICAL DATASHEETS:
             with open(temp_file, 'w', encoding='utf-8') as f:
                 f.write(content_text)
             
-            logger.info(f"💾 Created merged content file: {temp_file}")
+            logger.info(f"Created merged content file: {temp_file}")
             
             # Process through RAGAnything
-            logger.info("🚀 Processing through RAGAnything...")
+            logger.info("[START] Processing through RAGAnything...")
             await self.rag_anything.process_document_complete(
                 file_path=temp_file,
                 output_dir=output_dir,
                 parse_method="auto"
             )
             
-            logger.info("✅ RAGAnything processing complete")
+            logger.info("[OK] RAGAnything processing complete")
             return temp_file
             
         except Exception as e:
-            logger.error(f"❌ Error processing with RAGAnything: {e}")
+            logger.error(f"[ERROR] Error processing with RAGAnything: {e}")
             return None
     
     async def query_knowledge_graph(self, question, mode="hybrid"):
         """Query the RAGAnything knowledge graph"""
         if not self.rag_anything:
-            logger.error("❌ RAGAnything not initialized")
+            logger.error("[ERROR] RAGAnything not initialized")
             return None
         
         try:
-            logger.info(f"🔍 Querying: {question}")
+            logger.info(f"[SEARCH] Querying: {question}")
             result = await self.rag_anything.query_with_multimodal(question, mode=mode)
             return result
         except Exception as e:
-            logger.error(f"❌ Error querying knowledge graph: {e}")
+            logger.error(f"[ERROR] Error querying knowledge graph: {e}")
             return None
     
     async def process_complete_example(self):
         """Complete example: page + datasheets -> RAGAnything"""
         try:
-            logger.info("🚀 Starting complete RAG pipeline...")
+            logger.info("[START] Starting complete RAG pipeline...")
             
             # Initialize RAGAnything
             if not self.initialize_rag_anything():
@@ -299,7 +299,7 @@ TECHNICAL DATASHEETS:
             page_record = page_data["page"]
             datasheet_count = page_data["datasheet_count"]
             
-            logger.info(f"📄 Processing page: {page_record['url']} ({datasheet_count} datasheets)")
+            logger.info(f"[PAGES] Processing page: {page_record['url']} ({datasheet_count} datasheets)")
             
             # Scrape page content
             page_content = await self.scrape_page_content(page_record["url"])
@@ -344,7 +344,7 @@ TECHNICAL DATASHEETS:
             }
             
         except Exception as e:
-            logger.error(f"❌ Error in complete example: {e}")
+            logger.error(f"[ERROR] Error in complete example: {e}")
             return {"error": str(e)}
 
 async def main():
@@ -369,13 +369,13 @@ async def main():
         service = EnhancedRAGService()
         
         if args.command == 'complete':
-            print("🚀 Running complete RAG pipeline...")
+            print("[START] Running complete RAG pipeline...")
             result = await service.process_complete_example()
             print(json.dumps(result, indent=2, ensure_ascii=False))
             
         elif args.command == 'query':
             if not service.initialize_rag_anything():
-                print("❌ Failed to initialize RAGAnything")
+                print("[ERROR] Failed to initialize RAGAnything")
                 return 1
             
             result = await service.query_knowledge_graph(args.question, args.mode)
@@ -385,7 +385,7 @@ async def main():
         return 0
         
     except Exception as e:
-        logger.error(f"❌ Error: {e}")
+        logger.error(f"[ERROR] Error: {e}")
         import traceback
         traceback.print_exc()
         return 1

@@ -21,9 +21,9 @@ import uvicorn
 try:
     from dotenv import load_dotenv
     load_dotenv()
-    print("✅ Environment variables loaded")
+    print("[OK] Environment variables loaded")
 except ImportError:
-    print("⚠️ python-dotenv not available, using system environment variables")
+    print("[WARNING] python-dotenv not available, using system environment variables")
 
 # Import our LightRAG client
 from lightrag_server_client import LightRAGServerClient
@@ -50,19 +50,19 @@ async def lifespan(app: FastAPI):
     global rag_client
     
     # Startup
-    logger.info("🚀 Starting RAG API Service...")
+    logger.info("[START] Starting RAG API Service...")
     try:
         rag_client = LightRAGServerClient(LIGHTRAG_SERVER_URL)
-        logger.info(f"✅ LightRAG client initialized (Server: {LIGHTRAG_SERVER_URL})")
+        logger.info(f"[OK] LightRAG client initialized (Server: {LIGHTRAG_SERVER_URL})")
         
         # Test connection
         if rag_client.test_lightrag_server_connection():
-            logger.info("✅ LightRAG server connection successful")
+            logger.info("[OK] LightRAG server connection successful")
         else:
-            logger.warning("⚠️ LightRAG server connection failed - will retry on requests")
+            logger.warning("[WARNING] LightRAG server connection failed - will retry on requests")
             
     except Exception as e:
-        logger.error(f"❌ Failed to initialize RAG client: {e}")
+        logger.error(f"[ERROR] Failed to initialize RAG client: {e}")
         rag_client = None
     
     yield
@@ -213,7 +213,7 @@ async def process_page(
         
     except Exception as e:
         processing_time = (datetime.now() - start_time).total_seconds()
-        logger.error(f"❌ Error processing page {request.page_id}: {e}")
+        logger.error(f"[ERROR] Error processing page {request.page_id}: {e}")
         
         return ProcessPageResponse(
             success=False,
@@ -260,7 +260,7 @@ async def get_page_status(
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"❌ Error checking status for page {page_id}: {e}")
+        logger.error(f"[ERROR] Error checking status for page {page_id}: {e}")
         raise HTTPException(
             status_code=500,
             detail=f"Error checking page status: {str(e)}"
@@ -290,7 +290,7 @@ async def batch_process_pages(
     
     for page_id in page_ids:
         try:
-            logger.info(f"🔄 Batch processing page {page_id}")
+            logger.info(f"[BATCH] Batch processing page {page_id}")
             result = await rag_client.process_specific_page_to_lightrag(
                 page_id,
                 fast_mode=fast_mode
@@ -305,7 +305,7 @@ async def batch_process_pages(
             await asyncio.sleep(1)
             
         except Exception as e:
-            logger.error(f"❌ Error processing page {page_id} in batch: {e}")
+            logger.error(f"[ERROR] Error processing page {page_id} in batch: {e}")
             results.append({
                 "page_id": page_id,
                 "success": False,
@@ -326,7 +326,7 @@ async def batch_process_pages(
 
 # Main entry point
 if __name__ == "__main__":
-    logger.info(f"🚀 Starting RAG API Service on {API_HOST}:{API_PORT}")
+    logger.info(f"[START] Starting RAG API Service on {API_HOST}:{API_PORT}")
     logger.info(f"📡 LightRAG Server: {LIGHTRAG_SERVER_URL}")
     logger.info(f"🔐 API Key configured: {'Yes' if API_KEY != 'your-secure-api-key-here' else 'No (using default)'}")
     
