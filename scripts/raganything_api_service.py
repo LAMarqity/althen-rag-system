@@ -331,11 +331,19 @@ async def process_document_and_upload_to_lightrag(pdf_path: str, page_id: int, d
         try:
             logger.info("Starting RAGAnything document processing...")
             
-            # Use RAGAnything to process the document
-            processing_result = await rag_instance.process_document_complete(
-                pdf_path,
-                doc_id=f"page_{page_id}_datasheet_{datasheet_id}"
-            )
+            # Use RAGAnything to process the document with timeout
+            import asyncio
+            try:
+                processing_result = await asyncio.wait_for(
+                    rag_instance.process_document_complete(
+                        pdf_path,
+                        doc_id=f"page_{page_id}_datasheet_{datasheet_id}"
+                    ),
+                    timeout=300  # 5 minute timeout
+                )
+            except asyncio.TimeoutError:
+                logger.warning("RAGAnything processing timed out after 5 minutes, using fallback")
+                raise Exception("Processing timeout - using fallback")
             
             # Extract the processed content
             rag_content = processing_result.get("content", processing_result.get("text", ""))
@@ -451,11 +459,19 @@ async def process_document_with_raganything(pdf_path: str, page_id: int, datashe
         try:
             logger.info("Starting RAGAnything document processing...")
             
-            # Use RAGAnything to process the document
-            processing_result = await rag_instance.process_document_complete(
-                pdf_path,
-                doc_id=f"page_{page_id}_datasheet_{datasheet_id}"
-            )
+            # Use RAGAnything to process the document with timeout
+            import asyncio
+            try:
+                processing_result = await asyncio.wait_for(
+                    rag_instance.process_document_complete(
+                        pdf_path,
+                        doc_id=f"page_{page_id}_datasheet_{datasheet_id}"
+                    ),
+                    timeout=300  # 5 minute timeout
+                )
+            except asyncio.TimeoutError:
+                logger.warning("RAGAnything processing timed out after 5 minutes, using fallback")
+                raise Exception("Processing timeout - using fallback")
             
             # Extract the processed content
             rag_content = processing_result.get("content", processing_result.get("text", ""))
@@ -561,6 +577,9 @@ async def upload_image_to_supabase(image_data: bytes, filename: str, page_id: in
         import base64
         from io import BytesIO
         
+        # Get Supabase client
+        supabase_client = get_supabase_client()
+        
         # Create temporary file for the image
         with tempfile.NamedTemporaryFile(suffix='.png', delete=False) as tmp_file:
             # If image_data is base64 string, decode it
@@ -577,11 +596,11 @@ async def upload_image_to_supabase(image_data: bytes, filename: str, page_id: in
             storage_path = f"page_{page_id}/datasheet_{datasheet_id}/{filename}"
             
             with open(tmp_file_path, 'rb') as f:
-                response = supabase.storage.from_(bucket).upload(storage_path, f)
+                response = supabase_client.storage.from_(bucket).upload(storage_path, f)
             
             if response:
                 # Get public URL
-                public_url = supabase.storage.from_(bucket).get_public_url(storage_path)
+                public_url = supabase_client.storage.from_(bucket).get_public_url(storage_path)
                 logger.info(f"Image uploaded to Supabase: {public_url}")
                 return public_url
             else:
@@ -604,6 +623,9 @@ async def upload_processed_document_to_supabase(content: str, page_data: dict, p
     try:
         import tempfile
         import json
+        
+        # Get Supabase client
+        supabase_client = get_supabase_client()
         
         # Extract page information
         page_id = page_data.get('id')
@@ -642,11 +664,11 @@ processing_metadata: {json.dumps(processing_metadata)}
         try:
             # Upload to Supabase storage
             with open(tmp_file_path, 'rb') as f:
-                response = supabase.storage.from_(bucket).upload(storage_path, f)
+                response = supabase_client.storage.from_(bucket).upload(storage_path, f)
             
             if response:
                 # Get public URL
-                public_url = supabase.storage.from_(bucket).get_public_url(storage_path)
+                public_url = supabase_client.storage.from_(bucket).get_public_url(storage_path)
                 logger.info(f"Processed document uploaded to Supabase: {public_url}")
                 return public_url
             else:
