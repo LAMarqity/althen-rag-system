@@ -168,20 +168,42 @@ async def process_page_with_mineru(page_id: int):
             }
         )
         
-        # Upload to LightRAG server
+        # Upload to LightRAG server via API
         try:
-            from scripts.lightrag_server_client import LightRAGServerClient
-            lightrag_client = LightRAGServerClient()
+            import requests
+            import os
             
-            # Test connection first
-            if lightrag_client.test_lightrag_server_connection():
-                result = lightrag_client.insert_text_to_lightrag(combined_content, f"page_{page_id}")
-                if result:
-                    logger.info("Successfully uploaded to LightRAG server")
-                else:
-                    logger.warning("Failed to upload to LightRAG server")
+            # Get LightRAG server URL from environment
+            lightrag_server_url = os.getenv("LIGHTRAG_SERVER_URL", "http://localhost:8020")
+            lightrag_api_key = os.getenv("LIGHTRAG_API_KEY")
+            
+            # Prepare headers
+            headers = {'Content-Type': 'application/json'}
+            if lightrag_api_key:
+                headers['X-API-Key'] = lightrag_api_key
+            
+            # Prepare payload for /documents/text API
+            payload = {
+                "text": combined_content,
+                "file_source": f"page_{page_id}_crh03_series_gyroscope"
+            }
+            
+            # Upload to LightRAG via API
+            response = requests.post(
+                f"{lightrag_server_url}/documents/text",
+                json=payload,
+                headers=headers,
+                timeout=30
+            )
+            
+            if response.status_code == 200:
+                result = response.json()
+                logger.info(f"Successfully uploaded to LightRAG server: {result.get('message', 'Success')}")
+                track_id = result.get('track_id', 'N/A')
+                logger.info(f"LightRAG track ID: {track_id}")
             else:
-                logger.warning("LightRAG server connection failed, skipping upload")
+                logger.warning(f"LightRAG upload failed: {response.status_code} - {response.text}")
+                
         except Exception as lightrag_error:
             logger.warning(f"LightRAG upload failed: {lightrag_error}")
         
