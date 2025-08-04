@@ -57,9 +57,6 @@ async def process_page_with_mineru(page_id: int):
             logger.info("No datasheets found - processing web content only")
             # Process web content instead
             try:
-                import requests
-                from bs4 import BeautifulSoup
-                
                 logger.info(f"Scraping web content from: {page_url}")
                 response = requests.get(page_url, timeout=30)
                 soup = BeautifulSoup(response.content, 'html.parser')
