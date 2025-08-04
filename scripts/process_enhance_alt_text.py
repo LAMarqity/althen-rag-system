@@ -279,11 +279,21 @@ Source: {page_url}
             if not web_content:
                 return {"success": False, "error": "No datasheets and no web content available"}
             
+            # Get url_lang array from page data
+            url_lang = page_data.get('url_lang', [])
+            url_lang_section = ""
+            if url_lang:
+                url_lang_section = f"""
+**Available Languages:** {', '.join(url_lang)}
+**Language URLs:**
+{chr(10).join([f"- {lang}" for lang in url_lang])}
+"""
+
             combined_content = f"""# {page_data.get('category', 'Page')} - {page_data.get('subcategory', 'Web Content')}
 
 **URL:** {page_url}
 **Business Area:** {page_data.get('business_area', 'unknown')}
-**Page Type:** {page_data.get('page_type', 'web')}
+**Page Type:** {page_data.get('page_type', 'web')}{url_lang_section}
 
 ---
 
@@ -382,12 +392,22 @@ Source: {page_url}
                     if os.path.exists(pdf_path):
                         os.unlink(pdf_path)
             
+            # Get url_lang array from page data
+            url_lang = page_data.get('url_lang', [])
+            url_lang_section = ""
+            if url_lang:
+                url_lang_section = f"""
+**Available Languages:** {', '.join(url_lang)}
+**Language URLs:**
+{chr(10).join([f"- {lang}" for lang in url_lang])}
+"""
+
             # Combine all content: web + PDFs
             combined_content = f"""# {page_data.get('category', 'Product')} - {page_data.get('subcategory', 'Documentation')}
 
 **URL:** {page_url}
 **Business Area:** {page_data.get('business_area', 'sensors')}
-**Page Type:** {page_data.get('page_type', 'product')}
+**Page Type:** {page_data.get('page_type', 'product')}{url_lang_section}
 
 ---
 
