@@ -27,43 +27,50 @@ from scripts.raganything_api_service import (
 )
 
 def scrape_web_content(url: str, max_length: int = 10000) -> str:
-    """Extract content using regex patterns after first H1"""
+    """Extract main content by removing navigation and finding product description"""
     try:
         logger.info(f"Scraping web content from: {url}")
         response = requests.get(url, timeout=30)
         html_data = response.text
         
-        # Find first H1 and take everything from H1 onwards
-        h1_match = re.search(r'<h1[^>]*>.*?</h1>', html_data, re.IGNORECASE | re.DOTALL)
-        if h1_match:
-            # Take everything from H1 onwards (including the H1)
-            content_after_h1 = html_data[h1_match.start():]
+        # Remove navigation sections first
+        # Remove everything before the main product title
+        product_title_match = re.search(r'<h1[^>]*>([^<]+(?:Fiber Optic|Force|Strain|Pressure|Temperature|Sensor)[^<]+)</h1>', html_data, re.IGNORECASE)
+        if product_title_match:
+            # Start from the product title
+            content_section = html_data[product_title_match.start():]
+            
+            # Stop at footer or similar end sections
+            footer_patterns = [
+                r'<footer',
+                r'class="[^"]*footer',
+                r'<div[^>]*class="[^"]*newsletter',
+                r'Follow us',
+                r'Stay in touch'
+            ]
+            
+            for footer_pattern in footer_patterns:
+                footer_match = re.search(footer_pattern, content_section, re.IGNORECASE)
+                if footer_match:
+                    content_section = content_section[:footer_match.start()]
+                    break
         else:
-            # If no H1 found, look for main content area
-            main_match = re.search(r'<main[^>]*>.*?</main>', html_data, re.IGNORECASE | re.DOTALL)
-            if main_match:
-                content_after_h1 = html_data[main_match.start():]
-            else:
-                # Last resort - try to find content div
-                content_match = re.search(r'<div[^>]*class="[^"]*content[^"]*"[^>]*>', html_data, re.IGNORECASE)
-                if content_match:
-                    content_after_h1 = html_data[content_match.start():]
-                else:
-                    content_after_h1 = html_data
+            # Fallback: look for main content container
+            main_match = re.search(r'<main[^>]*>(.*?)</main>', html_data, re.IGNORECASE | re.DOTALL)
+            content_section = main_match.group(1) if main_match else html_data
         
-        # Patterns for different elements
+        # Extract content using patterns
         patterns = [
             r'<(h[1-6])[^>]*>(.*?)</\1>',  # H-tags
             r'<p[^>]*>(.*?)</p>',          # P-tags
-            r'<li[^>]*>(.*?)</li>',        # List items (bullets)
+            r'<li[^>]*>(.*?)</li>',        # List items
             r'<td[^>]*>(.*?)</td>',        # Table cells
             r'<th[^>]*>(.*?)</th>'         # Table headers
         ]
         
-        # Collect all matches
         all_matches = []
         for pattern in patterns:
-            matches = re.findall(pattern, content_after_h1, re.IGNORECASE | re.DOTALL)
+            matches = re.findall(pattern, content_section, re.IGNORECASE | re.DOTALL)
             for match in matches:
                 if isinstance(match, tuple):
                     content = match[1] if len(match) > 1 else match[0]
@@ -71,23 +78,26 @@ def scrape_web_content(url: str, max_length: int = 10000) -> str:
                     content = match
                 all_matches.append(content)
         
-        # Clean the texts
+        # Clean and filter content
         cleaned_texts = []
+        navigation_keywords = ['menu', 'search', 'contact', 'call us', 'products', 'solutions', 'services', 'industries', 'about althen', 'projects', 'news', 'blog', 'follow us', 'linkedin', 'twitter', 'facebook']
+        
         for content in all_matches:
-            # Remove all HTML tags
             clean_text = re.sub(r'<[^>]+>', '', content)
-            # Remove extra whitespace
             clean_text = re.sub(r'\s+', ' ', clean_text).strip()
-            if clean_text and len(clean_text) > 10:
-                cleaned_texts.append(clean_text)
+            
+            # Skip navigation-like content
+            if clean_text and len(clean_text) > 15:
+                is_navigation = any(keyword in clean_text.lower() for keyword in navigation_keywords)
+                if not is_navigation and not clean_text.lower().startswith(('en ', 'de ', 'nl ', 'fr ', 'sv ')):
+                    cleaned_texts.append(clean_text)
         
         web_content = '\n\n'.join(cleaned_texts)
         
-        # Limit content length
         if len(web_content) > max_length:
             web_content = web_content[:max_length] + "..."
         
-        logger.info(f"Extracted {len(web_content)} characters using regex patterns")
+        logger.info(f"Extracted {len(web_content)} characters of main content")
         return web_content
         
     except Exception as e:
