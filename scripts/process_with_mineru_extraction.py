@@ -170,9 +170,6 @@ async def process_page_with_mineru(page_id: int):
         
         # Upload to LightRAG server via API
         try:
-            import requests
-            import os
-            
             # Get LightRAG server URL from environment
             lightrag_server_url = os.getenv("LIGHTRAG_SERVER_URL", "http://localhost:8020")
             lightrag_api_key = os.getenv("LIGHTRAG_API_KEY")
