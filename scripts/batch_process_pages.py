@@ -187,9 +187,9 @@ if __name__ == "__main__":
         ]
     )
     
-    # Configuration - Process pages WITHOUT datasheets (web content only)
+    # Configuration - Process all unprocessed pages
     TARGET_SUBCATEGORY = None  # Process all subcategories
-    TARGET_DATASHEET_COUNT = 0  # Process pages with NO datasheets
+    TARGET_DATASHEET_COUNT = None  # Process pages with any number of datasheets
     BATCH_SIZE = 5
     
     # Add timestamp separator
