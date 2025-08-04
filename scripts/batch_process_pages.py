@@ -15,50 +15,81 @@ sys.path.insert(0, str(project_root))
 
 from scripts.raganything_api_service import get_supabase_client, logger
 
-async def get_unprocessed_pages(limit=5):
-    """Get pages that haven't been processed yet"""
+async def get_unprocessed_pages(limit=5, subcategory=None, datasheet_count=None):
+    """
+    Get pages that haven't been processed yet with specific filters
+    
+    Args:
+        limit: Maximum number of pages to return
+        subcategory: Filter by subcategory (e.g., 'miniature-force-sensors')
+        datasheet_count: Filter by exact number of datasheets (e.g., 1 for single datasheet)
+    """
     try:
         supabase = get_supabase_client()
         
-        # Get unprocessed pages (rag_ingested = False or null)
-        response = supabase.table("new_pages_index")\
+        # Build query for unprocessed pages
+        query = supabase.table("new_pages_index")\
             .select("*")\
-            .or_("rag_ingested.eq.false,rag_ingested.is.null")\
-            .limit(limit)\
-            .execute()
+            .or_("rag_ingested.eq.false,rag_ingested.is.null")
         
+        # Add subcategory filter if specified
+        if subcategory:
+            query = query.eq("subcategory", subcategory)
+            logger.info(f"Filtering for subcategory: {subcategory}")
+        
+        # Get pages
+        response = query.limit(limit * 3).execute()  # Get more to filter by datasheet count
         pages = response.data if response.data else []
         
-        # Filter to only pages with datasheets if needed
-        pages_with_datasheets = []
+        # Filter by datasheet count if specified
+        filtered_pages = []
         for page in pages:
-            # Check if page has datasheets
+            # Count datasheets for this page
             datasheet_response = supabase.table("new_datasheets_index")\
-                .select("id")\
+                .select("id", count="exact")\
                 .eq("parent_url", page['url'])\
-                .limit(1)\
                 .execute()
             
-            if datasheet_response.data:
-                pages_with_datasheets.append(page)
-                logger.info(f"Page {page['id']} has {len(datasheet_response.data)} datasheet(s)")
+            actual_count = len(datasheet_response.data) if datasheet_response.data else 0
+            
+            # Apply datasheet count filter if specified
+            if datasheet_count is not None:
+                if actual_count == datasheet_count:
+                    filtered_pages.append(page)
+                    logger.info(f"Page {page['id']} ({page.get('subcategory', 'unknown')}) has exactly {actual_count} datasheet(s)")
             else:
-                # Still process pages without datasheets (web content only)
-                pages_with_datasheets.append(page)
-                logger.info(f"Page {page['id']} has no datasheets (web content only)")
+                # No datasheet filter, include all
+                filtered_pages.append(page)
+                logger.info(f"Page {page['id']} ({page.get('subcategory', 'unknown')}) has {actual_count} datasheet(s)")
+            
+            # Stop if we have enough pages
+            if len(filtered_pages) >= limit:
+                break
         
-        return pages_with_datasheets
+        logger.info(f"Found {len(filtered_pages)} pages matching criteria")
+        return filtered_pages
         
     except Exception as e:
         logger.error(f"Error fetching unprocessed pages: {e}")
         return []
 
-async def process_batch():
-    """Process a batch of pages"""
+async def process_batch(subcategory=None, datasheet_count=None, batch_size=3):
+    """
+    Process a batch of pages with optional filters
+    
+    Args:
+        subcategory: Filter by subcategory (e.g., 'miniature-force-sensors')
+        datasheet_count: Filter by exact number of datasheets (e.g., 1)
+        batch_size: Number of pages to process in this batch
+    """
     from scripts.process_enhance_alt_text import process_page_enhance_alt_text
     
-    # Get unprocessed pages
-    pages = await get_unprocessed_pages(limit=3)  # Process 3 at a time
+    # Get unprocessed pages with filters
+    pages = await get_unprocessed_pages(
+        limit=batch_size,
+        subcategory=subcategory,
+        datasheet_count=datasheet_count
+    )
     
     if not pages:
         logger.info("No unprocessed pages found")
@@ -96,20 +127,33 @@ async def process_batch():
     logger.info(f"Batch complete: Processed {results['processed']}, Success {results['success']}, Failed {results['failed']}")
     return results
 
-async def check_processing_status():
-    """Check overall processing status"""
+async def check_processing_status(subcategory=None):
+    """Check overall processing status with optional filtering"""
     try:
         supabase = get_supabase_client()
         
+        # Build queries with optional subcategory filter
+        total_query = supabase.table("new_pages_index").select("id", count="exact")
+        processed_query = supabase.table("new_pages_index").select("id", count="exact").eq("rag_ingested", True)
+        
+        if subcategory:
+            total_query = total_query.eq("subcategory", subcategory)
+            processed_query = processed_query.eq("subcategory", subcategory)
+            logger.info(f"Status check for subcategory: {subcategory}")
+        
         # Get counts
-        total_response = supabase.table("new_pages_index").select("id", count="exact").execute()
-        processed_response = supabase.table("new_pages_index").select("id", count="exact").eq("rag_ingested", True).execute()
+        total_response = total_query.execute()
+        processed_response = processed_query.execute()
         
         total = total_response.count if hasattr(total_response, 'count') else len(total_response.data)
         processed = processed_response.count if hasattr(processed_response, 'count') else len(processed_response.data)
         remaining = total - processed
         
-        logger.info(f"📊 Processing Status: {processed}/{total} pages processed ({remaining} remaining)")
+        status_msg = f"📊 Processing Status"
+        if subcategory:
+            status_msg += f" ({subcategory})"
+        status_msg += f": {processed}/{total} pages processed ({remaining} remaining)"
+        logger.info(status_msg)
         
         if remaining > 0:
             # Estimate time
@@ -140,15 +184,25 @@ if __name__ == "__main__":
         ]
     )
     
+    # Configuration - Focus on miniature-force-sensors with single datasheets
+    TARGET_SUBCATEGORY = "miniature-force-sensors"
+    TARGET_DATASHEET_COUNT = 1  # Pages with exactly 1 datasheet
+    BATCH_SIZE = 3
+    
     # Add timestamp separator
     logger.info("=" * 60)
     logger.info(f"Batch processing started at {datetime.now()}")
+    logger.info(f"Target: {TARGET_SUBCATEGORY} with {TARGET_DATASHEET_COUNT} datasheet(s)")
     
     # Check status first
-    asyncio.run(check_processing_status())
+    asyncio.run(check_processing_status(subcategory=TARGET_SUBCATEGORY))
     
-    # Process batch
-    results = asyncio.run(process_batch())
+    # Process batch with filters
+    results = asyncio.run(process_batch(
+        subcategory=TARGET_SUBCATEGORY,
+        datasheet_count=TARGET_DATASHEET_COUNT,
+        batch_size=BATCH_SIZE
+    ))
     
     logger.info(f"Batch processing ended at {datetime.now()}")
     logger.info("=" * 60)
