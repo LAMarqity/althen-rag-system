@@ -332,11 +332,16 @@ async def process_document_and_upload_to_lightrag(pdf_path: str, page_id: int, d
             logger.info("Starting RAGAnything document processing...")
             
             # Use RAGAnything to process the document
-            processing_result = await rag_instance.insert([pdf_path])
+            processing_result = await rag_instance.process_document_complete(
+                pdf_path,
+                doc_id=f"page_{page_id}_datasheet_{datasheet_id}",
+                enable_ocr=True,
+                enable_image_processing=True
+            )
             
             # Extract the processed content
-            rag_content = processing_result.get("content", "")
-            images_processed = processing_result.get("images", [])
+            rag_content = processing_result.get("content", processing_result.get("text", ""))
+            images_processed = processing_result.get("images", processing_result.get("extracted_images", []))
             
             logger.info(f"RAGAnything processed {len(rag_content)} characters and {len(images_processed)} images")
             
@@ -449,11 +454,16 @@ async def process_document_with_raganything(pdf_path: str, page_id: int, datashe
             logger.info("Starting RAGAnything document processing...")
             
             # Use RAGAnything to process the document
-            processing_result = await rag_instance.insert([pdf_path])
+            processing_result = await rag_instance.process_document_complete(
+                pdf_path,
+                doc_id=f"page_{page_id}_datasheet_{datasheet_id}",
+                enable_ocr=True,
+                enable_image_processing=True
+            )
             
             # Extract the processed content
-            rag_content = processing_result.get("content", "")
-            images_processed = processing_result.get("images", [])
+            rag_content = processing_result.get("content", processing_result.get("text", ""))
+            images_processed = processing_result.get("images", processing_result.get("extracted_images", []))
             
             logger.info(f"RAGAnything processed {len(rag_content)} characters and {len(images_processed)} images")
             

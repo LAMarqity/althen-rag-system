@@ -236,7 +236,7 @@ The parent product page is available in {len(url_lang)} languages:
 
 ## Cross-References
 - **Parent Product Page:** Page ID {page_id} at {parent_url}
-- **Related Products:** Other sensors in the {product_category} category
+- **Related Products:** Other sensors in the {category} category
 - **Manufacturer:** Althen Sensors (www.althensensors.com)
 
 ---
