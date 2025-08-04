@@ -54,20 +54,13 @@ async def main():
             if sample_response.data:
                 logger.info(f"Datasheets table columns: {list(sample_response.data[0].keys())}")
             
-            # Try different possible column names
-            possible_columns = ['page_id', 'new_page_id', 'pages_id', 'page_index_id']
-            datasheets = []
+            # The datasheets table links via parent_url, not page_id
+            page_url = page_data['url']  
+            logger.info(f"Looking for datasheets with parent_url: {page_url}")
             
-            for col_name in possible_columns:
-                try:
-                    logger.info(f"Trying column: {col_name}")
-                    datasheets_response = supabase_client.table("new_datasheets_index").select("*").eq(col_name, page_id).execute()
-                    datasheets = datasheets_response.data
-                    logger.info(f"SUCCESS: Found {len(datasheets)} datasheets using column {col_name}")
-                    break
-                except Exception as e:
-                    logger.info(f"Column {col_name} doesn't exist: {e}")
-                    continue
+            datasheets_response = supabase_client.table("new_datasheets_index").select("*").eq("parent_url", page_url).execute()
+            datasheets = datasheets_response.data
+            logger.info(f"Found {len(datasheets)} datasheets for URL {page_url}")
                     
         except Exception as e:
             logger.error(f"Error accessing datasheets table: {e}")
@@ -79,11 +72,14 @@ async def main():
         
         # Process first datasheet
         datasheet = datasheets[0]
-        logger.info(f"Processing datasheet: {datasheet['filename']}")
+        logger.info(f"Processing datasheet: {datasheet.get('filename', 'Unknown')}")
+        logger.info(f"Datasheet keys: {list(datasheet.keys())}")
         
         # Download PDF
         logger.info("Downloading PDF...")
-        response = requests.get(datasheet['url'])
+        datasheet_url = datasheet['url']
+        logger.info(f"Downloading from: {datasheet_url}")
+        response = requests.get(datasheet_url)
         with tempfile.NamedTemporaryFile(suffix='.pdf', delete=False) as tmp_file:
             tmp_file.write(response.content)
             pdf_path = tmp_file.name
