@@ -592,6 +592,14 @@ async def upload_image_to_supabase(image_data: bytes, filename: str, page_id: in
             tmp_file_path = tmp_file.name
         
         try:
+            # Try to create bucket if it doesn't exist
+            try:
+                supabase_client.storage.create_bucket(bucket, options={"public": True})
+                logger.info(f"Created Supabase bucket: {bucket}")
+            except Exception as bucket_error:
+                # Bucket probably already exists, which is fine
+                logger.debug(f"Bucket creation failed (probably exists): {bucket_error}")
+            
             # Upload to Supabase storage
             storage_path = f"page_{page_id}/datasheet_{datasheet_id}/{filename}"
             
@@ -618,7 +626,7 @@ async def upload_image_to_supabase(image_data: bytes, filename: str, page_id: in
         logger.error(f"Error uploading image to Supabase: {e}")
         return None
 
-async def upload_processed_document_to_supabase(content: str, page_data: dict, processing_metadata: dict, bucket: str = "documents") -> str:
+async def upload_processed_document_to_supabase(content: str, page_data: dict, processing_metadata: dict, bucket: str = "processed-documents") -> str:
     """Upload processed document with images and metadata to Supabase documents bucket"""
     try:
         import tempfile
@@ -662,6 +670,14 @@ processing_metadata: {json.dumps(processing_metadata)}
             tmp_file_path = tmp_file.name
         
         try:
+            # Try to create bucket if it doesn't exist
+            try:
+                supabase_client.storage.create_bucket(bucket, options={"public": True})
+                logger.info(f"Created Supabase bucket: {bucket}")
+            except Exception as bucket_error:
+                # Bucket probably already exists, which is fine
+                logger.debug(f"Bucket creation failed (probably exists): {bucket_error}")
+            
             # Upload to Supabase storage
             with open(tmp_file_path, 'rb') as f:
                 response = supabase_client.storage.from_(bucket).upload(storage_path, f)
