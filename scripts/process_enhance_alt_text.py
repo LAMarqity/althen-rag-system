@@ -56,8 +56,8 @@ def scrape_web_content(url: str, max_length: int = 10000) -> str:
         logger.error(f"Failed to scrape web content: {e}")
         return ""
 
-def generate_comprehensive_description(img_info: dict, surrounding_text: str = "") -> str:
-    """Generate comprehensive image description using ALL MinerU content"""
+def generate_natural_description(img_info: dict, surrounding_text: str = "") -> str:
+    """Generate natural image description using MinerU's own content without rigid categories"""
     
     caption = img_info.get("caption", "").strip()
     footnote = img_info.get("footnote", "").strip()
@@ -65,112 +65,78 @@ def generate_comprehensive_description(img_info: dict, surrounding_text: str = "
     table_body = img_info.get("table_body", "").strip()
     context = img_info.get("context", "").strip()
     
-    # Combine ALL available text for analysis
-    all_text_parts = [caption, footnote, surrounding_text, context, table_body]
-    all_text = " ".join([part for part in all_text_parts if part]).lower()
+    # Let MinerU's own extracted content drive the description naturally
+    description_parts = []
     
-    # If we have a meaningful caption, use it as primary description
-    if caption and len(caption) > 3:
-        primary_desc = caption
+    # Start with MinerU's caption if meaningful
+    if caption and len(caption.strip()) > 2:
+        # Use MinerU's caption as-is, it's already descriptive
+        description_parts.append(caption.strip())
+    
+    # Add MinerU's footnote if available
+    if footnote and len(footnote.strip()) > 2:
+        description_parts.append(footnote.strip())
+    
+    # If we have both caption and footnote, combine naturally
+    if len(description_parts) >= 2:
+        return " - ".join(description_parts)
+    elif len(description_parts) == 1:
+        return description_parts[0]
+    
+    # If no direct MinerU captions, extract meaningful context
+    # Look for nearby headings or descriptive text
+    if context:
+        context_sentences = context.split('.')
+        for sentence in context_sentences[:3]:  # Check first 3 sentences
+            sentence = sentence.strip()
+            if len(sentence) > 20 and len(sentence) < 100:
+                # Look for descriptive sentences that might describe the image
+                descriptive_keywords = [
+                    'shows', 'displays', 'illustrates', 'depicts', 'contains',
+                    'specifications', 'dimensions', 'connections', 'configuration',
+                    'diagram', 'chart', 'table', 'drawing', 'schematic'
+                ]
+                
+                sentence_lower = sentence.lower()
+                if any(keyword in sentence_lower for keyword in descriptive_keywords):
+                    return sentence
+    
+    # Extract meaningful phrases from table content for tables
+    if img_type == "table" and table_body:
+        # Extract key information from table HTML
+        import re
+        # Remove HTML tags
+        clean_table = re.sub('<[^<]+?>', ' ', table_body)
+        # Look for meaningful patterns
+        table_words = clean_table.split()[:20]  # First 20 words
         
-        # Add footnote context if available
-        if footnote:
-            if img_type == "table":
-                return f"Table: {primary_desc} - {footnote}"
-            else:
-                return f"Figure: {primary_desc} - {footnote}"
-        else:
-            if img_type == "table":
-                return f"Table: {primary_desc}"
-            else:
-                return f"Figure: {primary_desc}"
-    
-    # Enhanced technical pattern recognition using all MinerU content
-    technical_patterns = {
-        "dimensions": {
-            "keywords": ["dimension", "mm", "inch", "size", "diameter", "length", "width", "height", "measure", "metric", "imperial"],
-            "table_desc": "Dimensional Specifications Table",
-            "image_desc": "Dimensional Drawing"
-        },
-        "wiring": {
-            "keywords": ["wiring", "wire", "cable", "connection", "pin", "connector", "electrical", "circuit", "voltage", "current", "signal"],
-            "table_desc": "Electrical Connection Table", 
-            "image_desc": "Wiring Diagram"
-        },
-        "performance": {
-            "keywords": ["performance", "curve", "graph", "chart", "specification", "specs", "characteristics", "response", "accuracy", "linearity"],
-            "table_desc": "Performance Characteristics Table",
-            "image_desc": "Performance Chart"
-        },
-        "mounting": {
-            "keywords": ["mount", "installation", "bracket", "hole", "assembly", "fixing", "attachment", "fastener"],
-            "table_desc": "Mounting Specifications Table",
-            "image_desc": "Mounting Configuration"
-        },
-        "communication": {
-            "keywords": ["communication", "protocol", "rs232", "serial", "i/o", "format", "command", "hex", "data"],
-            "table_desc": "Communication Protocol Table",
-            "image_desc": "Communication Diagram"
-        },
-        "calibration": {
-            "keywords": ["calibration", "accuracy", "error", "tolerance", "drift", "stability", "zero", "span"],
-            "table_desc": "Calibration Data Table",
-            "image_desc": "Calibration Chart"
-        },
-        "environmental": {
-            "keywords": ["temperature", "humidity", "pressure", "environmental", "operating", "storage", "protection", "ip rating"],
-            "table_desc": "Environmental Specifications Table",
-            "image_desc": "Environmental Conditions Chart"
-        },
-        "ordering": {
-            "keywords": ["ordering", "model", "part number", "configuration", "options", "variants"],
-            "table_desc": "Ordering Information Table",
-            "image_desc": "Product Configuration"
-        }
-    }
-    
-    # Analyze content for specific patterns
-    detected_patterns = []
-    for pattern_type, pattern_info in technical_patterns.items():
-        if any(keyword in all_text for keyword in pattern_info["keywords"]):
-            detected_patterns.append((pattern_type, pattern_info))
-    
-    # Generate description based on detected patterns and type
-    if detected_patterns:
-        # Use the first (most relevant) detected pattern
-        pattern_type, pattern_info = detected_patterns[0]
+        # Look for patterns that suggest what the table contains
+        meaningful_phrases = []
+        for i, word in enumerate(table_words):
+            if word.lower() in ['capacity', 'range', 'specification', 'dimension', 'parameter', 'model', 'voltage', 'current', 'temperature', 'pressure']:
+                # Take this word and 2-3 following words
+                phrase = ' '.join(table_words[i:i+3])
+                meaningful_phrases.append(phrase)
         
-        if img_type == "table":
-            base_desc = pattern_info["table_desc"]
-        else:
-            base_desc = pattern_info["image_desc"]
-        
-        # Add contextual information if available
-        if footnote:
-            return f"{base_desc} - {footnote}"
-        elif context and len(context) > 20:
-            # Extract key context snippet
-            context_words = context.split()[:8]  # First 8 words
-            context_snippet = " ".join(context_words)
-            return f"{base_desc} ({context_snippet}...)"
-        else:
-            return base_desc
+        if meaningful_phrases:
+            return f"Table showing {meaningful_phrases[0].lower()}"
     
-    # Fallback descriptions with context
+    # Fallback: Let surrounding context suggest the content
+    if surrounding_text:
+        # Extract the most recent heading or meaningful phrase
+        sentences = surrounding_text.split('.')
+        for sentence in sentences[-3:]:  # Last 3 sentences before image
+            sentence = sentence.strip()
+            if 10 < len(sentence) < 80:  # Reasonable length
+                # Check if it's likely a heading or description
+                if sentence.isupper() or sentence.istitle() or ':' in sentence:
+                    return sentence
+    
+    # Final fallback - just indicate it's an image/table without rigid categorization
     if img_type == "table":
-        if footnote:
-            return f"Technical Specifications Table - {footnote}"
-        else:
-            return "Technical Specifications Table"
+        return "Data table"
     else:
-        if footnote:
-            return f"Technical Figure - {footnote}"
-        elif context and len(context) > 20:
-            context_words = context.split()[:6]
-            context_snippet = " ".join(context_words)
-            return f"Technical Figure ({context_snippet}...)"
-        else:
-            return "Technical Figure"
+        return "Technical diagram"
 
 def extract_images_with_context(content_list_file: str) -> dict:
     """Extract all images with context, indexed by filename"""
@@ -265,9 +231,9 @@ def enhance_existing_alt_text(markdown_content: str, image_url_map: dict, images
         if not alt_text.strip() or len(alt_text.strip()) < 3:
             if original_filename in images_context_map:
                 img_info = images_context_map[original_filename]
-                comprehensive_alt = generate_comprehensive_description(img_info, img_info["context"])
-                logger.info(f"Enhanced empty alt text for {original_filename}: '{comprehensive_alt}'")
-                return f"![{comprehensive_alt}]({url})"
+                natural_alt = generate_natural_description(img_info, img_info["context"])
+                logger.info(f"Enhanced empty alt text for {original_filename}: '{natural_alt}'")
+                return f"![{natural_alt}]({url})"
         
         # Return original if alt text is already good
         return match.group(0)
@@ -290,15 +256,19 @@ def enhance_existing_alt_text(markdown_content: str, image_url_map: dict, images
             if filename in image_url_map and filename in images_context_map:
                 url = image_url_map[filename]
                 img_info = images_context_map[filename]
-                comprehensive_description = generate_comprehensive_description(img_info, img_info["context"])
+                natural_description = generate_natural_description(img_info, img_info["context"])
                 
-                enhanced_markdown += f"![{comprehensive_description}]({url})\n"
+                enhanced_markdown += f"![{natural_description}]({url})\n"
                 
-                # Add additional context if available (caption and footnote are already in description)
-                if img_info.get('table_body') and len(img_info['table_body']) > 50:
-                    # Show a snippet of table content for context
-                    table_snippet = img_info['table_body'][:100] + "..." if len(img_info['table_body']) > 100 else img_info['table_body']
-                    enhanced_markdown += f"*Table content preview: {table_snippet}*\n"
+                # Add MinerU's original context if it provides additional value
+                additional_context = []
+                if img_info.get('caption') and img_info['caption'] not in natural_description:
+                    additional_context.append(f"Caption: {img_info['caption']}")
+                if img_info.get('footnote') and img_info['footnote'] not in natural_description:
+                    additional_context.append(f"Note: {img_info['footnote']}")
+                
+                if additional_context:
+                    enhanced_markdown += f"*{' | '.join(additional_context)}*\n"
                 
                 enhanced_markdown += "\n"
     
@@ -418,8 +388,27 @@ Source: {page_url}
                             with open(image_path, 'rb') as img_f:
                                 image_data = img_f.read()
                             
-                            # Create descriptive filename
-                            descriptive_name = f"page_{page_id}_img_{i+1:03d}.jpg"
+                            # Create naturally descriptive filename based on MinerU content
+                            if filename in images_context_map:
+                                img_context = images_context_map[filename]
+                                
+                                # Use MinerU's own caption/content for filename
+                                name_parts = []
+                                if img_context.get('caption'):
+                                    # Clean caption for filename
+                                    clean_caption = re.sub(r'[^a-zA-Z0-9\s]', '', img_context['caption'])
+                                    name_parts.extend(clean_caption.lower().split()[:3])  # First 3 words
+                                
+                                if img_context.get('type') == 'table':
+                                    name_parts.append('table')
+                                
+                                if name_parts:
+                                    descriptive_part = "_".join(name_parts)
+                                    descriptive_name = f"page_{page_id}_{descriptive_part}_{i+1:03d}.jpg"
+                                else:
+                                    descriptive_name = f"page_{page_id}_img_{i+1:03d}.jpg"
+                            else:
+                                descriptive_name = f"page_{page_id}_img_{i+1:03d}.jpg"
                             
                             # Upload to Supabase
                             image_url = await upload_image_to_supabase(
