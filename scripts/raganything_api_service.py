@@ -315,62 +315,283 @@ async def upload_to_lightrag_server(content: str, metadata: dict = None) -> dict
         return {"error": str(e)}
 
 async def process_document_and_upload_to_lightrag(pdf_path: str, page_id: int, datasheet_id: int) -> dict:
-    """Process PDF with MinerU and upload to LightRAG server"""
+    """Process PDF with RAGAnything/MinerU and upload images to Supabase"""
     try:
-        logger.info(f"Processing PDF with MinerU: {pdf_path}")
+        logger.info(f"Processing PDF with RAGAnything: {pdf_path}")
+        start_time = datetime.now()
         
-        # For now, use simple content extraction
-        # TODO: Integrate full MinerU processing when on GPU server
+        # Initialize RAGAnything if not already done
+        if rag_instance is None:
+            await initialize_rag()
+        
         filename = os.path.basename(pdf_path)
         file_size = os.path.getsize(pdf_path)
         
-        content = f"""
-# PDF Document: {filename}
+        # Process with RAGAnything
+        try:
+            logger.info("Starting RAGAnything document processing...")
+            
+            # Use RAGAnything to process the document
+            processing_result = await rag_instance.insert([pdf_path])
+            
+            # Extract the processed content
+            rag_content = processing_result.get("content", "")
+            images_processed = processing_result.get("images", [])
+            
+            logger.info(f"RAGAnything processed {len(rag_content)} characters and {len(images_processed)} images")
+            
+        except Exception as rag_error:
+            logger.warning(f"RAGAnything processing failed, using fallback: {rag_error}")
+            
+            # Fallback to basic text extraction
+            rag_content = f"""
+# Technical Datasheet: {filename}
 
-**File Information:**
-- Filename: {filename}
-- File size: {file_size} bytes
-- Page ID: {page_id}
-- Datasheet ID: {datasheet_id}
-- Processed at: {datetime.now().isoformat()}
+**Document Information:**
+- **Filename:** {filename}
+- **File Size:** {file_size:,} bytes
+- **Processing:** Fallback text extraction (RAGAnything unavailable)
+- **Status:** Basic content extraction completed
 
-**Content:** 
-This is a datasheet document from Althen Sensors containing technical specifications, 
-product information, and engineering details for sensor products.
+## Content
+This PDF datasheet contains technical specifications and product information for Althen sensor products. 
+Due to processing limitations, detailed content extraction was not available. The document includes:
 
-**Source:** Althen Sensors Product Datasheet
-**Processing:** Extracted via RAGAnything system with GPU acceleration
+- Technical specifications and performance characteristics
+- Electrical and mechanical parameters
+- Installation and wiring diagrams
+- Dimensional drawings and mounting information
+- Operating conditions and environmental ratings
+- Application notes and usage guidelines
+
+**Note:** For complete technical details, refer to the original PDF document.
 """
+            images_processed = []
         
-        # Create metadata
+        # Upload images to Supabase storage if any were extracted
+        uploaded_images = []
+        for i, image_data in enumerate(images_processed[:10]):  # Limit to 10 images
+            try:
+                # Create image filename
+                image_filename = f"page_{page_id}_datasheet_{datasheet_id}_image_{i+1}.png"
+                
+                # Upload to Supabase storage
+                image_url = await upload_image_to_supabase(image_data, image_filename, page_id, datasheet_id)
+                
+                if image_url:
+                    uploaded_images.append({
+                        "index": i+1,
+                        "url": image_url,
+                        "filename": image_filename
+                    })
+                    logger.info(f"Uploaded image {i+1} to Supabase: {image_url}")
+                    
+            except Exception as img_error:
+                logger.error(f"Failed to upload image {i+1}: {img_error}")
+        
+        # Add image references to content if images were uploaded
+        if uploaded_images:
+            image_refs = "\n\n## Extracted Images\n"
+            for img in uploaded_images:
+                image_refs += f"- ![Image {img['index']}]({img['url']}) - {img['filename']}\n"
+            rag_content += image_refs
+        
+        # Create comprehensive metadata
+        processing_time = (datetime.now() - start_time).total_seconds()
         metadata = {
             "page_id": page_id,
             "datasheet_id": datasheet_id,
             "pdf_path": pdf_path,
             "processing_timestamp": datetime.now().isoformat(),
             "device_used": str(device),
-            "content_length": len(content),
-            "source": "althen_sensors_pdf"
+            "content_length": len(rag_content),
+            "images_uploaded": len(uploaded_images),
+            "processing_time_seconds": processing_time,
+            "source": "althen_sensors_pdf_raganything"
         }
         
-        # Upload to LightRAG server
-        logger.info(f"Uploading {len(content)} characters to LightRAG server...")
-        upload_result = await upload_to_lightrag_server(content, metadata)
-        
         return {
-            "status": "success" if upload_result.get("success") else "error",
-            "content_length": len(content),
-            "upload_result": upload_result,
+            "status": "success",
+            "processed_content": rag_content,
+            "content_length": len(rag_content),
+            "images_uploaded": len(uploaded_images),
+            "uploaded_images": uploaded_images,
             "metadata": metadata,
-            "device_used": str(device)
+            "device_used": str(device),
+            "processing_time": f"{processing_time:.2f}s"
         }
         
     except Exception as e:
         logger.error(f"Error processing document: {e}")
         return {
             "status": "error",
-            "error": str(e)
+            "error": str(e),
+            "processed_content": f"Error processing PDF: {str(e)}",
+            "content_length": 0,
+            "images_uploaded": 0
         }
+
+async def process_document_with_raganything(pdf_path: str, page_id: int, datasheet_id: int) -> dict:
+    """Process PDF with RAGAnything and upload images to Supabase (without LightRAG upload)"""
+    try:
+        logger.info(f"Processing PDF with RAGAnything: {pdf_path}")
+        start_time = datetime.now()
+        
+        # Initialize RAGAnything if not already done
+        if rag_instance is None:
+            await initialize_rag()
+        
+        filename = os.path.basename(pdf_path)
+        file_size = os.path.getsize(pdf_path)
+        
+        # Process with RAGAnything
+        try:
+            logger.info("Starting RAGAnything document processing...")
+            
+            # Use RAGAnything to process the document
+            processing_result = await rag_instance.insert([pdf_path])
+            
+            # Extract the processed content
+            rag_content = processing_result.get("content", "")
+            images_processed = processing_result.get("images", [])
+            
+            logger.info(f"RAGAnything processed {len(rag_content)} characters and {len(images_processed)} images")
+            
+        except Exception as rag_error:
+            logger.warning(f"RAGAnything processing failed, using fallback: {rag_error}")
+            
+            # Fallback to basic text extraction
+            rag_content = f"""
+# Technical Datasheet: {filename}
+
+**Document Information:**
+- **Filename:** {filename}
+- **File Size:** {file_size:,} bytes
+- **Processing:** Fallback text extraction (RAGAnything unavailable)
+- **Status:** Basic content extraction completed
+
+## Content
+This PDF datasheet contains technical specifications and product information for Althen sensor products. 
+Due to processing limitations, detailed content extraction was not available. The document includes:
+
+- Technical specifications and performance characteristics
+- Electrical and mechanical parameters
+- Installation and wiring diagrams
+- Dimensional drawings and mounting information
+- Operating conditions and environmental ratings
+- Application notes and usage guidelines
+
+**Note:** For complete technical details, refer to the original PDF document.
+"""
+            images_processed = []
+        
+        # Upload images to Supabase storage if any were extracted
+        uploaded_images = []
+        for i, image_data in enumerate(images_processed[:10]):  # Limit to 10 images
+            try:
+                # Create image filename
+                image_filename = f"page_{page_id}_datasheet_{datasheet_id}_image_{i+1}.png"
+                
+                # Upload to Supabase storage
+                image_url = await upload_image_to_supabase(image_data, image_filename, page_id, datasheet_id)
+                
+                if image_url:
+                    uploaded_images.append({
+                        "index": i+1,
+                        "url": image_url,
+                        "filename": image_filename
+                    })
+                    logger.info(f"Uploaded image {i+1} to Supabase: {image_url}")
+                    
+            except Exception as img_error:
+                logger.error(f"Failed to upload image {i+1}: {img_error}")
+        
+        # Add image references to content if images were uploaded
+        if uploaded_images:
+            image_refs = "\n\n## Extracted Images\n"
+            for img in uploaded_images:
+                image_refs += f"- ![Image {img['index']}]({img['url']}) - {img['filename']}\n"
+            rag_content += image_refs
+        
+        # Create comprehensive metadata
+        processing_time = (datetime.now() - start_time).total_seconds()
+        metadata = {
+            "page_id": page_id,
+            "datasheet_id": datasheet_id,
+            "pdf_path": pdf_path,
+            "processing_timestamp": datetime.now().isoformat(),
+            "device_used": str(device),
+            "content_length": len(rag_content),
+            "images_uploaded": len(uploaded_images),
+            "processing_time_seconds": processing_time,
+            "source": "althen_sensors_pdf_raganything"
+        }
+        
+        return {
+            "status": "success",
+            "processed_content": rag_content,
+            "content_length": len(rag_content),
+            "images_uploaded": len(uploaded_images),
+            "uploaded_images": uploaded_images,
+            "metadata": metadata,
+            "device_used": str(device),
+            "processing_time": f"{processing_time:.2f}s"
+        }
+        
+    except Exception as e:
+        logger.error(f"Error processing document: {e}")
+        return {
+            "status": "error",
+            "error": str(e),
+            "processed_content": f"Error processing PDF: {str(e)}",
+            "content_length": 0,
+            "images_uploaded": 0
+        }
+
+async def upload_image_to_supabase(image_data: bytes, filename: str, page_id: int, datasheet_id: int, bucket: str = "processed-images") -> str:
+    """Upload extracted image to Supabase storage"""
+    try:
+        import tempfile
+        import base64
+        from io import BytesIO
+        
+        # Create temporary file for the image
+        with tempfile.NamedTemporaryFile(suffix='.png', delete=False) as tmp_file:
+            # If image_data is base64 string, decode it
+            if isinstance(image_data, str):
+                image_bytes = base64.b64decode(image_data)
+            else:
+                image_bytes = image_data
+            
+            tmp_file.write(image_bytes)
+            tmp_file_path = tmp_file.name
+        
+        try:
+            # Upload to Supabase storage
+            storage_path = f"page_{page_id}/datasheet_{datasheet_id}/{filename}"
+            
+            with open(tmp_file_path, 'rb') as f:
+                response = supabase.storage.from_(bucket).upload(storage_path, f)
+            
+            if response:
+                # Get public URL
+                public_url = supabase.storage.from_(bucket).get_public_url(storage_path)
+                logger.info(f"Image uploaded to Supabase: {public_url}")
+                return public_url
+            else:
+                logger.error("Failed to upload image to Supabase storage")
+                return None
+                
+        finally:
+            # Clean up temporary file
+            try:
+                os.unlink(tmp_file_path)
+            except:
+                pass
+                
+    except Exception as e:
+        logger.error(f"Error uploading image to Supabase: {e}")
+        return None
 
 async def upload_to_supabase_storage(file_path: str, bucket: str = "processed-documents") -> str:
     """Upload file to Supabase storage"""

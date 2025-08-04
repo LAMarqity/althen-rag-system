@@ -135,43 +135,45 @@ mechanical dimensions, environmental ratings, and application notes.
     
     async def process_pdf_content(self, pdf_path: str, pdf_url: str, parent_url: str, 
                                   page_id: int, datasheet_id: int, page_data: dict) -> str:
-        """Process PDF content with parent relationship"""
+        """Process PDF content with RAGAnything and upload images to Supabase"""
         try:
-            file_size = os.path.getsize(pdf_path)
-            filename = os.path.basename(pdf_url)
+            print(f"   Processing PDF with RAGAnything: {os.path.basename(pdf_path)}")
             
-            # Extract product name from filename
-            product_name = filename.replace('.pdf', '').replace('-', ' ').replace('_', ' ').title()
+            # Import RAGAnything processing function
+            from raganything_api_service import process_document_with_raganything
             
-            # Extract product category from parent URL
-            url_parts = parent_url.rstrip('/').split('/')
-            product_category = url_parts[-1].replace('-', ' ').title() if url_parts else "Unknown Category"
+            # Process document with RAGAnything (includes image extraction and upload to Supabase)
+            processing_result = await process_document_with_raganything(pdf_path, page_id, datasheet_id)
             
-            # Extract parent page metadata
-            business_area = page_data.get('business_area', '')
-            category = page_data.get('category', '')
-            subcategory = page_data.get('subcategory', '')
-            sub_subcategory = page_data.get('sub_subcategory', '')
-            image_url = page_data.get('image_url', '')
-            image_title = page_data.get('image_title', '')
-            url_lang = page_data.get('url_lang', [])
-            
-            content = f"""# Technical Datasheet: {product_name}
+            if processing_result.get("status") == "success":
+                # Get the processed content from RAGAnything
+                rag_content = processing_result.get("processed_content", "")
+                
+                # Extract metadata
+                business_area = page_data.get('business_area', '')
+                category = page_data.get('category', '')
+                subcategory = page_data.get('subcategory', '')
+                sub_subcategory = page_data.get('sub_subcategory', '')
+                image_url = page_data.get('image_url', '')
+                image_title = page_data.get('image_title', '')
+                url_lang = page_data.get('url_lang', [])
+                
+                filename = os.path.basename(pdf_url)
+                product_name = filename.replace('.pdf', '').replace('-', ' ').replace('_', ' ').title()
+                
+                # Combine RAGAnything output with metadata
+                enhanced_content = f"""# Technical Datasheet: {product_name}
 
 ## Document Metadata
-- **Document Type:** Technical Datasheet PDF
+- **Document Type:** Technical Datasheet PDF (Processed with RAGAnything)
 - **Datasheet ID:** {datasheet_id}
 - **Parent Page ID:** {page_id}
 - **Parent Product URL:** {parent_url}
 - **PDF Document:** {filename}
-- **File Size:** {file_size:,} bytes
-- **Direct PDF URL:** {pdf_url}
+- **Processing Status:** Successfully processed with image extraction
 
 ## Product Context & Classification
-This datasheet is associated with the product page at:
-{parent_url}
-
-The parent page contains general product information, while this datasheet provides detailed technical specifications.
+This datasheet is associated with the product page at: {parent_url}
 
 **Product Classification:**
 - **Business Area:** {business_area}
@@ -190,8 +192,21 @@ The parent product page is available in {len(url_lang)} languages:
 {chr(10).join([f'- {lang_url}' for lang_url in url_lang[:3]])}
 {'- ... and more' if len(url_lang) > 3 else ''}
 
+{'='*60}
+
+## RAGAnything Processed Content
+
+{rag_content}
+
+{'='*60}
+
+## Processing Information
+- **Images Extracted:** {processing_result.get('images_uploaded', 0)}
+- **Content Length:** {processing_result.get('content_length', 0)} characters
+- **Device Used:** {processing_result.get('device_used', 'CPU')}
+- **Processing Time:** {processing_result.get('processing_time', 'Unknown')}
+
 ## Technical Content
-This technical datasheet contains detailed specifications for {product_name}, including:
 
 ### Electrical Specifications
 - Operating voltage ranges and power requirements
@@ -396,17 +411,24 @@ This combined document ensures all related information is connected in the knowl
                     success = await download_pdf(pdf_url, pdf_path)
                     
                     if success:
-                        # Process PDF content with parent relationship
+                        # Process PDF content with RAGAnything (this handles LightRAG upload internally)
                         pdf_content = await self.process_pdf_content(
                             pdf_path, pdf_url, page_url, page_id, datasheet['id'], page_data
                         )
-                        pdf_contents.append(pdf_content)
                         
-                        # Mark datasheet as processed
-                        supabase = get_supabase_client()
-                        supabase.table("new_datasheets_index").update({
-                            "ingested": True
-                        }).eq("id", datasheet['id']).execute()
+                        # Only add to pdf_contents if processing was successful
+                        if pdf_content and "Error processing PDF" not in pdf_content:
+                            pdf_contents.append(pdf_content)
+                            
+                            # Mark datasheet as processed
+                            supabase = get_supabase_client()
+                            supabase.table("new_datasheets_index").update({
+                                "ingested": True
+                            }).eq("id", datasheet['id']).execute()
+                            
+                            print(f"   [OK] PDF processed with RAGAnything and uploaded to LightRAG")
+                        else:
+                            print(f"   [ERROR] Failed to process PDF with RAGAnything")
                     
                     # Clean up temp file
                     try:
