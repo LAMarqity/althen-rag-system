@@ -36,7 +36,7 @@ class PageProcessor:
         if not self.server_url or not self.api_key:
             raise ValueError("LIGHTRAG_SERVER_URL and LIGHTRAG_API_KEY required in .env")
     
-    async def scrape_web_content(self, url: str) -> str:
+    async def scrape_web_content(self, url: str, page_data: dict = None) -> str:
         """Scrape and structure web page content"""
         try:
             print(f"   Scraping: {url}")
@@ -70,11 +70,40 @@ class PageProcessor:
             if main_content:
                 content_text = main_content.get_text(separator=' ', strip=True)[:3000]
             
-            # Build structured content
+            # Build structured content with metadata if available
             structured_content = f"""# {title_text}
 
 **URL:** {url}
-**Description:** {description if description else 'Althen product page'}
+**Description:** {description if description else 'Althen product page'}"""
+            
+            # Add metadata if page_data is provided
+            if page_data:
+                business_area = page_data.get('business_area', '')
+                category = page_data.get('category', '')
+                subcategory = page_data.get('subcategory', '')
+                image_url = page_data.get('image_url', '')
+                image_title = page_data.get('image_title', '')
+                url_lang = page_data.get('url_lang', [])
+                page_type = page_data.get('page_type', '')
+                
+                structured_content += f"""
+
+## Product Classification
+- **Business Area:** {business_area}
+- **Page Type:** {page_type}
+- **Category:** {category}
+- **Subcategory:** {subcategory}
+
+## Visual Assets
+- **Product Image:** {image_url if image_url else 'Not available'}
+- **Image Title:** {image_title if image_title else 'Not specified'}
+
+## Multilingual Information
+- **Available Languages:** {len(url_lang)} language versions
+{chr(10).join([f'  - {lang_url}' for lang_url in url_lang[:3]])}
+{'  - ... and more' if len(url_lang) > 3 else ''}"""
+            
+            structured_content += f"""
 
 ## Content Overview
 {content_text}
@@ -242,7 +271,7 @@ The datasheet provides comprehensive technical data for integration and applicat
             # 4. Process web content if no PDFs or as additional content
             if not datasheets:  # Only process web content if no PDFs
                 print("\n3. No PDFs found - Processing web content...")
-                web_content = await self.scrape_web_content(page_url)
+                web_content = await self.scrape_web_content(page_url, page_data)
                 
                 # Upload web content
                 source_id = f"Page_{page_id}_WebContent_{page_url.split('/')[-1] or 'home'}"

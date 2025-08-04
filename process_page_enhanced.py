@@ -37,7 +37,7 @@ class EnhancedPageProcessor:
         if not self.server_url or not self.api_key:
             raise ValueError("LIGHTRAG_SERVER_URL and LIGHTRAG_API_KEY required in .env")
     
-    async def scrape_web_content(self, url: str, page_id: int, has_datasheets: bool = False) -> str:
+    async def scrape_web_content(self, url: str, page_id: int, page_data: dict, has_datasheets: bool = False) -> str:
         """Scrape web page content with relationship context"""
         try:
             print(f"   Scraping: {url}")
@@ -71,7 +71,17 @@ class EnhancedPageProcessor:
             if main_content:
                 content_text = main_content.get_text(separator=' ', strip=True)[:3000]
             
-            # Build structured content with relationship information
+            # Extract additional fields from page_data
+            url_lang = page_data.get('url_lang', [])
+            image_url = page_data.get('image_url', '')
+            image_title = page_data.get('image_title', '')
+            business_area = page_data.get('business_area', '')
+            category = page_data.get('category', '')
+            subcategory = page_data.get('subcategory', '')
+            sub_subcategory = page_data.get('sub_subcategory', '')
+            page_type = page_data.get('page_type', '')
+            
+            # Build structured content with comprehensive metadata
             structured_content = f"""# {title_text}
 
 ## Document Metadata
@@ -80,6 +90,22 @@ class EnhancedPageProcessor:
 - **URL:** {url}
 - **Has Technical Datasheets:** {'Yes' if has_datasheets else 'No'}
 - **Description:** {description if description else 'Althen product page'}
+
+## Classification & Navigation
+- **Business Area:** {business_area}
+- **Page Type:** {page_type}
+- **Category:** {category}
+- **Subcategory:** {subcategory}
+- **Sub-subcategory:** {sub_subcategory}
+
+## Multilingual Information
+- **Available Languages:** {len(url_lang)} language versions
+{chr(10).join([f'  - {lang_url}' for lang_url in url_lang[:5]])}
+{'  - ... and more' if len(url_lang) > 5 else ''}
+
+## Visual Assets
+- **Product Image:** {image_url if image_url else 'Not available'}
+- **Image Title/Alt:** {image_title if image_title else 'Not specified'}
 
 ## Content Overview
 {content_text}
@@ -108,7 +134,7 @@ mechanical dimensions, environmental ratings, and application notes.
             return f"Error scraping web content: {str(e)}"
     
     async def process_pdf_content(self, pdf_path: str, pdf_url: str, parent_url: str, 
-                                  page_id: int, datasheet_id: int) -> str:
+                                  page_id: int, datasheet_id: int, page_data: dict) -> str:
         """Process PDF content with parent relationship"""
         try:
             file_size = os.path.getsize(pdf_path)
@@ -121,6 +147,15 @@ mechanical dimensions, environmental ratings, and application notes.
             url_parts = parent_url.rstrip('/').split('/')
             product_category = url_parts[-1].replace('-', ' ').title() if url_parts else "Unknown Category"
             
+            # Extract parent page metadata
+            business_area = page_data.get('business_area', '')
+            category = page_data.get('category', '')
+            subcategory = page_data.get('subcategory', '')
+            sub_subcategory = page_data.get('sub_subcategory', '')
+            image_url = page_data.get('image_url', '')
+            image_title = page_data.get('image_title', '')
+            url_lang = page_data.get('url_lang', [])
+            
             content = f"""# Technical Datasheet: {product_name}
 
 ## Document Metadata
@@ -132,16 +167,28 @@ mechanical dimensions, environmental ratings, and application notes.
 - **File Size:** {file_size:,} bytes
 - **Direct PDF URL:** {pdf_url}
 
-## Product Context
+## Product Context & Classification
 This datasheet is associated with the product page at:
 {parent_url}
 
 The parent page contains general product information, while this datasheet provides detailed technical specifications.
 
-## Product Category
-- **Category:** {product_category}
+**Product Classification:**
+- **Business Area:** {business_area}
+- **Category:** {category}
+- **Subcategory:** {subcategory}
+- **Sub-subcategory:** {sub_subcategory}
 - **Product Name:** {product_name}
 - **Manufacturer:** Althen Sensors / Althen Controls
+
+## Parent Page Visual Assets
+- **Product Image:** {image_url if image_url else 'Not available'}
+- **Image Title:** {image_title if image_title else 'Not specified'}
+
+## Multilingual Availability
+The parent product page is available in {len(url_lang)} languages:
+{chr(10).join([f'- {lang_url}' for lang_url in url_lang[:3]])}
+{'- ... and more' if len(url_lang) > 3 else ''}
 
 ## Technical Content
 This technical datasheet contains detailed specifications for {product_name}, including:
@@ -187,14 +234,42 @@ This technical datasheet contains detailed specifications for {product_name}, in
             return f"Error processing PDF: {str(e)}"
     
     async def combine_contents(self, web_content: str, pdf_contents: list, 
-                              page_id: int, page_url: str) -> str:
+                              page_id: int, page_url: str, page_data: dict) -> str:
         """Combine web and PDF contents into a single document"""
+        
+        # Extract comprehensive metadata
+        business_area = page_data.get('business_area', '')
+        category = page_data.get('category', '')
+        subcategory = page_data.get('subcategory', '')
+        sub_subcategory = page_data.get('sub_subcategory', '')
+        image_url = page_data.get('image_url', '')
+        image_title = page_data.get('image_title', '')
+        url_lang = page_data.get('url_lang', [])
+        page_type = page_data.get('page_type', '')
         
         combined = f"""# Combined Product Documentation - Page ID {page_id}
 
 ## Document Overview
 This combined document contains both web page content and associated technical datasheets 
-for a complete product documentation set.
+for a complete product documentation set from Althen Sensors.
+
+**Product Information:**
+- **Business Area:** {business_area}
+- **Page Type:** {page_type}
+- **Category:** {category}
+- **Subcategory:** {subcategory}
+- **Sub-subcategory:** {sub_subcategory}
+
+**Visual & Multilingual Assets:**
+- **Product Image:** {image_url if image_url else 'Not available'}
+- **Image Title:** {image_title if image_title else 'Not specified'}
+- **Available Languages:** {len(url_lang)} language versions
+- **Primary URL:** {page_url}
+
+**Document Structure:**
+- Web page content with product overview and specifications
+- Technical datasheets ({len(pdf_contents)}) with detailed engineering data
+- Cross-referenced relationships and navigation paths
 
 {'='*60}
 
@@ -299,7 +374,7 @@ This combined document ensures all related information is connected in the knowl
             
             # 3. Scrape web content (always, for context)
             print("\n3. Processing web content...")
-            web_content = await self.scrape_web_content(page_url, page_id, len(datasheets) > 0)
+            web_content = await self.scrape_web_content(page_url, page_id, page_data, len(datasheets) > 0)
             
             # 4. Process PDFs if available
             pdf_contents = []
@@ -323,7 +398,7 @@ This combined document ensures all related information is connected in the knowl
                     if success:
                         # Process PDF content with parent relationship
                         pdf_content = await self.process_pdf_content(
-                            pdf_path, pdf_url, page_url, page_id, datasheet['id']
+                            pdf_path, pdf_url, page_url, page_id, datasheet['id'], page_data
                         )
                         pdf_contents.append(pdf_content)
                         
@@ -347,7 +422,7 @@ This combined document ensures all related information is connected in the knowl
                 # COMBINED MODE: Upload everything as one document
                 print("   Creating combined document...")
                 combined_content = await self.combine_contents(
-                    web_content, pdf_contents, page_id, page_url
+                    web_content, pdf_contents, page_id, page_url, page_data
                 )
                 
                 source_id = f"Page_{page_id}_Combined_{len(pdf_contents)}_Datasheets"
