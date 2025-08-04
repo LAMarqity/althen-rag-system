@@ -27,7 +27,7 @@ from scripts.raganything_api_service import (
 )
 
 def scrape_web_content(url: str, max_length: int = 10000) -> str:
-    """Scrape and clean web content from URL"""
+    """Scrape and clean web content from URL, preserving table structure"""
     try:
         logger.info(f"Scraping web content from: {url}")
         response = requests.get(url, timeout=30)
@@ -37,24 +37,69 @@ def scrape_web_content(url: str, max_length: int = 10000) -> str:
         for script in soup(["script", "style"]):
             script.extract()
         
-        # Get text content
+        # Convert tables to markdown-like format BEFORE extracting text
+        for table in soup.find_all('table'):
+            table_markdown = convert_table_to_markdown(table)
+            table.replace_with(table_markdown)
+        
+        # Get text content (now tables are converted to markdown)
         text = soup.get_text()
         
-        # Clean up text
-        lines = (line.strip() for line in text.splitlines())
-        chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
-        web_content = ' '.join(chunk for chunk in chunks if chunk)
+        # Clean up text but preserve table formatting
+        lines = []
+        for line in text.splitlines():
+            line = line.strip()
+            if line:
+                # Preserve table separator lines
+                if line.startswith('|') or line.startswith('-'):
+                    lines.append(line)
+                else:
+                    lines.append(line)
+        
+        web_content = '\n'.join(lines)
         
         # Limit content length
         if len(web_content) > max_length:
             web_content = web_content[:max_length] + "..."
         
-        logger.info(f"Extracted {len(web_content)} characters of web content")
+        logger.info(f"Extracted {len(web_content)} characters of web content with table preservation")
         return web_content
         
     except Exception as e:
         logger.error(f"Failed to scrape web content: {e}")
         return ""
+
+def convert_table_to_markdown(table) -> str:
+    """Convert HTML table to markdown format"""
+    try:
+        rows = []
+        
+        # Process table rows
+        for tr in table.find_all('tr'):
+            cells = []
+            for td in tr.find_all(['td', 'th']):
+                # Get cell text and clean it
+                cell_text = td.get_text(strip=True)
+                # Escape pipes in cell content
+                cell_text = cell_text.replace('|', '\\|')
+                cells.append(cell_text)
+            
+            if cells:  # Only add non-empty rows
+                rows.append('| ' + ' | '.join(cells) + ' |')
+        
+        if not rows:
+            return ""
+        
+        # Add header separator after first row (if exists)
+        if len(rows) > 1:
+            header_separator = '|' + '---|' * len(rows[0].split('|')[1:-1]) + '|'
+            rows.insert(1, header_separator)
+        
+        return '\n' + '\n'.join(rows) + '\n'
+        
+    except Exception as e:
+        logger.warning(f"Failed to convert table to markdown: {e}")
+        return str(table)  # Fallback to original table HTML
 
 def generate_natural_description(img_info: dict, surrounding_text: str = "") -> str:
     """Generate natural image description using MinerU's own content without rigid categories"""
