@@ -56,56 +56,119 @@ def scrape_web_content(url: str, max_length: int = 10000) -> str:
         logger.error(f"Failed to scrape web content: {e}")
         return ""
 
-def generate_smart_description(img_info: dict, surrounding_text: str = "") -> str:
-    """Generate intelligent image description"""
+def generate_comprehensive_description(img_info: dict, surrounding_text: str = "") -> str:
+    """Generate comprehensive image description using ALL MinerU content"""
     
     caption = img_info.get("caption", "").strip()
     footnote = img_info.get("footnote", "").strip()
     img_type = img_info.get("type", "image")
+    table_body = img_info.get("table_body", "").strip()
+    context = img_info.get("context", "").strip()
     
-    # If we have a meaningful caption, use it
+    # Combine ALL available text for analysis
+    all_text_parts = [caption, footnote, surrounding_text, context, table_body]
+    all_text = " ".join([part for part in all_text_parts if part]).lower()
+    
+    # If we have a meaningful caption, use it as primary description
     if caption and len(caption) > 3:
-        if img_type == "table":
-            return f"Table: {caption}"
+        primary_desc = caption
+        
+        # Add footnote context if available
+        if footnote:
+            if img_type == "table":
+                return f"Table: {primary_desc} - {footnote}"
+            else:
+                return f"Figure: {primary_desc} - {footnote}"
         else:
-            return f"Figure: {caption}"
+            if img_type == "table":
+                return f"Table: {primary_desc}"
+            else:
+                return f"Figure: {primary_desc}"
     
-    # Analyze context for technical keywords
-    all_text = f"{caption} {footnote} {surrounding_text}".lower()
-    
+    # Enhanced technical pattern recognition using all MinerU content
     technical_patterns = {
-        "dimensions": ["dimension", "mm", "inch", "size", "diameter", "length", "width", "height"],
-        "wiring": ["wiring", "wire", "cable", "connection", "pin", "connector", "electrical"],
-        "mounting": ["mount", "installation", "bracket", "hole", "assembly"],
-        "performance": ["performance", "curve", "graph", "chart", "specification"],
-        "calibration": ["calibration", "accuracy", "linearity", "error"]
+        "dimensions": {
+            "keywords": ["dimension", "mm", "inch", "size", "diameter", "length", "width", "height", "measure", "metric", "imperial"],
+            "table_desc": "Dimensional Specifications Table",
+            "image_desc": "Dimensional Drawing"
+        },
+        "wiring": {
+            "keywords": ["wiring", "wire", "cable", "connection", "pin", "connector", "electrical", "circuit", "voltage", "current", "signal"],
+            "table_desc": "Electrical Connection Table", 
+            "image_desc": "Wiring Diagram"
+        },
+        "performance": {
+            "keywords": ["performance", "curve", "graph", "chart", "specification", "specs", "characteristics", "response", "accuracy", "linearity"],
+            "table_desc": "Performance Characteristics Table",
+            "image_desc": "Performance Chart"
+        },
+        "mounting": {
+            "keywords": ["mount", "installation", "bracket", "hole", "assembly", "fixing", "attachment", "fastener"],
+            "table_desc": "Mounting Specifications Table",
+            "image_desc": "Mounting Configuration"
+        },
+        "communication": {
+            "keywords": ["communication", "protocol", "rs232", "serial", "i/o", "format", "command", "hex", "data"],
+            "table_desc": "Communication Protocol Table",
+            "image_desc": "Communication Diagram"
+        },
+        "calibration": {
+            "keywords": ["calibration", "accuracy", "error", "tolerance", "drift", "stability", "zero", "span"],
+            "table_desc": "Calibration Data Table",
+            "image_desc": "Calibration Chart"
+        },
+        "environmental": {
+            "keywords": ["temperature", "humidity", "pressure", "environmental", "operating", "storage", "protection", "ip rating"],
+            "table_desc": "Environmental Specifications Table",
+            "image_desc": "Environmental Conditions Chart"
+        },
+        "ordering": {
+            "keywords": ["ordering", "model", "part number", "configuration", "options", "variants"],
+            "table_desc": "Ordering Information Table",
+            "image_desc": "Product Configuration"
+        }
     }
     
-    detected_type = None
-    for pattern_type, keywords in technical_patterns.items():
-        if any(keyword in all_text for keyword in keywords):
-            detected_type = pattern_type
-            break
+    # Analyze content for specific patterns
+    detected_patterns = []
+    for pattern_type, pattern_info in technical_patterns.items():
+        if any(keyword in all_text for keyword in pattern_info["keywords"]):
+            detected_patterns.append((pattern_type, pattern_info))
     
-    # Generate description
+    # Generate description based on detected patterns and type
+    if detected_patterns:
+        # Use the first (most relevant) detected pattern
+        pattern_type, pattern_info = detected_patterns[0]
+        
+        if img_type == "table":
+            base_desc = pattern_info["table_desc"]
+        else:
+            base_desc = pattern_info["image_desc"]
+        
+        # Add contextual information if available
+        if footnote:
+            return f"{base_desc} - {footnote}"
+        elif context and len(context) > 20:
+            # Extract key context snippet
+            context_words = context.split()[:8]  # First 8 words
+            context_snippet = " ".join(context_words)
+            return f"{base_desc} ({context_snippet}...)"
+        else:
+            return base_desc
+    
+    # Fallback descriptions with context
     if img_type == "table":
-        if detected_type == "dimensions":
-            return "Dimensional Specifications Table"
-        elif detected_type == "performance":
-            return "Performance Characteristics Table"
-        elif detected_type == "wiring":
-            return "Electrical Connection Table"
+        if footnote:
+            return f"Technical Specifications Table - {footnote}"
         else:
             return "Technical Specifications Table"
     else:
-        if detected_type == "dimensions":
-            return "Dimensional Drawing"
-        elif detected_type == "wiring":
-            return "Wiring Diagram"
-        elif detected_type == "mounting":
-            return "Mounting Configuration"
-        elif detected_type == "performance":
-            return "Performance Chart"
+        if footnote:
+            return f"Technical Figure - {footnote}"
+        elif context and len(context) > 20:
+            context_words = context.split()[:6]
+            context_snippet = " ".join(context_words)
+            return f"Technical Figure ({context_snippet}...)"
         else:
             return "Technical Figure"
 
@@ -132,12 +195,25 @@ def extract_images_with_context(content_list_file: str) -> dict:
                 img_path = item.get("img_path", "")
                 if img_path:
                     filename = os.path.basename(img_path)
+                    
+                    # Extract ALL available MinerU data
+                    if item_type == "image":
+                        caption = " ".join(item.get("image_caption", [])).strip()
+                        footnote = " ".join(item.get("image_footnote", [])).strip()
+                        table_body = ""
+                    else:  # table
+                        caption = " ".join(item.get("table_caption", [])).strip()
+                        footnote = " ".join(item.get("table_footnote", [])).strip()
+                        table_body = item.get("table_body", "").strip()
+                    
                     images_map[filename] = {
                         "filename": filename,
-                        "caption": " ".join(item.get("image_caption" if item_type == "image" else "table_caption", [])).strip(),
-                        "footnote": " ".join(item.get("image_footnote", [])).strip(),
+                        "caption": caption,
+                        "footnote": footnote,
                         "type": item_type,
-                        "context": context_text.strip()
+                        "context": context_text.strip(),
+                        "table_body": table_body,
+                        "page_idx": item.get("page_idx", 0)
                     }
     
     except Exception as e:
@@ -189,9 +265,9 @@ def enhance_existing_alt_text(markdown_content: str, image_url_map: dict, images
         if not alt_text.strip() or len(alt_text.strip()) < 3:
             if original_filename in images_context_map:
                 img_info = images_context_map[original_filename]
-                smart_alt = generate_smart_description(img_info, img_info["context"])
-                logger.info(f"Enhanced empty alt text for {original_filename}: '{smart_alt}'")
-                return f"![{smart_alt}]({url})"
+                comprehensive_alt = generate_comprehensive_description(img_info, img_info["context"])
+                logger.info(f"Enhanced empty alt text for {original_filename}: '{comprehensive_alt}'")
+                return f"![{comprehensive_alt}]({url})"
         
         # Return original if alt text is already good
         return match.group(0)
@@ -214,14 +290,15 @@ def enhance_existing_alt_text(markdown_content: str, image_url_map: dict, images
             if filename in image_url_map and filename in images_context_map:
                 url = image_url_map[filename]
                 img_info = images_context_map[filename]
-                smart_description = generate_smart_description(img_info, img_info["context"])
+                comprehensive_description = generate_comprehensive_description(img_info, img_info["context"])
                 
-                enhanced_markdown += f"![{smart_description}]({url})\n"
+                enhanced_markdown += f"![{comprehensive_description}]({url})\n"
                 
-                if img_info['caption']:
-                    enhanced_markdown += f"*Caption: {img_info['caption']}*\n"
-                if img_info['footnote']:
-                    enhanced_markdown += f"*Note: {img_info['footnote']}*\n"
+                # Add additional context if available (caption and footnote are already in description)
+                if img_info.get('table_body') and len(img_info['table_body']) > 50:
+                    # Show a snippet of table content for context
+                    table_snippet = img_info['table_body'][:100] + "..." if len(img_info['table_body']) > 100 else img_info['table_body']
+                    enhanced_markdown += f"*Table content preview: {table_snippet}*\n"
                 
                 enhanced_markdown += "\n"
     
