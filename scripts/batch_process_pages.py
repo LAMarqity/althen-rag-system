@@ -56,7 +56,10 @@ async def get_unprocessed_pages(limit=5, subcategory=None, datasheet_count=None)
             if datasheet_count is not None:
                 if actual_count == datasheet_count:
                     filtered_pages.append(page)
-                    logger.info(f"Page {page['id']} ({page.get('subcategory', 'unknown')}) has exactly {actual_count} datasheet(s)")
+                    if datasheet_count == 0:
+                        logger.info(f"Page {page['id']} ({page.get('subcategory', 'unknown')}) has NO datasheets (web content only)")
+                    else:
+                        logger.info(f"Page {page['id']} ({page.get('subcategory', 'unknown')}) has exactly {actual_count} datasheet(s)")
             else:
                 # No datasheet filter, include all
                 filtered_pages.append(page)
@@ -184,15 +187,17 @@ if __name__ == "__main__":
         ]
     )
     
-    # Configuration - Process all unprocessed pages
+    # Configuration - Process pages WITHOUT datasheets (web content only)
     TARGET_SUBCATEGORY = None  # Process all subcategories
-    TARGET_DATASHEET_COUNT = None  # Process pages with any number of datasheets
+    TARGET_DATASHEET_COUNT = 0  # Process pages with NO datasheets
     BATCH_SIZE = 5
     
     # Add timestamp separator
     logger.info("=" * 60)
     logger.info(f"Batch processing started at {datetime.now()}")
-    if TARGET_SUBCATEGORY is None:
+    if TARGET_SUBCATEGORY is None and TARGET_DATASHEET_COUNT == 0:
+        logger.info("Target: All unprocessed pages WITHOUT datasheets (web content only)")
+    elif TARGET_SUBCATEGORY is None:
         logger.info("Target: All unprocessed pages (any subcategory, any number of datasheets)")
     elif TARGET_DATASHEET_COUNT is None:
         logger.info(f"Target: {TARGET_SUBCATEGORY} (any number of datasheets)")
