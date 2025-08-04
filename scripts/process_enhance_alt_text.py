@@ -320,6 +320,7 @@ Source: {page_url}
         all_content_sections = []
         all_images_uploaded = []
         lightrag_track_id = None
+        lightrag_content_id = None
         
         if not datasheets:
             # Use web content only
@@ -530,11 +531,38 @@ Source: {page_url}
                 logger.info(f"Successfully uploaded to LightRAG server: {result.get('message', 'Success')}")
                 track_id = result.get('track_id', 'N/A')
                 lightrag_track_id = track_id
+                
+                # Get the LightRAG content ID using the track_id
+                lightrag_content_id = None
+                if track_id and track_id != 'N/A':
+                    try:
+                        track_response = requests.get(
+                            f"{lightrag_server_url}/documents/track/{track_id}",
+                            headers=headers,
+                            timeout=10
+                        )
+                        
+                        if track_response.status_code == 200:
+                            track_data = track_response.json()
+                            documents = track_data.get('documents', [])
+                            if documents:
+                                # Get the first document's content ID (assuming single document upload)
+                                lightrag_content_id = documents[0].get('id') or documents[0].get('content_id')
+                                logger.info(f"Retrieved LightRAG content ID: {lightrag_content_id}")
+                            else:
+                                logger.warning("No documents found in track response")
+                        else:
+                            logger.warning(f"Failed to get track status: {track_response.status_code} - {track_response.text}")
+                    
+                    except Exception as track_error:
+                        logger.warning(f"Failed to retrieve LightRAG content ID: {track_error}")
             else:
                 logger.warning(f"LightRAG upload failed: {response.status_code} - {response.text}")
                 
         except Exception as lightrag_error:
             logger.warning(f"LightRAG upload failed: {lightrag_error}")
+            lightrag_track_id = None
+            lightrag_content_id = None
         
         # Mark page and datasheets as processed
         page_update_data = {
@@ -543,6 +571,8 @@ Source: {page_url}
         }
         if lightrag_track_id and lightrag_track_id != 'N/A':
             page_update_data["lightrag_track_id"] = lightrag_track_id
+        if lightrag_content_id:
+            page_update_data["lightrag_content_id"] = lightrag_content_id
             
         supabase_client.table("new_pages_index").update(page_update_data).eq("id", page_id).execute()
         
@@ -554,6 +584,8 @@ Source: {page_url}
                 }
                 if lightrag_track_id and lightrag_track_id != 'N/A':
                     datasheet_update_data["lightrag_track_id"] = lightrag_track_id
+                if lightrag_content_id:
+                    datasheet_update_data["lightrag_content_id"] = lightrag_content_id
                     
                 supabase_client.table("new_datasheets_index").update(datasheet_update_data).eq("id", datasheet['id']).execute()
                 logger.info(f"Marked datasheet {datasheet['id']} as processed")
