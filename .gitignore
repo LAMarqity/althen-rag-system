@@ -1,0 +1,141 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Environment files
+.env
+.env.local
+.env.*.local
+*.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb_checkpoints
+
+# Data and processing
+knowledge_base/
+rag_storage/
+rag_output/
+rag_output_kg/
+processed_documents/
+temp_storage/
+temp_mineru_output*/
+test_*/
+*.pdf
+*.docx
+*.xlsx
+*.pptx
+
+# Logs
+logs/
+*.log
+
+# Model files
+*.pt
+*.pth
+*.onnx
+*.bin
+*.safetensors
+models/
+
+# Cache
+.cache/
+__pycache__/
+*.pyc
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Supabase
+supabase/
+.supabase/
+
+# MinerU
+magic-pdf/
+mineru_output/
+
+# LightRAG
+lightrag_cache/
+*.lancedb/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# Documentation build
+docs/_build/
+docs/.doctrees/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+*.bak
+
+# Large files
+*.tar.gz
+*.zip
+*.rar
+*.7z
+
+# GPU/CUDA
+*.cu.o
+*.cubin
+*.fatbin
+*.gpu
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+
+# Node modules (for N8N integration)
+node_modules/
+package-lock.json
+yarn.lock
+
+# vast.ai
+vast_workspace/
+instance_data/
+
+# Secrets (extra safety)
+*_secret*
+*_private*
+*_key*
+*.pem
+*.key
+*.crt
