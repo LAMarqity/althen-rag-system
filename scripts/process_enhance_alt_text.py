@@ -389,8 +389,8 @@ Source: {page_url}
                                 image_data = img_f.read()
                             
                             # Create naturally descriptive filename based on MinerU content
-                            if filename in images_context_map:
-                                img_context = images_context_map[filename]
+                            if image_file in images_context_map:
+                                img_context = images_context_map[image_file]
                                 
                                 # Use MinerU's own caption/content for filename
                                 name_parts = []
