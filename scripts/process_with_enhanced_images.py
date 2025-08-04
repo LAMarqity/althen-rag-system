@@ -349,9 +349,13 @@ async def process_page_with_enhanced_images(page_id: int):
             if lightrag_api_key:
                 headers['X-API-Key'] = lightrag_api_key
             
+            # Create safe file source name
+            category = page_data.get('category') or 'content'
+            safe_category = str(category).lower().replace(' ', '_').replace('-', '_')
+            
             payload = {
                 "text": combined_content,
-                "file_source": f"page_{page_id}_{page_data.get('category', 'content').lower().replace(' ', '_')}_enhanced"
+                "file_source": f"page_{page_id}_{safe_category}_enhanced"
             }
             
             response = requests.post(
