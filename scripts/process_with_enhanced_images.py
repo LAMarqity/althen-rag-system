@@ -161,19 +161,64 @@ async def process_page_with_enhanced_images(page_id: int):
         datasheets = datasheets_response.data
         logger.info(f"Found {len(datasheets)} datasheets")
         
-        if not datasheets:
-            logger.error("No datasheets found")
-            return {"success": False, "error": "No datasheets found"}
-        
-        # Process each datasheet
-        all_content = []
+        combined_content = ""
         all_images_uploaded = []
         
-        for datasheet in datasheets:
-            logger.info(f"Processing datasheet: {datasheet['url']}")
+        if not datasheets:
+            # Fallback to web content scraping
+            logger.info("No datasheets found - processing web content only")
             
-            # Download PDF
-            response = requests.get(datasheet['url'])
+            try:
+                logger.info(f"Scraping web content from: {page_url}")
+                response = requests.get(page_url, timeout=30)
+                soup = BeautifulSoup(response.content, 'html.parser')
+                
+                # Remove script and style elements
+                for script in soup(["script", "style"]):
+                    script.extract()
+                
+                # Get text content
+                text = soup.get_text()
+                
+                # Clean up text
+                lines = (line.strip() for line in text.splitlines())
+                chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
+                web_content = ' '.join(chunk for chunk in chunks if chunk)
+                
+                # Limit content length
+                if len(web_content) > 5000:
+                    web_content = web_content[:5000] + "..."
+                
+                logger.info(f"Extracted {len(web_content)} characters of web content")
+                
+                # Create document from web content
+                combined_content = f"""# {page_data.get('category', 'Page')} - {page_data.get('subcategory', 'Web Content')}
+
+**URL:** {page_url}
+**Business Area:** {page_data.get('business_area', 'unknown')}
+**Page Type:** {page_data.get('page_type', 'web')}
+
+---
+
+{web_content}
+
+---
+*Processed from web content only - no datasheets available*
+"""
+                
+            except Exception as web_error:
+                logger.error(f"Failed to process web content: {web_error}")
+                return {"success": False, "error": f"No datasheets and web scraping failed: {web_error}"}
+        
+        else:
+            # Process each datasheet with enhanced images
+            all_content = []
+        
+            for datasheet in datasheets:
+                logger.info(f"Processing datasheet: {datasheet['url']}")
+                
+                # Download PDF
+                response = requests.get(datasheet['url'])
             with tempfile.NamedTemporaryFile(suffix='.pdf', delete=False) as tmp_file:
                 tmp_file.write(response.content)
                 pdf_path = tmp_file.name
@@ -262,11 +307,9 @@ async def process_page_with_enhanced_images(page_id: int):
                 if os.path.exists(pdf_path):
                     os.unlink(pdf_path)
         
-        if not all_content:
-            return {"success": False, "error": "No content was processed"}
-        
-        # Create combined document
-        combined_content = f"""# {page_data.get('category', 'Product')} - {page_data.get('subcategory', 'Technical Documentation')}
+            if all_content:
+                # Create combined document from datasheets
+                combined_content = f"""# {page_data.get('category', 'Product')} - {page_data.get('subcategory', 'Technical Documentation')}
 
 **URL:** {page_url}
 **Business Area:** {page_data.get('business_area', 'sensors')}
@@ -279,6 +322,8 @@ async def process_page_with_enhanced_images(page_id: int):
 ---
 *Processed from {len(datasheets)} datasheet(s) with {len(all_images_uploaded)} enhanced images using MinerU extraction*
 """
+            else:
+                return {"success": False, "error": "No content was processed"}
         
         logger.info(f"Created combined document: {len(combined_content)} characters")
         
