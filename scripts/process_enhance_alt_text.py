@@ -27,106 +27,66 @@ from scripts.raganything_api_service import (
 )
 
 def scrape_web_content(url: str, max_length: int = 10000) -> str:
-    """Scrape and clean web content from URL, focusing on main content after H1"""
+    """Extract ONLY visible text from headings, paragraphs, tables, and lists"""
     try:
         logger.info(f"Scraping web content from: {url}")
         response = requests.get(url, timeout=30)
         soup = BeautifulSoup(response.content, 'html.parser')
         
-        # Remove unwanted elements and hidden content
+        # Remove unwanted elements
         for element in soup(["script", "style", "footer", "nav", "aside", "header", "noscript"]):
             element.extract()
         
-        # Remove elements that are hidden with CSS
-        for element in soup.find_all():
-            style = element.get('style', '')
-            css_class = element.get('class', [])
-            
-            # Check for hidden styles
-            if ('display:none' in style.replace(' ', '') or 
-                'display: none' in style or
-                'visibility:hidden' in style.replace(' ', '') or
-                'visibility: hidden' in style):
-                element.extract()
-                continue
-            
-            # Check for common hidden classes
-            if isinstance(css_class, list):
-                css_class = ' '.join(css_class)
-            
-            hidden_classes = ['hidden', 'hide', 'invisible', 'collapse', 'd-none', 'sr-only']
-            if any(hidden_class in css_class.lower() for hidden_class in hidden_classes):
-                element.extract()
-        
-        # Find the main content area - look for common content containers first
-        content_root = None
-        
-        # Try to find main content containers
-        main_containers = soup.find_all(['main', 'article']) + soup.find_all(class_=lambda x: x and any(term in x.lower() for term in ['content', 'main', 'article']))
-        
-        if main_containers:
-            content_root = main_containers[0]
-            logger.info("Found main content container")
-        else:
-            # Fallback: Find the first H1 to start content extraction
-            h1 = soup.find('h1')
-            if h1:
-                content_root = h1.parent if h1.parent else soup
-                logger.info("Using H1 parent as content root")
-            else:
-                logger.warning("No H1 or main content found, extracting from body")
-                content_root = soup.find('body') or soup
-        
-        # Extract content in order: headings, paragraphs, and tables
         content_parts = []
         
-        # Get all relevant elements after/including H1
-        relevant_elements = content_root.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'table', 'ul', 'ol'])
-        
-        h1_found = False
-        for element in relevant_elements:
-            # Start extracting after we find H1
-            if element.name == 'h1':
-                h1_found = True
+        # Extract ONLY visible text from specific elements
+        for element in soup.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'table', 'ul', 'ol']):
+            # Skip hidden elements
+            style = element.get('style', '')
+            if 'display:none' in style or 'visibility:hidden' in style:
+                continue
+                
+            css_class = ' '.join(element.get('class', []))
+            if any(hidden in css_class.lower() for hidden in ['hidden', 'd-none', 'sr-only']):
+                continue
             
-            if h1_found:
-                if element.name in ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']:
-                    # Add heading with markdown formatting
+            if element.name in ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']:
+                # Extract heading text only
+                text = element.get_text(strip=True)
+                if text:
                     level = int(element.name[1])
-                    heading_text = element.get_text(strip=True)
-                    if heading_text:
-                        content_parts.append('#' * level + ' ' + heading_text)
-                
-                elif element.name == 'p':
-                    # Add paragraph content
-                    para_text = element.get_text(strip=True)
-                    if para_text and len(para_text) > 10:  # Skip very short paragraphs
-                        content_parts.append(para_text)
-                
-                elif element.name == 'table':
-                    # Convert table to markdown
-                    table_markdown = convert_table_to_markdown(element)
-                    if table_markdown.strip():
-                        content_parts.append(table_markdown)
-                
-                elif element.name in ['ul', 'ol']:
-                    # Handle lists
-                    list_items = []
-                    for li in element.find_all('li'):
-                        item_text = li.get_text(strip=True)
-                        if item_text:
-                            list_items.append(f"- {item_text}")
-                    if list_items:
-                        content_parts.append('\n'.join(list_items))
+                    content_parts.append('#' * level + ' ' + text)
+            
+            elif element.name == 'p':
+                # Extract paragraph text only
+                text = element.get_text(strip=True)
+                if text and len(text) > 10:
+                    content_parts.append(text)
+            
+            elif element.name == 'table':
+                # Extract table as markdown
+                table_text = convert_table_to_markdown(element)
+                if table_text.strip():
+                    content_parts.append(table_text)
+            
+            elif element.name in ['ul', 'ol']:
+                # Extract list items text only
+                list_items = []
+                for li in element.find_all('li'):
+                    text = li.get_text(strip=True)
+                    if text:
+                        list_items.append(f"- {text}")
+                if list_items:
+                    content_parts.append('\n'.join(list_items))
         
-        # Join all content parts
+        # Join all text content
         web_content = '\n\n'.join(content_parts)
         
         # Limit content length
         if len(web_content) > max_length:
             web_content = web_content[:max_length] + "..."
         
-        logger.info(f"Extracted {len(web_content)} characters of focused web content with {len([p for p in content_parts if p.startswith('|')])} tables")
+        logger.info(f"Extracted {len(web_content)} characters of visible text content")
         return web_content
         
     except Exception as e:
