@@ -19,9 +19,11 @@ from scripts.raganything_api_service import (
     logger,
     upload_image_to_supabase,
     upload_processed_document_to_supabase,
-    initialize_rag,
-    rag_instance
+    initialize_rag
 )
+
+# Global variable for RAG instance
+rag_instance = None
 
 async def extract_mineru_content(pdf_path: str) -> dict:
     """Extract the actual processed markdown content from MinerU output"""
@@ -82,10 +84,11 @@ async def extract_mineru_content(pdf_path: str) -> dict:
 
 async def process_page_with_mineru_extraction(page_id: int):
     """Process a page using actual MinerU content extraction"""
+    global rag_instance
     
     # Initialize connections
     supabase_client = get_supabase_client()
-    await initialize_rag()
+    rag_instance = await initialize_rag()
     
     # Get page data
     page_response = supabase_client.table("new_pages_index").select("*").eq("id", page_id).execute()
