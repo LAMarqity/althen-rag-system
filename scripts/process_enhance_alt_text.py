@@ -33,18 +33,49 @@ def scrape_web_content(url: str, max_length: int = 10000) -> str:
         response = requests.get(url, timeout=30)
         soup = BeautifulSoup(response.content, 'html.parser')
         
-        # Remove unwanted elements
-        for element in soup(["script", "style", "footer", "nav", "aside", "header"]):
+        # Remove unwanted elements and hidden content
+        for element in soup(["script", "style", "footer", "nav", "aside", "header", "noscript"]):
             element.extract()
         
-        # Find the first H1 to start content extraction
-        h1 = soup.find('h1')
-        if not h1:
-            logger.warning("No H1 found, extracting from entire page")
-            content_root = soup
+        # Remove elements that are hidden with CSS
+        for element in soup.find_all():
+            style = element.get('style', '')
+            css_class = element.get('class', [])
+            
+            # Check for hidden styles
+            if ('display:none' in style.replace(' ', '') or 
+                'display: none' in style or
+                'visibility:hidden' in style.replace(' ', '') or
+                'visibility: hidden' in style):
+                element.extract()
+                continue
+            
+            # Check for common hidden classes
+            if isinstance(css_class, list):
+                css_class = ' '.join(css_class)
+            
+            hidden_classes = ['hidden', 'hide', 'invisible', 'collapse', 'd-none', 'sr-only']
+            if any(hidden_class in css_class.lower() for hidden_class in hidden_classes):
+                element.extract()
+        
+        # Find the main content area - look for common content containers first
+        content_root = None
+        
+        # Try to find main content containers
+        main_containers = soup.find_all(['main', 'article']) + soup.find_all(class_=lambda x: x and any(term in x.lower() for term in ['content', 'main', 'article']))
+        
+        if main_containers:
+            content_root = main_containers[0]
+            logger.info("Found main content container")
         else:
-            # Get the parent container of H1 to extract content from that section
-            content_root = h1.parent if h1.parent else soup
+            # Fallback: Find the first H1 to start content extraction
+            h1 = soup.find('h1')
+            if h1:
+                content_root = h1.parent if h1.parent else soup
+                logger.info("Using H1 parent as content root")
+            else:
+                logger.warning("No H1 or main content found, extracting from body")
+                content_root = soup.find('body') or soup
         
         # Extract content in order: headings, paragraphs, and tables
         content_parts = []
