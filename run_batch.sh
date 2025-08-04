@@ -16,7 +16,9 @@ fi
 
 # Set environment variables (load from .env if exists)
 if [ -f ".env" ]; then
-    export $(cat .env | grep -v '^#' | xargs)
+    set -a  # automatically export all variables
+    source .env
+    set +a  # turn off automatic export
 fi
 
 # Add timestamp to log
