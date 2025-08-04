@@ -47,10 +47,31 @@ async def main():
         page_title = page_data.get('title') or page_data.get('name') or page_data.get('url', 'Unknown')
         logger.info(f"Found page: {page_title}")
         
-        # Get datasheets
-        datasheets_response = supabase_client.table("new_datasheets_index").select("*").eq("page_id", page_id).execute()
-        datasheets = datasheets_response.data
-        logger.info(f"Found {len(datasheets)} datasheets")
+        # Get datasheets - first check the schema
+        try:
+            logger.info("Checking datasheets table structure...")
+            sample_response = supabase_client.table("new_datasheets_index").select("*").limit(1).execute()
+            if sample_response.data:
+                logger.info(f"Datasheets table columns: {list(sample_response.data[0].keys())}")
+            
+            # Try different possible column names
+            possible_columns = ['page_id', 'new_page_id', 'pages_id', 'page_index_id']
+            datasheets = []
+            
+            for col_name in possible_columns:
+                try:
+                    logger.info(f"Trying column: {col_name}")
+                    datasheets_response = supabase_client.table("new_datasheets_index").select("*").eq(col_name, page_id).execute()
+                    datasheets = datasheets_response.data
+                    logger.info(f"SUCCESS: Found {len(datasheets)} datasheets using column {col_name}")
+                    break
+                except Exception as e:
+                    logger.info(f"Column {col_name} doesn't exist: {e}")
+                    continue
+                    
+        except Exception as e:
+            logger.error(f"Error accessing datasheets table: {e}")
+            return
         
         if not datasheets:
             logger.error("No datasheets found")
