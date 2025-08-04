@@ -168,10 +168,22 @@ async def process_page_with_mineru(page_id: int):
             }
         )
         
-        # Upload to LightRAG
-        if rag_instance:
-            await rag_instance.insert_document(combined_content, f"page_{page_id}")
-            logger.info("Uploaded to LightRAG server")
+        # Upload to LightRAG server
+        try:
+            from scripts.lightrag_server_client import LightRAGServerClient
+            lightrag_client = LightRAGServerClient()
+            
+            # Test connection first
+            if lightrag_client.test_lightrag_server_connection():
+                result = lightrag_client.insert_text_to_lightrag(combined_content, f"page_{page_id}")
+                if result:
+                    logger.info("Successfully uploaded to LightRAG server")
+                else:
+                    logger.warning("Failed to upload to LightRAG server")
+            else:
+                logger.warning("LightRAG server connection failed, skipping upload")
+        except Exception as lightrag_error:
+            logger.warning(f"LightRAG upload failed: {lightrag_error}")
         
         # Mark as processed
         supabase_client.table("new_pages_index").update({
