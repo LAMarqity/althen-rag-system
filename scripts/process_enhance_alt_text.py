@@ -634,7 +634,9 @@ Source: {page_url}
         page_update_data = {
             "rag_ingested": True,
             "rag_ingested_at": "now()",
-            "rag_ingestion_status": "completed"
+            "rag_ingestion_status": "completed",
+            "markdown_storage_url": doc_url,
+            "markdown_uploaded_at": "now()"
         }
         if lightrag_track_id and lightrag_track_id != 'N/A':
             page_update_data["lightrag_track_id"] = lightrag_track_id

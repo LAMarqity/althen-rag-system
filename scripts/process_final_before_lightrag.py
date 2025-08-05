@@ -572,7 +572,9 @@ Source: {page_url}
         page_update_data = {
             "rag_ingested": True,
             "rag_ingested_at": "now()",
-            "rag_ingestion_status": "completed"
+            "rag_ingestion_status": "completed",
+            "markdown_storage_url": doc_url,
+            "markdown_uploaded_at": "now()"
         }
             
         supabase_client.table("new_pages_index").update(page_update_data).eq("id", page_id).execute()
