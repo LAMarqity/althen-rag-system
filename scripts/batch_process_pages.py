@@ -100,6 +100,22 @@ async def process_batch(subcategory=None, datasheet_count=None, batch_size=3):
     
     logger.info(f"Starting batch processing of {len(pages)} pages")
     
+    # Mark all pages in batch as processing to prevent conflicts
+    try:
+        supabase = get_supabase_client()
+        page_ids = [page['id'] for page in pages]
+        logger.info(f"Marking pages {page_ids} as 'processing'...")
+        
+        for page_id in page_ids:
+            supabase.table("new_pages_index").update({
+                "rag_ingestion_status": "processing"
+            }).eq("id", page_id).execute()
+        
+        logger.info(f"Successfully marked {len(page_ids)} pages as processing")
+    except Exception as e:
+        logger.error(f"Error marking pages as processing: {e}")
+        # Continue anyway, the individual process will also try to mark as processing
+    
     results = {"processed": 0, "success": 0, "failed": 0}
     
     for page in pages:
