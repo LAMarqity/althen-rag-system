@@ -14,13 +14,11 @@ FROM new_pages_index
 WHERE id IN (9067, 9064, 9063, 9066, 8983) -- Known page IDs from markdown files
 ORDER BY id;
 
--- Add columns for markdown file connections if they don't exist
--- (Run these ALTER statements one by one if the columns don't exist)
-
--- ALTER TABLE new_pages_index ADD COLUMN IF NOT EXISTS markdown_file_path TEXT;
--- ALTER TABLE new_pages_index ADD COLUMN IF NOT EXISTS markdown_storage_url TEXT;
--- ALTER TABLE new_pages_index ADD COLUMN IF NOT EXISTS markdown_uploaded_at TIMESTAMPTZ;
--- ALTER TABLE new_pages_index ADD COLUMN IF NOT EXISTS markdown_file_size INTEGER;
+-- Add columns for markdown file connections
+ALTER TABLE new_pages_index ADD COLUMN IF NOT EXISTS markdown_file_path TEXT;
+ALTER TABLE new_pages_index ADD COLUMN IF NOT EXISTS markdown_storage_url TEXT;
+ALTER TABLE new_pages_index ADD COLUMN IF NOT EXISTS markdown_uploaded_at TIMESTAMPTZ;
+ALTER TABLE new_pages_index ADD COLUMN IF NOT EXISTS markdown_file_size INTEGER;
 
 -- Update pages with their markdown file information
 -- Page 9067 - PT series string pots
