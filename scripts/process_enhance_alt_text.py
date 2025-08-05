@@ -72,7 +72,7 @@ def scrape_web_content(url: str, max_length: int = 10000) -> str:
             if clean_text:
                 cleaned_texts.append(clean_text)
 
-        web_content = '\n\n'.join(cleaned_texts)
+        web_content = ' '.join(cleaned_texts)
         
         if len(web_content) > max_length:
             web_content = web_content[:max_length] + "..."
