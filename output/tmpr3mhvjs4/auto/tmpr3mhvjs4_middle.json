@@ -1,0 +1,3277 @@
+{
+    "pdf_info": [
+        {
+            "preproc_blocks": [
+                {
+                    "type": "image",
+                    "bbox": [
+                        225,
+                        117,
+                        528,
+                        192
+                    ],
+                    "blocks": [
+                        {
+                            "type": "image_body",
+                            "bbox": [
+                                225,
+                                117,
+                                528,
+                                192
+                            ],
+                            "group_id": 1,
+                            "lines": [
+                                {
+                                    "bbox": [
+                                        225,
+                                        117,
+                                        528,
+                                        192
+                                    ],
+                                    "spans": [
+                                        {
+                                            "bbox": [
+                                                225,
+                                                117,
+                                                528,
+                                                192
+                                            ],
+                                            "score": 0.864,
+                                            "type": "image",
+                                            "image_path": "93b1fca9a54bdcf12f969135ad279ecf5bb6e332603fdd9c3177b48f92a67f83.jpg"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "index": 1,
+                            "virtual_lines": [
+                                {
+                                    "bbox": [
+                                        225,
+                                        117,
+                                        528,
+                                        142.0
+                                    ],
+                                    "spans": [],
+                                    "index": 0
+                                },
+                                {
+                                    "bbox": [
+                                        225,
+                                        142.0,
+                                        528,
+                                        167.0
+                                    ],
+                                    "spans": [],
+                                    "index": 1
+                                },
+                                {
+                                    "bbox": [
+                                        225,
+                                        167.0,
+                                        528,
+                                        192.0
+                                    ],
+                                    "spans": [],
+                                    "index": 2
+                                }
+                            ]
+                        }
+                    ],
+                    "index": 1
+                },
+                {
+                    "type": "text",
+                    "bbox": [
+                        44,
+                        207,
+                        283,
+                        250
+                    ],
+                    "lines": [
+                        {
+                            "bbox": [
+                                44,
+                                207,
+                                281,
+                                219
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        44,
+                                        207,
+                                        281,
+                                        219
+                                    ],
+                                    "score": 1.0,
+                                    "content": "Button Load Cells are strain gauge based transducers",
+                                    "type": "text"
+                                }
+                            ],
+                            "index": 3
+                        },
+                        {
+                            "bbox": [
+                                43,
+                                222,
+                                282,
+                                234
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        43,
+                                        222,
+                                        282,
+                                        234
+                                    ],
+                                    "score": 1.0,
+                                    "content": "with temperature compensation and excellent overall",
+                                    "type": "text"
+                                }
+                            ],
+                            "index": 4
+                        },
+                        {
+                            "bbox": [
+                                43,
+                                237,
+                                106,
+                                250
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        43,
+                                        237,
+                                        106,
+                                        250
+                                    ],
+                                    "score": 1.0,
+                                    "content": "performance.",
+                                    "type": "text"
+                                }
+                            ],
+                            "index": 5
+                        }
+                    ],
+                    "index": 4
+                },
+                {
+                    "type": "text",
+                    "bbox": [
+                        44,
+                        267,
+                        290,
+                        340
+                    ],
+                    "lines": [
+                        {
+                            "bbox": [
+                                43,
+                                267,
+                                291,
+                                280
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        43,
+                                        267,
+                                        244,
+                                        280
+                                    ],
+                                    "score": 1.0,
+                                    "content": "This type provides a range of capacities up to",
+                                    "type": "text"
+                                },
+                                {
+                                    "bbox": [
+                                        245,
+                                        267,
+                                        279,
+                                        279
+                                    ],
+                                    "score": 0.4,
+                                    "content": "2 0 0 ~ \\mathsf { k N }",
+                                    "type": "inline_equation"
+                                },
+                                {
+                                    "bbox": [
+                                        279,
+                                        267,
+                                        291,
+                                        280
+                                    ],
+                                    "score": 1.0,
+                                    "content": "or",
+                                    "type": "text"
+                                }
+                            ],
+                            "index": 6
+                        },
+                        {
+                            "bbox": [
+                                44,
+                                282,
+                                288,
+                                295
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        44,
+                                        282,
+                                        73,
+                                        294
+                                    ],
+                                    "score": 0.64,
+                                    "content": "5 0 \\ k \\ b",
+                                    "type": "inline_equation"
+                                },
+                                {
+                                    "bbox": [
+                                        74,
+                                        282,
+                                        146,
+                                        295
+                                    ],
+                                    "score": 1.0,
+                                    "content": "with better than",
+                                    "type": "text"
+                                },
+                                {
+                                    "bbox": [
+                                        146,
+                                        282,
+                                        178,
+                                        294
+                                    ],
+                                    "score": 0.88,
+                                    "content": "\\pm 0 . 5 \\%",
+                                    "type": "inline_equation"
+                                },
+                                {
+                                    "bbox": [
+                                        178,
+                                        282,
+                                        288,
+                                        295
+                                    ],
+                                    "score": 1.0,
+                                    "content": "(full scale) non-linearity.",
+                                    "type": "text"
+                                }
+                            ],
+                            "index": 7
+                        },
+                        {
+                            "bbox": [
+                                43,
+                                297,
+                                281,
+                                309
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        43,
+                                        297,
+                                        281,
+                                        309
+                                    ],
+                                    "score": 1.0,
+                                    "content": "Three tapped holes are provided on the underside for",
+                                    "type": "text"
+                                }
+                            ],
+                            "index": 8
+                        },
+                        {
+                            "bbox": [
+                                44,
+                                313,
+                                285,
+                                325
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        44,
+                                        313,
+                                        285,
+                                        325
+                                    ],
+                                    "score": 1.0,
+                                    "content": "ease of mounting. Amplified and digitised versions are",
+                                    "type": "text"
+                                }
+                            ],
+                            "index": 9
+                        },
+                        {
+                            "bbox": [
+                                44,
+                                328,
+                                149,
+                                340
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        44,
+                                        328,
+                                        149,
+                                        340
+                                    ],
+                                    "score": 1.0,
+                                    "content": "available upon request.",
+                                    "type": "text"
+                                }
+                            ],
+                            "index": 10
+                        }
+                    ],
+                    "index": 8
+                },
+                {
+                    "type": "title",
+                    "bbox": [
+                        44,
+                        377,
+                        100,
+                        390
+                    ],
+                    "lines": [
+                        {
+                            "bbox": [
+                                59,
+                                378,
+                                101,
+                                390
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        59,
+                                        378,
+                                        101,
+                                        390
+                                    ],
+                                    "score": 1.0,
+                                    "content": "WIRING",
+                                    "type": "text"
+                                }
+                            ],
+                            "index": 11
+                        }
+                    ],
+                    "index": 11
+                },
+                {
+                    "type": "text",
+                    "bbox": [
+                        46,
+                        393,
+                        285,
+                        481
+                    ],
+                    "lines": [
+                        {
+                            "bbox": [
+                                47,
+                                393,
+                                252,
+                                406
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        47,
+                                        393,
+                                        201,
+                                        406
+                                    ],
+                                    "score": 1.0,
+                                    "content": "• The load button is provided with",
+                                    "type": "text"
+                                },
+                                {
+                                    "bbox": [
+                                        202,
+                                        394,
+                                        226,
+                                        405
+                                    ],
+                                    "score": 0.47,
+                                    "content": "4 \\times 3 2",
+                                    "type": "inline_equation"
+                                },
+                                {
+                                    "bbox": [
+                                        227,
+                                        393,
+                                        252,
+                                        406
+                                    ],
+                                    "score": 1.0,
+                                    "content": "AWG",
+                                    "type": "text"
+                                }
+                            ],
+                            "index": 12
+                        },
+                        {
+                            "bbox": [
+                                66,
+                                408,
+                                277,
+                                421
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        66,
+                                        408,
+                                        200,
+                                        421
+                                    ],
+                                    "score": 1.0,
+                                    "content": "(100N-500N & 25lb – 100lb),",
+                                    "type": "text"
+                                },
+                                {
+                                    "bbox": [
+                                        200,
+                                        408,
+                                        225,
+                                        420
+                                    ],
+                                    "score": 0.51,
+                                    "content": "4 \\times 2 8",
+                                    "type": "inline_equation"
+                                },
+                                {
+                                    "bbox": [
+                                        226,
+                                        408,
+                                        277,
+                                        421
+                                    ],
+                                    "score": 1.0,
+                                    "content": "AWG (1kN-",
+                                    "type": "text"
+                                }
+                            ],
+                            "index": 13
+                        },
+                        {
+                            "bbox": [
+                                66,
+                                424,
+                                285,
+                                436
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        66,
+                                        424,
+                                        285,
+                                        436
+                                    ],
+                                    "score": 1.0,
+                                    "content": "200kN & 250lbf – 50klbf) wiring within a braided",
+                                    "type": "text"
+                                }
+                            ],
+                            "index": 14
+                        },
+                        {
+                            "bbox": [
+                                65,
+                                438,
+                                247,
+                                451
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        65,
+                                        438,
+                                        247,
+                                        451
+                                    ],
+                                    "score": 1.0,
+                                    "content": "shielded cable (overall cable length 2m).",
+                                    "type": "text"
+                                }
+                            ],
+                            "index": 15
+                        },
+                        {
+                            "bbox": [
+                                47,
+                                453,
+                                271,
+                                466
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        47,
+                                        453,
+                                        271,
+                                        466
+                                    ],
+                                    "score": 1.0,
+                                    "content": "• Connector with integrated TEDS chip is available",
+                                    "type": "text"
+                                }
+                            ],
+                            "index": 16
+                        },
+                        {
+                            "bbox": [
+                                65,
+                                469,
+                                105,
+                                480
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        65,
+                                        469,
+                                        105,
+                                        480
+                                    ],
+                                    "score": 1.0,
+                                    "content": "to order.",
+                                    "type": "text"
+                                }
+                            ],
+                            "index": 17
+                        }
+                    ],
+                    "index": 14.5
+                },
+                {
+                    "type": "image",
+                    "bbox": [
+                        323,
+                        374,
+                        529,
+                        480
+                    ],
+                    "blocks": [
+                        {
+                            "type": "image_body",
+                            "bbox": [
+                                323,
+                                374,
+                                529,
+                                480
+                            ],
+                            "group_id": 2,
+                            "lines": [
+                                {
+                                    "bbox": [
+                                        323,
+                                        374,
+                                        529,
+                                        480
+                                    ],
+                                    "spans": [
+                                        {
+                                            "bbox": [
+                                                323,
+                                                374,
+                                                529,
+                                                480
+                                            ],
+                                            "score": 0.925,
+                                            "type": "image",
+                                            "image_path": "1c0e15f3aa878d6e678512fcb8ae055e8d5bc5ec81955ddddb8c3ebfabbf33ef.jpg"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "index": 21.5,
+                            "virtual_lines": [
+                                {
+                                    "bbox": [
+                                        323,
+                                        374,
+                                        529,
+                                        387.25
+                                    ],
+                                    "spans": [],
+                                    "index": 18
+                                },
+                                {
+                                    "bbox": [
+                                        323,
+                                        387.25,
+                                        529,
+                                        400.5
+                                    ],
+                                    "spans": [],
+                                    "index": 19
+                                },
+                                {
+                                    "bbox": [
+                                        323,
+                                        400.5,
+                                        529,
+                                        413.75
+                                    ],
+                                    "spans": [],
+                                    "index": 20
+                                },
+                                {
+                                    "bbox": [
+                                        323,
+                                        413.75,
+                                        529,
+                                        427.0
+                                    ],
+                                    "spans": [],
+                                    "index": 21
+                                },
+                                {
+                                    "bbox": [
+                                        323,
+                                        427.0,
+                                        529,
+                                        440.25
+                                    ],
+                                    "spans": [],
+                                    "index": 22
+                                },
+                                {
+                                    "bbox": [
+                                        323,
+                                        440.25,
+                                        529,
+                                        453.5
+                                    ],
+                                    "spans": [],
+                                    "index": 23
+                                },
+                                {
+                                    "bbox": [
+                                        323,
+                                        453.5,
+                                        529,
+                                        466.75
+                                    ],
+                                    "spans": [],
+                                    "index": 24
+                                },
+                                {
+                                    "bbox": [
+                                        323,
+                                        466.75,
+                                        529,
+                                        480.0
+                                    ],
+                                    "spans": [],
+                                    "index": 25
+                                }
+                            ]
+                        }
+                    ],
+                    "index": 21.5
+                },
+                {
+                    "type": "image",
+                    "bbox": [
+                        40,
+                        536,
+                        294,
+                        752
+                    ],
+                    "blocks": [
+                        {
+                            "type": "image_caption",
+                            "bbox": [
+                                44,
+                                516,
+                                125,
+                                530
+                            ],
+                            "group_id": 0,
+                            "lines": [
+                                {
+                                    "bbox": [
+                                        60,
+                                        516,
+                                        125,
+                                        530
+                                    ],
+                                    "spans": [
+                                        {
+                                            "bbox": [
+                                                60,
+                                                516,
+                                                125,
+                                                530
+                                            ],
+                                            "score": 1.0,
+                                            "content": "DIMENSIONS",
+                                            "type": "text"
+                                        }
+                                    ],
+                                    "index": 26
+                                }
+                            ],
+                            "index": 26
+                        },
+                        {
+                            "type": "image_body",
+                            "bbox": [
+                                40,
+                                536,
+                                294,
+                                752
+                            ],
+                            "group_id": 0,
+                            "lines": [
+                                {
+                                    "bbox": [
+                                        40,
+                                        536,
+                                        294,
+                                        752
+                                    ],
+                                    "spans": [
+                                        {
+                                            "bbox": [
+                                                40,
+                                                536,
+                                                294,
+                                                752
+                                            ],
+                                            "score": 0.674,
+                                            "type": "image",
+                                            "image_path": "740039dd41c0a347ca7ea949adf6e30bd0cdb854da26123e2abbb3be4982d8fc.jpg"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "index": 34.5,
+                            "virtual_lines": [
+                                {
+                                    "bbox": [
+                                        40,
+                                        536,
+                                        294,
+                                        549.5
+                                    ],
+                                    "spans": [],
+                                    "index": 27
+                                },
+                                {
+                                    "bbox": [
+                                        40,
+                                        549.5,
+                                        294,
+                                        563.0
+                                    ],
+                                    "spans": [],
+                                    "index": 28
+                                },
+                                {
+                                    "bbox": [
+                                        40,
+                                        563.0,
+                                        294,
+                                        576.5
+                                    ],
+                                    "spans": [],
+                                    "index": 29
+                                },
+                                {
+                                    "bbox": [
+                                        40,
+                                        576.5,
+                                        294,
+                                        590.0
+                                    ],
+                                    "spans": [],
+                                    "index": 30
+                                },
+                                {
+                                    "bbox": [
+                                        40,
+                                        590.0,
+                                        294,
+                                        603.5
+                                    ],
+                                    "spans": [],
+                                    "index": 31
+                                },
+                                {
+                                    "bbox": [
+                                        40,
+                                        603.5,
+                                        294,
+                                        617.0
+                                    ],
+                                    "spans": [],
+                                    "index": 32
+                                },
+                                {
+                                    "bbox": [
+                                        40,
+                                        617.0,
+                                        294,
+                                        630.5
+                                    ],
+                                    "spans": [],
+                                    "index": 33
+                                },
+                                {
+                                    "bbox": [
+                                        40,
+                                        630.5,
+                                        294,
+                                        644.0
+                                    ],
+                                    "spans": [],
+                                    "index": 34
+                                },
+                                {
+                                    "bbox": [
+                                        40,
+                                        644.0,
+                                        294,
+                                        657.5
+                                    ],
+                                    "spans": [],
+                                    "index": 35
+                                },
+                                {
+                                    "bbox": [
+                                        40,
+                                        657.5,
+                                        294,
+                                        671.0
+                                    ],
+                                    "spans": [],
+                                    "index": 36
+                                },
+                                {
+                                    "bbox": [
+                                        40,
+                                        671.0,
+                                        294,
+                                        684.5
+                                    ],
+                                    "spans": [],
+                                    "index": 37
+                                },
+                                {
+                                    "bbox": [
+                                        40,
+                                        684.5,
+                                        294,
+                                        698.0
+                                    ],
+                                    "spans": [],
+                                    "index": 38
+                                },
+                                {
+                                    "bbox": [
+                                        40,
+                                        698.0,
+                                        294,
+                                        711.5
+                                    ],
+                                    "spans": [],
+                                    "index": 39
+                                },
+                                {
+                                    "bbox": [
+                                        40,
+                                        711.5,
+                                        294,
+                                        725.0
+                                    ],
+                                    "spans": [],
+                                    "index": 40
+                                },
+                                {
+                                    "bbox": [
+                                        40,
+                                        725.0,
+                                        294,
+                                        738.5
+                                    ],
+                                    "spans": [],
+                                    "index": 41
+                                },
+                                {
+                                    "bbox": [
+                                        40,
+                                        738.5,
+                                        294,
+                                        752.0
+                                    ],
+                                    "spans": [],
+                                    "index": 42
+                                }
+                            ]
+                        }
+                    ],
+                    "index": 30.25
+                },
+                {
+                    "type": "text",
+                    "bbox": [
+                        43,
+                        767,
+                        204,
+                        779
+                    ],
+                    "lines": [
+                        {
+                            "bbox": [
+                                43,
+                                766,
+                                205,
+                                780
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        43,
+                                        766,
+                                        205,
+                                        780
+                                    ],
+                                    "score": 0.989,
+                                    "content": "Dimensions continued on next page.",
+                                    "type": "text"
+                                }
+                            ],
+                            "index": 43
+                        }
+                    ],
+                    "index": 43
+                },
+                {
+                    "type": "table",
+                    "bbox": [
+                        320,
+                        530,
+                        550,
+                        775
+                    ],
+                    "blocks": [
+                        {
+                            "type": "table_body",
+                            "bbox": [
+                                320,
+                                530,
+                                550,
+                                775
+                            ],
+                            "group_id": 0,
+                            "lines": [
+                                {
+                                    "bbox": [
+                                        320,
+                                        530,
+                                        550,
+                                        775
+                                    ],
+                                    "spans": [
+                                        {
+                                            "bbox": [
+                                                320,
+                                                530,
+                                                550,
+                                                775
+                                            ],
+                                            "score": 0.964,
+                                            "html": "<table><tr><td></td><td>CAPACITY DEFLECTION (NOM.) (MM) [IN]</td></tr><tr><td>100N</td><td>0.02 [.001]</td></tr><tr><td>200N</td><td>0.04 [.002]</td></tr><tr><td>500N</td><td>0.03 [.001]</td></tr><tr><td>1kN</td><td>0.03 [.001]</td></tr><tr><td>2kN</td><td>0.03 [.001]</td></tr><tr><td>5kN</td><td>0.03 [.001]</td></tr><tr><td>10kN</td><td>0.03 [.001]</td></tr><tr><td>15kN</td><td>0.04 [.002]</td></tr><tr><td>20kN</td><td>0.05 [.002]</td></tr><tr><td>50kN</td><td>0.06 [.002]</td></tr><tr><td>100kN</td><td>0.08 [.003]</td></tr><tr><td>150kN</td><td>0.09 [.003]</td></tr></table>",
+                                            "type": "table",
+                                            "image_path": "d6da752cb64d354c40ed09ef9967767275c0a2da9dcf2bab278f710fdef40812.jpg"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "index": 52.5,
+                            "virtual_lines": [
+                                {
+                                    "bbox": [
+                                        320,
+                                        530,
+                                        550,
+                                        543.6111111111111
+                                    ],
+                                    "spans": [],
+                                    "index": 44
+                                },
+                                {
+                                    "bbox": [
+                                        320,
+                                        543.6111111111111,
+                                        550,
+                                        557.2222222222222
+                                    ],
+                                    "spans": [],
+                                    "index": 45
+                                },
+                                {
+                                    "bbox": [
+                                        320,
+                                        557.2222222222222,
+                                        550,
+                                        570.8333333333333
+                                    ],
+                                    "spans": [],
+                                    "index": 46
+                                },
+                                {
+                                    "bbox": [
+                                        320,
+                                        570.8333333333333,
+                                        550,
+                                        584.4444444444443
+                                    ],
+                                    "spans": [],
+                                    "index": 47
+                                },
+                                {
+                                    "bbox": [
+                                        320,
+                                        584.4444444444443,
+                                        550,
+                                        598.0555555555554
+                                    ],
+                                    "spans": [],
+                                    "index": 48
+                                },
+                                {
+                                    "bbox": [
+                                        320,
+                                        598.0555555555554,
+                                        550,
+                                        611.6666666666665
+                                    ],
+                                    "spans": [],
+                                    "index": 49
+                                },
+                                {
+                                    "bbox": [
+                                        320,
+                                        611.6666666666665,
+                                        550,
+                                        625.2777777777776
+                                    ],
+                                    "spans": [],
+                                    "index": 50
+                                },
+                                {
+                                    "bbox": [
+                                        320,
+                                        625.2777777777776,
+                                        550,
+                                        638.8888888888887
+                                    ],
+                                    "spans": [],
+                                    "index": 51
+                                },
+                                {
+                                    "bbox": [
+                                        320,
+                                        638.8888888888887,
+                                        550,
+                                        652.4999999999998
+                                    ],
+                                    "spans": [],
+                                    "index": 52
+                                },
+                                {
+                                    "bbox": [
+                                        320,
+                                        652.4999999999998,
+                                        550,
+                                        666.1111111111109
+                                    ],
+                                    "spans": [],
+                                    "index": 53
+                                },
+                                {
+                                    "bbox": [
+                                        320,
+                                        666.1111111111109,
+                                        550,
+                                        679.722222222222
+                                    ],
+                                    "spans": [],
+                                    "index": 54
+                                },
+                                {
+                                    "bbox": [
+                                        320,
+                                        679.722222222222,
+                                        550,
+                                        693.333333333333
+                                    ],
+                                    "spans": [],
+                                    "index": 55
+                                },
+                                {
+                                    "bbox": [
+                                        320,
+                                        693.333333333333,
+                                        550,
+                                        706.9444444444441
+                                    ],
+                                    "spans": [],
+                                    "index": 56
+                                },
+                                {
+                                    "bbox": [
+                                        320,
+                                        706.9444444444441,
+                                        550,
+                                        720.5555555555552
+                                    ],
+                                    "spans": [],
+                                    "index": 57
+                                },
+                                {
+                                    "bbox": [
+                                        320,
+                                        720.5555555555552,
+                                        550,
+                                        734.1666666666663
+                                    ],
+                                    "spans": [],
+                                    "index": 58
+                                },
+                                {
+                                    "bbox": [
+                                        320,
+                                        734.1666666666663,
+                                        550,
+                                        747.7777777777774
+                                    ],
+                                    "spans": [],
+                                    "index": 59
+                                },
+                                {
+                                    "bbox": [
+                                        320,
+                                        747.7777777777774,
+                                        550,
+                                        761.3888888888885
+                                    ],
+                                    "spans": [],
+                                    "index": 60
+                                },
+                                {
+                                    "bbox": [
+                                        320,
+                                        761.3888888888885,
+                                        550,
+                                        774.9999999999995
+                                    ],
+                                    "spans": [],
+                                    "index": 61
+                                }
+                            ]
+                        }
+                    ],
+                    "index": 52.5
+                }
+            ],
+            "page_idx": 0,
+            "page_size": [
+                595,
+                841
+            ],
+            "discarded_blocks": [
+                {
+                    "type": "discarded",
+                    "bbox": [
+                        26,
+                        26,
+                        570,
+                        64
+                    ],
+                    "lines": [
+                        {
+                            "bbox": [
+                                38,
+                                24,
+                                571,
+                                64
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        38,
+                                        37,
+                                        54,
+                                        52
+                                    ],
+                                    "score": 0.612,
+                                    "content": "A",
+                                    "type": "text"
+                                },
+                                {
+                                    "bbox": [
+                                        75,
+                                        30,
+                                        148,
+                                        57
+                                    ],
+                                    "score": 1.0,
+                                    "content": "ALBMButton Load Cell",
+                                    "type": "text"
+                                },
+                                {
+                                    "bbox": [
+                                        452,
+                                        24,
+                                        571,
+                                        64
+                                    ],
+                                    "score": 0.9,
+                                    "content": "SALTHENS",
+                                    "type": "text"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "discarded",
+                    "bbox": [
+                        42,
+                        96,
+                        163,
+                        129
+                    ],
+                    "lines": [
+                        {
+                            "bbox": [
+                                51,
+                                96,
+                                127,
+                                119
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        51,
+                                        102,
+                                        67,
+                                        119
+                                    ],
+                                    "score": 1.0,
+                                    "content": "N",
+                                    "type": "text"
+                                },
+                                {
+                                    "bbox": [
+                                        81,
+                                        96,
+                                        127,
+                                        114
+                                    ],
+                                    "score": 1.0,
+                                    "content": "ALBM",
+                                    "type": "text"
+                                }
+                            ]
+                        },
+                        {
+                            "bbox": [
+                                82,
+                                115,
+                                163,
+                                128
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        82,
+                                        115,
+                                        163,
+                                        128
+                                    ],
+                                    "score": 1.0,
+                                    "content": "Button Load Cell",
+                                    "type": "text"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "discarded",
+                    "bbox": [
+                        527,
+                        806,
+                        562,
+                        816
+                    ],
+                    "lines": [
+                        {
+                            "bbox": [
+                                526,
+                                805,
+                                564,
+                                817
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        526,
+                                        805,
+                                        564,
+                                        817
+                                    ],
+                                    "score": 1.0,
+                                    "content": "Page 1 / 3",
+                                    "type": "text"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "discarded",
+                    "bbox": [
+                        569,
+                        723,
+                        577,
+                        766
+                    ],
+                    "lines": []
+                }
+            ],
+            "para_blocks": [
+                {
+                    "type": "image",
+                    "bbox": [
+                        225,
+                        117,
+                        528,
+                        192
+                    ],
+                    "blocks": [
+                        {
+                            "type": "image_body",
+                            "bbox": [
+                                225,
+                                117,
+                                528,
+                                192
+                            ],
+                            "group_id": 1,
+                            "lines": [
+                                {
+                                    "bbox": [
+                                        225,
+                                        117,
+                                        528,
+                                        192
+                                    ],
+                                    "spans": [
+                                        {
+                                            "bbox": [
+                                                225,
+                                                117,
+                                                528,
+                                                192
+                                            ],
+                                            "score": 0.864,
+                                            "type": "image",
+                                            "image_path": "93b1fca9a54bdcf12f969135ad279ecf5bb6e332603fdd9c3177b48f92a67f83.jpg"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "index": 1,
+                            "virtual_lines": [
+                                {
+                                    "bbox": [
+                                        225,
+                                        117,
+                                        528,
+                                        142.0
+                                    ],
+                                    "spans": [],
+                                    "index": 0
+                                },
+                                {
+                                    "bbox": [
+                                        225,
+                                        142.0,
+                                        528,
+                                        167.0
+                                    ],
+                                    "spans": [],
+                                    "index": 1
+                                },
+                                {
+                                    "bbox": [
+                                        225,
+                                        167.0,
+                                        528,
+                                        192.0
+                                    ],
+                                    "spans": [],
+                                    "index": 2
+                                }
+                            ]
+                        }
+                    ],
+                    "index": 1
+                },
+                {
+                    "type": "text",
+                    "bbox": [
+                        44,
+                        207,
+                        283,
+                        250
+                    ],
+                    "lines": [
+                        {
+                            "bbox": [
+                                44,
+                                207,
+                                281,
+                                219
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        44,
+                                        207,
+                                        281,
+                                        219
+                                    ],
+                                    "score": 1.0,
+                                    "content": "Button Load Cells are strain gauge based transducers",
+                                    "type": "text"
+                                }
+                            ],
+                            "index": 3
+                        },
+                        {
+                            "bbox": [
+                                43,
+                                222,
+                                282,
+                                234
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        43,
+                                        222,
+                                        282,
+                                        234
+                                    ],
+                                    "score": 1.0,
+                                    "content": "with temperature compensation and excellent overall",
+                                    "type": "text"
+                                }
+                            ],
+                            "index": 4
+                        },
+                        {
+                            "bbox": [
+                                43,
+                                237,
+                                106,
+                                250
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        43,
+                                        237,
+                                        106,
+                                        250
+                                    ],
+                                    "score": 1.0,
+                                    "content": "performance.",
+                                    "type": "text"
+                                }
+                            ],
+                            "index": 5
+                        }
+                    ],
+                    "index": 4,
+                    "bbox_fs": [
+                        43,
+                        207,
+                        282,
+                        250
+                    ]
+                },
+                {
+                    "type": "text",
+                    "bbox": [
+                        44,
+                        267,
+                        290,
+                        340
+                    ],
+                    "lines": [
+                        {
+                            "bbox": [
+                                43,
+                                267,
+                                291,
+                                280
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        43,
+                                        267,
+                                        244,
+                                        280
+                                    ],
+                                    "score": 1.0,
+                                    "content": "This type provides a range of capacities up to",
+                                    "type": "text"
+                                },
+                                {
+                                    "bbox": [
+                                        245,
+                                        267,
+                                        279,
+                                        279
+                                    ],
+                                    "score": 0.4,
+                                    "content": "2 0 0 ~ \\mathsf { k N }",
+                                    "type": "inline_equation"
+                                },
+                                {
+                                    "bbox": [
+                                        279,
+                                        267,
+                                        291,
+                                        280
+                                    ],
+                                    "score": 1.0,
+                                    "content": "or",
+                                    "type": "text"
+                                }
+                            ],
+                            "index": 6
+                        },
+                        {
+                            "bbox": [
+                                44,
+                                282,
+                                288,
+                                295
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        44,
+                                        282,
+                                        73,
+                                        294
+                                    ],
+                                    "score": 0.64,
+                                    "content": "5 0 \\ k \\ b",
+                                    "type": "inline_equation"
+                                },
+                                {
+                                    "bbox": [
+                                        74,
+                                        282,
+                                        146,
+                                        295
+                                    ],
+                                    "score": 1.0,
+                                    "content": "with better than",
+                                    "type": "text"
+                                },
+                                {
+                                    "bbox": [
+                                        146,
+                                        282,
+                                        178,
+                                        294
+                                    ],
+                                    "score": 0.88,
+                                    "content": "\\pm 0 . 5 \\%",
+                                    "type": "inline_equation"
+                                },
+                                {
+                                    "bbox": [
+                                        178,
+                                        282,
+                                        288,
+                                        295
+                                    ],
+                                    "score": 1.0,
+                                    "content": "(full scale) non-linearity.",
+                                    "type": "text"
+                                }
+                            ],
+                            "index": 7
+                        },
+                        {
+                            "bbox": [
+                                43,
+                                297,
+                                281,
+                                309
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        43,
+                                        297,
+                                        281,
+                                        309
+                                    ],
+                                    "score": 1.0,
+                                    "content": "Three tapped holes are provided on the underside for",
+                                    "type": "text"
+                                }
+                            ],
+                            "index": 8
+                        },
+                        {
+                            "bbox": [
+                                44,
+                                313,
+                                285,
+                                325
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        44,
+                                        313,
+                                        285,
+                                        325
+                                    ],
+                                    "score": 1.0,
+                                    "content": "ease of mounting. Amplified and digitised versions are",
+                                    "type": "text"
+                                }
+                            ],
+                            "index": 9
+                        },
+                        {
+                            "bbox": [
+                                44,
+                                328,
+                                149,
+                                340
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        44,
+                                        328,
+                                        149,
+                                        340
+                                    ],
+                                    "score": 1.0,
+                                    "content": "available upon request.",
+                                    "type": "text"
+                                }
+                            ],
+                            "index": 10
+                        }
+                    ],
+                    "index": 8,
+                    "bbox_fs": [
+                        43,
+                        267,
+                        291,
+                        340
+                    ]
+                },
+                {
+                    "type": "title",
+                    "bbox": [
+                        44,
+                        377,
+                        100,
+                        390
+                    ],
+                    "lines": [
+                        {
+                            "bbox": [
+                                59,
+                                378,
+                                101,
+                                390
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        59,
+                                        378,
+                                        101,
+                                        390
+                                    ],
+                                    "score": 1.0,
+                                    "content": "WIRING",
+                                    "type": "text"
+                                }
+                            ],
+                            "index": 11
+                        }
+                    ],
+                    "index": 11
+                },
+                {
+                    "type": "list",
+                    "bbox": [
+                        46,
+                        393,
+                        285,
+                        481
+                    ],
+                    "lines": [
+                        {
+                            "bbox": [
+                                47,
+                                393,
+                                252,
+                                406
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        47,
+                                        393,
+                                        201,
+                                        406
+                                    ],
+                                    "score": 1.0,
+                                    "content": "• The load button is provided with",
+                                    "type": "text"
+                                },
+                                {
+                                    "bbox": [
+                                        202,
+                                        394,
+                                        226,
+                                        405
+                                    ],
+                                    "score": 0.47,
+                                    "content": "4 \\times 3 2",
+                                    "type": "inline_equation"
+                                },
+                                {
+                                    "bbox": [
+                                        227,
+                                        393,
+                                        252,
+                                        406
+                                    ],
+                                    "score": 1.0,
+                                    "content": "AWG",
+                                    "type": "text"
+                                }
+                            ],
+                            "index": 12,
+                            "is_list_start_line": true,
+                            "is_list_end_line": true
+                        },
+                        {
+                            "bbox": [
+                                66,
+                                408,
+                                277,
+                                421
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        66,
+                                        408,
+                                        200,
+                                        421
+                                    ],
+                                    "score": 1.0,
+                                    "content": "(100N-500N & 25lb – 100lb),",
+                                    "type": "text"
+                                },
+                                {
+                                    "bbox": [
+                                        200,
+                                        408,
+                                        225,
+                                        420
+                                    ],
+                                    "score": 0.51,
+                                    "content": "4 \\times 2 8",
+                                    "type": "inline_equation"
+                                },
+                                {
+                                    "bbox": [
+                                        226,
+                                        408,
+                                        277,
+                                        421
+                                    ],
+                                    "score": 1.0,
+                                    "content": "AWG (1kN-",
+                                    "type": "text"
+                                }
+                            ],
+                            "index": 13
+                        },
+                        {
+                            "bbox": [
+                                66,
+                                424,
+                                285,
+                                436
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        66,
+                                        424,
+                                        285,
+                                        436
+                                    ],
+                                    "score": 1.0,
+                                    "content": "200kN & 250lbf – 50klbf) wiring within a braided",
+                                    "type": "text"
+                                }
+                            ],
+                            "index": 14
+                        },
+                        {
+                            "bbox": [
+                                65,
+                                438,
+                                247,
+                                451
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        65,
+                                        438,
+                                        247,
+                                        451
+                                    ],
+                                    "score": 1.0,
+                                    "content": "shielded cable (overall cable length 2m).",
+                                    "type": "text"
+                                }
+                            ],
+                            "index": 15,
+                            "is_list_end_line": true
+                        },
+                        {
+                            "bbox": [
+                                47,
+                                453,
+                                271,
+                                466
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        47,
+                                        453,
+                                        271,
+                                        466
+                                    ],
+                                    "score": 1.0,
+                                    "content": "• Connector with integrated TEDS chip is available",
+                                    "type": "text"
+                                }
+                            ],
+                            "index": 16,
+                            "is_list_start_line": true,
+                            "is_list_end_line": true
+                        },
+                        {
+                            "bbox": [
+                                65,
+                                469,
+                                105,
+                                480
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        65,
+                                        469,
+                                        105,
+                                        480
+                                    ],
+                                    "score": 1.0,
+                                    "content": "to order.",
+                                    "type": "text"
+                                }
+                            ],
+                            "index": 17,
+                            "is_list_end_line": true
+                        }
+                    ],
+                    "index": 14.5,
+                    "bbox_fs": [
+                        47,
+                        393,
+                        285,
+                        480
+                    ]
+                },
+                {
+                    "type": "image",
+                    "bbox": [
+                        323,
+                        374,
+                        529,
+                        480
+                    ],
+                    "blocks": [
+                        {
+                            "type": "image_body",
+                            "bbox": [
+                                323,
+                                374,
+                                529,
+                                480
+                            ],
+                            "group_id": 2,
+                            "lines": [
+                                {
+                                    "bbox": [
+                                        323,
+                                        374,
+                                        529,
+                                        480
+                                    ],
+                                    "spans": [
+                                        {
+                                            "bbox": [
+                                                323,
+                                                374,
+                                                529,
+                                                480
+                                            ],
+                                            "score": 0.925,
+                                            "type": "image",
+                                            "image_path": "1c0e15f3aa878d6e678512fcb8ae055e8d5bc5ec81955ddddb8c3ebfabbf33ef.jpg"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "index": 21.5,
+                            "virtual_lines": [
+                                {
+                                    "bbox": [
+                                        323,
+                                        374,
+                                        529,
+                                        387.25
+                                    ],
+                                    "spans": [],
+                                    "index": 18
+                                },
+                                {
+                                    "bbox": [
+                                        323,
+                                        387.25,
+                                        529,
+                                        400.5
+                                    ],
+                                    "spans": [],
+                                    "index": 19
+                                },
+                                {
+                                    "bbox": [
+                                        323,
+                                        400.5,
+                                        529,
+                                        413.75
+                                    ],
+                                    "spans": [],
+                                    "index": 20
+                                },
+                                {
+                                    "bbox": [
+                                        323,
+                                        413.75,
+                                        529,
+                                        427.0
+                                    ],
+                                    "spans": [],
+                                    "index": 21
+                                },
+                                {
+                                    "bbox": [
+                                        323,
+                                        427.0,
+                                        529,
+                                        440.25
+                                    ],
+                                    "spans": [],
+                                    "index": 22
+                                },
+                                {
+                                    "bbox": [
+                                        323,
+                                        440.25,
+                                        529,
+                                        453.5
+                                    ],
+                                    "spans": [],
+                                    "index": 23
+                                },
+                                {
+                                    "bbox": [
+                                        323,
+                                        453.5,
+                                        529,
+                                        466.75
+                                    ],
+                                    "spans": [],
+                                    "index": 24
+                                },
+                                {
+                                    "bbox": [
+                                        323,
+                                        466.75,
+                                        529,
+                                        480.0
+                                    ],
+                                    "spans": [],
+                                    "index": 25
+                                }
+                            ]
+                        }
+                    ],
+                    "index": 21.5
+                },
+                {
+                    "type": "image",
+                    "bbox": [
+                        40,
+                        536,
+                        294,
+                        752
+                    ],
+                    "blocks": [
+                        {
+                            "type": "image_caption",
+                            "bbox": [
+                                44,
+                                516,
+                                125,
+                                530
+                            ],
+                            "group_id": 0,
+                            "lines": [
+                                {
+                                    "bbox": [
+                                        60,
+                                        516,
+                                        125,
+                                        530
+                                    ],
+                                    "spans": [
+                                        {
+                                            "bbox": [
+                                                60,
+                                                516,
+                                                125,
+                                                530
+                                            ],
+                                            "score": 1.0,
+                                            "content": "DIMENSIONS",
+                                            "type": "text"
+                                        }
+                                    ],
+                                    "index": 26
+                                }
+                            ],
+                            "index": 26
+                        },
+                        {
+                            "type": "image_body",
+                            "bbox": [
+                                40,
+                                536,
+                                294,
+                                752
+                            ],
+                            "group_id": 0,
+                            "lines": [
+                                {
+                                    "bbox": [
+                                        40,
+                                        536,
+                                        294,
+                                        752
+                                    ],
+                                    "spans": [
+                                        {
+                                            "bbox": [
+                                                40,
+                                                536,
+                                                294,
+                                                752
+                                            ],
+                                            "score": 0.674,
+                                            "type": "image",
+                                            "image_path": "740039dd41c0a347ca7ea949adf6e30bd0cdb854da26123e2abbb3be4982d8fc.jpg"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "index": 34.5,
+                            "virtual_lines": [
+                                {
+                                    "bbox": [
+                                        40,
+                                        536,
+                                        294,
+                                        549.5
+                                    ],
+                                    "spans": [],
+                                    "index": 27
+                                },
+                                {
+                                    "bbox": [
+                                        40,
+                                        549.5,
+                                        294,
+                                        563.0
+                                    ],
+                                    "spans": [],
+                                    "index": 28
+                                },
+                                {
+                                    "bbox": [
+                                        40,
+                                        563.0,
+                                        294,
+                                        576.5
+                                    ],
+                                    "spans": [],
+                                    "index": 29
+                                },
+                                {
+                                    "bbox": [
+                                        40,
+                                        576.5,
+                                        294,
+                                        590.0
+                                    ],
+                                    "spans": [],
+                                    "index": 30
+                                },
+                                {
+                                    "bbox": [
+                                        40,
+                                        590.0,
+                                        294,
+                                        603.5
+                                    ],
+                                    "spans": [],
+                                    "index": 31
+                                },
+                                {
+                                    "bbox": [
+                                        40,
+                                        603.5,
+                                        294,
+                                        617.0
+                                    ],
+                                    "spans": [],
+                                    "index": 32
+                                },
+                                {
+                                    "bbox": [
+                                        40,
+                                        617.0,
+                                        294,
+                                        630.5
+                                    ],
+                                    "spans": [],
+                                    "index": 33
+                                },
+                                {
+                                    "bbox": [
+                                        40,
+                                        630.5,
+                                        294,
+                                        644.0
+                                    ],
+                                    "spans": [],
+                                    "index": 34
+                                },
+                                {
+                                    "bbox": [
+                                        40,
+                                        644.0,
+                                        294,
+                                        657.5
+                                    ],
+                                    "spans": [],
+                                    "index": 35
+                                },
+                                {
+                                    "bbox": [
+                                        40,
+                                        657.5,
+                                        294,
+                                        671.0
+                                    ],
+                                    "spans": [],
+                                    "index": 36
+                                },
+                                {
+                                    "bbox": [
+                                        40,
+                                        671.0,
+                                        294,
+                                        684.5
+                                    ],
+                                    "spans": [],
+                                    "index": 37
+                                },
+                                {
+                                    "bbox": [
+                                        40,
+                                        684.5,
+                                        294,
+                                        698.0
+                                    ],
+                                    "spans": [],
+                                    "index": 38
+                                },
+                                {
+                                    "bbox": [
+                                        40,
+                                        698.0,
+                                        294,
+                                        711.5
+                                    ],
+                                    "spans": [],
+                                    "index": 39
+                                },
+                                {
+                                    "bbox": [
+                                        40,
+                                        711.5,
+                                        294,
+                                        725.0
+                                    ],
+                                    "spans": [],
+                                    "index": 40
+                                },
+                                {
+                                    "bbox": [
+                                        40,
+                                        725.0,
+                                        294,
+                                        738.5
+                                    ],
+                                    "spans": [],
+                                    "index": 41
+                                },
+                                {
+                                    "bbox": [
+                                        40,
+                                        738.5,
+                                        294,
+                                        752.0
+                                    ],
+                                    "spans": [],
+                                    "index": 42
+                                }
+                            ]
+                        }
+                    ],
+                    "index": 30.25
+                },
+                {
+                    "type": "text",
+                    "bbox": [
+                        43,
+                        767,
+                        204,
+                        779
+                    ],
+                    "lines": [
+                        {
+                            "bbox": [
+                                43,
+                                766,
+                                205,
+                                780
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        43,
+                                        766,
+                                        205,
+                                        780
+                                    ],
+                                    "score": 0.989,
+                                    "content": "Dimensions continued on next page.",
+                                    "type": "text"
+                                }
+                            ],
+                            "index": 43
+                        }
+                    ],
+                    "index": 43,
+                    "bbox_fs": [
+                        43,
+                        766,
+                        205,
+                        780
+                    ]
+                },
+                {
+                    "type": "table",
+                    "bbox": [
+                        320,
+                        530,
+                        550,
+                        775
+                    ],
+                    "blocks": [
+                        {
+                            "type": "table_body",
+                            "bbox": [
+                                320,
+                                530,
+                                550,
+                                775
+                            ],
+                            "group_id": 0,
+                            "lines": [
+                                {
+                                    "bbox": [
+                                        320,
+                                        530,
+                                        550,
+                                        775
+                                    ],
+                                    "spans": [
+                                        {
+                                            "bbox": [
+                                                320,
+                                                530,
+                                                550,
+                                                775
+                                            ],
+                                            "score": 0.964,
+                                            "html": "<table><tr><td></td><td>CAPACITY DEFLECTION (NOM.) (MM) [IN]</td></tr><tr><td>100N</td><td>0.02 [.001]</td></tr><tr><td>200N</td><td>0.04 [.002]</td></tr><tr><td>500N</td><td>0.03 [.001]</td></tr><tr><td>1kN</td><td>0.03 [.001]</td></tr><tr><td>2kN</td><td>0.03 [.001]</td></tr><tr><td>5kN</td><td>0.03 [.001]</td></tr><tr><td>10kN</td><td>0.03 [.001]</td></tr><tr><td>15kN</td><td>0.04 [.002]</td></tr><tr><td>20kN</td><td>0.05 [.002]</td></tr><tr><td>50kN</td><td>0.06 [.002]</td></tr><tr><td>100kN</td><td>0.08 [.003]</td></tr><tr><td>150kN</td><td>0.09 [.003]</td></tr></table>",
+                                            "type": "table",
+                                            "image_path": "d6da752cb64d354c40ed09ef9967767275c0a2da9dcf2bab278f710fdef40812.jpg"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "index": 52.5,
+                            "virtual_lines": [
+                                {
+                                    "bbox": [
+                                        320,
+                                        530,
+                                        550,
+                                        543.6111111111111
+                                    ],
+                                    "spans": [],
+                                    "index": 44
+                                },
+                                {
+                                    "bbox": [
+                                        320,
+                                        543.6111111111111,
+                                        550,
+                                        557.2222222222222
+                                    ],
+                                    "spans": [],
+                                    "index": 45
+                                },
+                                {
+                                    "bbox": [
+                                        320,
+                                        557.2222222222222,
+                                        550,
+                                        570.8333333333333
+                                    ],
+                                    "spans": [],
+                                    "index": 46
+                                },
+                                {
+                                    "bbox": [
+                                        320,
+                                        570.8333333333333,
+                                        550,
+                                        584.4444444444443
+                                    ],
+                                    "spans": [],
+                                    "index": 47
+                                },
+                                {
+                                    "bbox": [
+                                        320,
+                                        584.4444444444443,
+                                        550,
+                                        598.0555555555554
+                                    ],
+                                    "spans": [],
+                                    "index": 48
+                                },
+                                {
+                                    "bbox": [
+                                        320,
+                                        598.0555555555554,
+                                        550,
+                                        611.6666666666665
+                                    ],
+                                    "spans": [],
+                                    "index": 49
+                                },
+                                {
+                                    "bbox": [
+                                        320,
+                                        611.6666666666665,
+                                        550,
+                                        625.2777777777776
+                                    ],
+                                    "spans": [],
+                                    "index": 50
+                                },
+                                {
+                                    "bbox": [
+                                        320,
+                                        625.2777777777776,
+                                        550,
+                                        638.8888888888887
+                                    ],
+                                    "spans": [],
+                                    "index": 51
+                                },
+                                {
+                                    "bbox": [
+                                        320,
+                                        638.8888888888887,
+                                        550,
+                                        652.4999999999998
+                                    ],
+                                    "spans": [],
+                                    "index": 52
+                                },
+                                {
+                                    "bbox": [
+                                        320,
+                                        652.4999999999998,
+                                        550,
+                                        666.1111111111109
+                                    ],
+                                    "spans": [],
+                                    "index": 53
+                                },
+                                {
+                                    "bbox": [
+                                        320,
+                                        666.1111111111109,
+                                        550,
+                                        679.722222222222
+                                    ],
+                                    "spans": [],
+                                    "index": 54
+                                },
+                                {
+                                    "bbox": [
+                                        320,
+                                        679.722222222222,
+                                        550,
+                                        693.333333333333
+                                    ],
+                                    "spans": [],
+                                    "index": 55
+                                },
+                                {
+                                    "bbox": [
+                                        320,
+                                        693.333333333333,
+                                        550,
+                                        706.9444444444441
+                                    ],
+                                    "spans": [],
+                                    "index": 56
+                                },
+                                {
+                                    "bbox": [
+                                        320,
+                                        706.9444444444441,
+                                        550,
+                                        720.5555555555552
+                                    ],
+                                    "spans": [],
+                                    "index": 57
+                                },
+                                {
+                                    "bbox": [
+                                        320,
+                                        720.5555555555552,
+                                        550,
+                                        734.1666666666663
+                                    ],
+                                    "spans": [],
+                                    "index": 58
+                                },
+                                {
+                                    "bbox": [
+                                        320,
+                                        734.1666666666663,
+                                        550,
+                                        747.7777777777774
+                                    ],
+                                    "spans": [],
+                                    "index": 59
+                                },
+                                {
+                                    "bbox": [
+                                        320,
+                                        747.7777777777774,
+                                        550,
+                                        761.3888888888885
+                                    ],
+                                    "spans": [],
+                                    "index": 60
+                                },
+                                {
+                                    "bbox": [
+                                        320,
+                                        761.3888888888885,
+                                        550,
+                                        774.9999999999995
+                                    ],
+                                    "spans": [],
+                                    "index": 61
+                                }
+                            ]
+                        }
+                    ],
+                    "index": 52.5
+                }
+            ]
+        },
+        {
+            "preproc_blocks": [
+                {
+                    "type": "table",
+                    "bbox": [
+                        45,
+                        159,
+                        574,
+                        712
+                    ],
+                    "blocks": [
+                        {
+                            "type": "table_caption",
+                            "bbox": [
+                                44,
+                                125,
+                                183,
+                                138
+                            ],
+                            "group_id": 0,
+                            "lines": [
+                                {
+                                    "bbox": [
+                                        61,
+                                        126,
+                                        183,
+                                        138
+                                    ],
+                                    "spans": [
+                                        {
+                                            "bbox": [
+                                                61,
+                                                126,
+                                                183,
+                                                138
+                                            ],
+                                            "score": 1.0,
+                                            "content": "DIMENSIONS CONTINUED",
+                                            "type": "text"
+                                        }
+                                    ],
+                                    "index": 0
+                                }
+                            ],
+                            "index": 0
+                        },
+                        {
+                            "type": "table_body",
+                            "bbox": [
+                                45,
+                                159,
+                                574,
+                                712
+                            ],
+                            "group_id": 0,
+                            "lines": [
+                                {
+                                    "bbox": [
+                                        45,
+                                        159,
+                                        574,
+                                        712
+                                    ],
+                                    "spans": [
+                                        {
+                                            "bbox": [
+                                                45,
+                                                159,
+                                                574,
+                                                712
+                                            ],
+                                            "score": 0.976,
+                                            "html": "<table><tr><td>RANGE</td><td>CAPACITYD1 (MM)</td><td></td><td>D2(MM[IN]H (MM [IN]L(MM [IN]A(IN)</td><td></td><td></td><td>B (MM) [IN]G (MM [IN]</td><td></td></tr><tr><td>ALBM-1M</td><td>100N</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>ALBM-1M</td><td>200N</td><td>24.9 [0.98]</td><td>5,33 [0.21] 8.13 [0.32]</td><td>1,27 [0.05]</td><td>M3</td><td>5,59 [0.22]</td><td>19,05[0.75]</td></tr><tr><td>ALBM-1M</td><td>500N</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>ALBM-1U</td><td>25lbf</td><td>24.9 [0.98]</td><td></td><td>1,27 [0.05]</td><td></td><td></td><td></td></tr><tr><td>ALBM-1U</td><td>50lbf</td><td></td><td>5,33 [0.21] 8.13 [0.32]</td><td></td><td></td><td>#4-40 UNC5,59[0.22]</td><td>19,05 [0.75]</td></tr><tr><td>ALBM-1U</td><td>100lbf</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>ALBM-2M</td><td>1kN</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>ALBM-2M</td><td>2kN</td><td>31,75[1.25]8,13 [0.32]</td><td></td><td>9,91 [0.39] 1,27 [0.05]</td><td>M4</td><td>6,35 [0.25]</td><td>25,4[1.000]</td></tr><tr><td>ALBM-2M</td><td>5kN</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>ALBM-2M ALBM-2U</td><td>10kN 250lbf</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>ALBM-2U</td><td>500lbf</td><td>31,75[1.25]8,13 [0.32]</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>ALBM-2U</td><td></td><td></td><td>9,91 [0.39]</td><td>1,27 [0.05]</td><td></td><td>#6-32UNC 6,35 [0.25]</td><td>25,4[1.000]</td></tr><tr><td>ALBM-2U</td><td>1klbf 2klbf</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>ALBM-3M</td><td>15kN</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>ALBM-3M</td><td>20kN</td><td>38,1 [1.50]</td><td>10,16[0.40]16,0 [0.63]</td><td>2,03 [0.08]</td><td>M4</td><td>6,35 [0.25]</td><td>31,75 [1.250]</td></tr><tr><td>ALBM-3M</td><td>50kN</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>ALBM-3U</td><td>5klbf</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>ALBM-3U</td><td>7.5klbf</td><td>38,1 [1.50]</td><td>10,16[0.40]16,0 [0.63]</td><td>2,03 [0.08]</td><td></td><td>#6-32UNC6,35 [0.25]</td><td>31,75[1.250]</td></tr><tr><td>ALBM-3U</td><td>10klbf</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>ALBM-4M</td><td>100kN</td><td>50.3 [1.98]</td><td>15.24[0.60]25.4 [1.00]</td><td>3.05 [0.12]</td><td>M4</td><td>6,35 [0.25]</td><td>41. [1.625]</td></tr><tr><td>ALBM-4M ALBM-4U</td><td>150kN 20klbf</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>ALBM-4U</td><td>30klbf</td><td>50.3 [1.98]</td><td>15.24[0.60]」25.4 [1.00]</td><td>3.05 [0.12]</td><td></td><td>#6-32UNC 6,35[0.25]</td><td>41.3 [1.625]</td></tr><tr><td>ALBM-4M</td><td>200kN</td><td>75.7 [2.98]</td><td>19.8 [0.78] 38.1 [1.50]</td><td>4.6 [0.18]</td><td>M4</td><td>6.4 [0.25]</td><td>60.5 [2.375]</td></tr><tr><td>ALBM-4U</td><td>50klbf</td><td>75.7 [2.98]</td><td>19.8 [0.78] 38.1[1.50]</td><td>4.6 [0.18]</td><td></td><td>#6-32UNC 6.4 [0.25]</td><td>60.5[2.375]</td></tr></table>",
+                                            "type": "table",
+                                            "image_path": "043bbb5edce274a96d7db21bdc3b17a937f1c37485babd29715d6d0157845856.jpg"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "index": 2,
+                            "virtual_lines": [
+                                {
+                                    "bbox": [
+                                        45,
+                                        159,
+                                        574,
+                                        343.33333333333337
+                                    ],
+                                    "spans": [],
+                                    "index": 1
+                                },
+                                {
+                                    "bbox": [
+                                        45,
+                                        343.33333333333337,
+                                        574,
+                                        527.6666666666667
+                                    ],
+                                    "spans": [],
+                                    "index": 2
+                                },
+                                {
+                                    "bbox": [
+                                        45,
+                                        527.6666666666667,
+                                        574,
+                                        712.0000000000001
+                                    ],
+                                    "spans": [],
+                                    "index": 3
+                                }
+                            ]
+                        }
+                    ],
+                    "index": 1.0
+                }
+            ],
+            "page_idx": 1,
+            "page_size": [
+                595,
+                841
+            ],
+            "discarded_blocks": [
+                {
+                    "type": "discarded",
+                    "bbox": [
+                        27,
+                        26,
+                        570,
+                        64
+                    ],
+                    "lines": [
+                        {
+                            "bbox": [
+                                37,
+                                23,
+                                572,
+                                64
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        37,
+                                        36,
+                                        55,
+                                        54
+                                    ],
+                                    "score": 0.835,
+                                    "content": "A",
+                                    "type": "text"
+                                },
+                                {
+                                    "bbox": [
+                                        75,
+                                        30,
+                                        149,
+                                        59
+                                    ],
+                                    "score": 1.0,
+                                    "content": "ALBMButton Load Cell",
+                                    "type": "text"
+                                },
+                                {
+                                    "bbox": [
+                                        452,
+                                        23,
+                                        572,
+                                        64
+                                    ],
+                                    "score": 0.826,
+                                    "content": "SALTHIENS",
+                                    "type": "text"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "discarded",
+                    "bbox": [
+                        527,
+                        806,
+                        562,
+                        816
+                    ],
+                    "lines": [
+                        {
+                            "bbox": [
+                                526,
+                                805,
+                                564,
+                                817
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        526,
+                                        805,
+                                        564,
+                                        817
+                                    ],
+                                    "score": 1.0,
+                                    "content": "Page 2 / 3",
+                                    "type": "text"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "discarded",
+                    "bbox": [
+                        569,
+                        758,
+                        577,
+                        801
+                    ],
+                    "lines": [
+                        {
+                            "bbox": [
+                                569,
+                                757,
+                                577,
+                                801
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        569,
+                                        757,
+                                        577,
+                                        801
+                                    ],
+                                    "score": 0.0,
+                                    "content": "",
+                                    "type": "text"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "para_blocks": [
+                {
+                    "type": "table",
+                    "bbox": [
+                        45,
+                        159,
+                        574,
+                        712
+                    ],
+                    "blocks": [
+                        {
+                            "type": "table_caption",
+                            "bbox": [
+                                44,
+                                125,
+                                183,
+                                138
+                            ],
+                            "group_id": 0,
+                            "lines": [
+                                {
+                                    "bbox": [
+                                        61,
+                                        126,
+                                        183,
+                                        138
+                                    ],
+                                    "spans": [
+                                        {
+                                            "bbox": [
+                                                61,
+                                                126,
+                                                183,
+                                                138
+                                            ],
+                                            "score": 1.0,
+                                            "content": "DIMENSIONS CONTINUED",
+                                            "type": "text"
+                                        }
+                                    ],
+                                    "index": 0
+                                }
+                            ],
+                            "index": 0
+                        },
+                        {
+                            "type": "table_body",
+                            "bbox": [
+                                45,
+                                159,
+                                574,
+                                712
+                            ],
+                            "group_id": 0,
+                            "lines": [
+                                {
+                                    "bbox": [
+                                        45,
+                                        159,
+                                        574,
+                                        712
+                                    ],
+                                    "spans": [
+                                        {
+                                            "bbox": [
+                                                45,
+                                                159,
+                                                574,
+                                                712
+                                            ],
+                                            "score": 0.976,
+                                            "html": "<table><tr><td>RANGE</td><td>CAPACITYD1 (MM)</td><td></td><td>D2(MM[IN]H (MM [IN]L(MM [IN]A(IN)</td><td></td><td></td><td>B (MM) [IN]G (MM [IN]</td><td></td></tr><tr><td>ALBM-1M</td><td>100N</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>ALBM-1M</td><td>200N</td><td>24.9 [0.98]</td><td>5,33 [0.21] 8.13 [0.32]</td><td>1,27 [0.05]</td><td>M3</td><td>5,59 [0.22]</td><td>19,05[0.75]</td></tr><tr><td>ALBM-1M</td><td>500N</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>ALBM-1U</td><td>25lbf</td><td>24.9 [0.98]</td><td></td><td>1,27 [0.05]</td><td></td><td></td><td></td></tr><tr><td>ALBM-1U</td><td>50lbf</td><td></td><td>5,33 [0.21] 8.13 [0.32]</td><td></td><td></td><td>#4-40 UNC5,59[0.22]</td><td>19,05 [0.75]</td></tr><tr><td>ALBM-1U</td><td>100lbf</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>ALBM-2M</td><td>1kN</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>ALBM-2M</td><td>2kN</td><td>31,75[1.25]8,13 [0.32]</td><td></td><td>9,91 [0.39] 1,27 [0.05]</td><td>M4</td><td>6,35 [0.25]</td><td>25,4[1.000]</td></tr><tr><td>ALBM-2M</td><td>5kN</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>ALBM-2M ALBM-2U</td><td>10kN 250lbf</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>ALBM-2U</td><td>500lbf</td><td>31,75[1.25]8,13 [0.32]</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>ALBM-2U</td><td></td><td></td><td>9,91 [0.39]</td><td>1,27 [0.05]</td><td></td><td>#6-32UNC 6,35 [0.25]</td><td>25,4[1.000]</td></tr><tr><td>ALBM-2U</td><td>1klbf 2klbf</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>ALBM-3M</td><td>15kN</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>ALBM-3M</td><td>20kN</td><td>38,1 [1.50]</td><td>10,16[0.40]16,0 [0.63]</td><td>2,03 [0.08]</td><td>M4</td><td>6,35 [0.25]</td><td>31,75 [1.250]</td></tr><tr><td>ALBM-3M</td><td>50kN</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>ALBM-3U</td><td>5klbf</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>ALBM-3U</td><td>7.5klbf</td><td>38,1 [1.50]</td><td>10,16[0.40]16,0 [0.63]</td><td>2,03 [0.08]</td><td></td><td>#6-32UNC6,35 [0.25]</td><td>31,75[1.250]</td></tr><tr><td>ALBM-3U</td><td>10klbf</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>ALBM-4M</td><td>100kN</td><td>50.3 [1.98]</td><td>15.24[0.60]25.4 [1.00]</td><td>3.05 [0.12]</td><td>M4</td><td>6,35 [0.25]</td><td>41. [1.625]</td></tr><tr><td>ALBM-4M ALBM-4U</td><td>150kN 20klbf</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>ALBM-4U</td><td>30klbf</td><td>50.3 [1.98]</td><td>15.24[0.60]」25.4 [1.00]</td><td>3.05 [0.12]</td><td></td><td>#6-32UNC 6,35[0.25]</td><td>41.3 [1.625]</td></tr><tr><td>ALBM-4M</td><td>200kN</td><td>75.7 [2.98]</td><td>19.8 [0.78] 38.1 [1.50]</td><td>4.6 [0.18]</td><td>M4</td><td>6.4 [0.25]</td><td>60.5 [2.375]</td></tr><tr><td>ALBM-4U</td><td>50klbf</td><td>75.7 [2.98]</td><td>19.8 [0.78] 38.1[1.50]</td><td>4.6 [0.18]</td><td></td><td>#6-32UNC 6.4 [0.25]</td><td>60.5[2.375]</td></tr></table>",
+                                            "type": "table",
+                                            "image_path": "043bbb5edce274a96d7db21bdc3b17a937f1c37485babd29715d6d0157845856.jpg"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "index": 2,
+                            "virtual_lines": [
+                                {
+                                    "bbox": [
+                                        45,
+                                        159,
+                                        574,
+                                        343.33333333333337
+                                    ],
+                                    "spans": [],
+                                    "index": 1
+                                },
+                                {
+                                    "bbox": [
+                                        45,
+                                        343.33333333333337,
+                                        574,
+                                        527.6666666666667
+                                    ],
+                                    "spans": [],
+                                    "index": 2
+                                },
+                                {
+                                    "bbox": [
+                                        45,
+                                        527.6666666666667,
+                                        574,
+                                        712.0000000000001
+                                    ],
+                                    "spans": [],
+                                    "index": 3
+                                }
+                            ]
+                        }
+                    ],
+                    "index": 1.0
+                }
+            ]
+        },
+        {
+            "preproc_blocks": [
+                {
+                    "type": "table",
+                    "bbox": [
+                        43,
+                        162,
+                        573,
+                        601
+                    ],
+                    "blocks": [
+                        {
+                            "type": "table_body",
+                            "bbox": [
+                                43,
+                                162,
+                                573,
+                                601
+                            ],
+                            "group_id": 0,
+                            "lines": [
+                                {
+                                    "bbox": [
+                                        43,
+                                        162,
+                                        573,
+                                        601
+                                    ],
+                                    "spans": [
+                                        {
+                                            "bbox": [
+                                                43,
+                                                162,
+                                                573,
+                                                601
+                                            ],
+                                            "score": 0.98,
+                                            "html": "<table><tr><td>PARAMETER</td><td>RANGE</td><td>NOTES</td></tr><tr><td>Capacity (metric) (N)</td><td>100, 200,500, 1K,2K, 5K, 10K, 15K, 20K, 50K, 100K, 150K, 200K</td><td>With metric threads as standard</td></tr><tr><td>Capacity (lb)</td><td>25, 50,100, 250, 500, 1K, 2K, 3K, 4K, 5K, 7.5K, 10K, 15K, 20K, 30K, 50K</td><td>With UNF threads as standard</td></tr><tr><td>Allowable Maximum Load (%)</td><td>150 full scale</td><td>No effect on performance</td></tr><tr><td>Non-Linearity (%)</td><td>±0.5 FS max.</td><td></td></tr><tr><td>Hysteresis (%)</td><td>±0.3 FS max.</td><td></td></tr><tr><td>Repeatability (%)</td><td>±0.1 FS max.</td><td></td></tr><tr><td>Total Eror (%)</td><td>±0.8 FS max.</td><td>Non-linearity and hysteresis</td></tr><tr><td>Zero Balance (%)</td><td>2 FS max.</td><td></td></tr><tr><td>Zero Temperature Coefficient (%)</td><td>0.01 FS/C</td><td></td></tr><tr><td>Span Temperature Coefficient (%)</td><td>0.02 of load/°C</td><td></td></tr><tr><td>Compensated Temperature (C)</td><td>-15 to +70</td><td>Wider range available to order</td></tr><tr><td>Operating Temperature (°C)</td><td>-20 to +80</td><td>Wider range available to order</td></tr><tr><td>Output (mV/V)</td><td>2nominal (1 for 100N and 25lbf)</td><td>Amplified and digitised versions available to order.</td></tr><tr><td>IP Rating</td><td>IP64- Bonded Cover</td><td>Bonded cover is standard</td></tr><tr><td>Excitation (V)</td><td>5,10</td><td></td></tr><tr><td>Bridge Resistance (ohms)</td><td>350 nominal.-(100N - 500N) &amp; (25lbf -100lbf) 700 nominal - above 1kN &amp; 250lbf</td><td></td></tr></table>",
+                                            "type": "table",
+                                            "image_path": "9428aa117e36fdf30189c54bd48f9dec3cf9df3247a5daed490d9fe797a527f4.jpg"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "index": 1,
+                            "virtual_lines": [
+                                {
+                                    "bbox": [
+                                        43,
+                                        162,
+                                        573,
+                                        308.33333333333337
+                                    ],
+                                    "spans": [],
+                                    "index": 0
+                                },
+                                {
+                                    "bbox": [
+                                        43,
+                                        308.33333333333337,
+                                        573,
+                                        454.66666666666674
+                                    ],
+                                    "spans": [],
+                                    "index": 1
+                                },
+                                {
+                                    "bbox": [
+                                        43,
+                                        454.66666666666674,
+                                        573,
+                                        601.0000000000001
+                                    ],
+                                    "spans": [],
+                                    "index": 2
+                                }
+                            ]
+                        }
+                    ],
+                    "index": 1
+                }
+            ],
+            "page_idx": 2,
+            "page_size": [
+                595,
+                841
+            ],
+            "discarded_blocks": [
+                {
+                    "type": "discarded",
+                    "bbox": [
+                        27,
+                        26,
+                        570,
+                        64
+                    ],
+                    "lines": [
+                        {
+                            "bbox": [
+                                37,
+                                23,
+                                572,
+                                64
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        37,
+                                        36,
+                                        55,
+                                        54
+                                    ],
+                                    "score": 0.835,
+                                    "content": "A",
+                                    "type": "text"
+                                },
+                                {
+                                    "bbox": [
+                                        75,
+                                        30,
+                                        149,
+                                        59
+                                    ],
+                                    "score": 1.0,
+                                    "content": "ALBMButton Load Cell",
+                                    "type": "text"
+                                },
+                                {
+                                    "bbox": [
+                                        452,
+                                        23,
+                                        572,
+                                        64
+                                    ],
+                                    "score": 0.826,
+                                    "content": "SALTHIENS",
+                                    "type": "text"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "discarded",
+                    "bbox": [
+                        567,
+                        716,
+                        576,
+                        759
+                    ],
+                    "lines": [
+                        {
+                            "bbox": [
+                                568,
+                                716,
+                                576,
+                                759
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        568,
+                                        716,
+                                        576,
+                                        759
+                                    ],
+                                    "score": 0.0,
+                                    "content": "",
+                                    "type": "text"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "discarded",
+                    "bbox": [
+                        521,
+                        750,
+                        556,
+                        760
+                    ],
+                    "lines": [
+                        {
+                            "bbox": [
+                                520,
+                                749,
+                                558,
+                                761
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        520,
+                                        749,
+                                        558,
+                                        761
+                                    ],
+                                    "score": 1.0,
+                                    "content": "Page 3 / 3",
+                                    "type": "text"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "discarded",
+                    "bbox": [
+                        44,
+                        125,
+                        136,
+                        138
+                    ],
+                    "lines": [
+                        {
+                            "bbox": [
+                                60,
+                                125,
+                                137,
+                                138
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        60,
+                                        125,
+                                        137,
+                                        138
+                                    ],
+                                    "score": 1.0,
+                                    "content": "SPECIFICATION",
+                                    "type": "text"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "discarded",
+                    "bbox": [
+                        25,
+                        775,
+                        575,
+                        841
+                    ],
+                    "lines": []
+                }
+            ],
+            "para_blocks": [
+                {
+                    "type": "table",
+                    "bbox": [
+                        43,
+                        162,
+                        573,
+                        601
+                    ],
+                    "blocks": [
+                        {
+                            "type": "table_body",
+                            "bbox": [
+                                43,
+                                162,
+                                573,
+                                601
+                            ],
+                            "group_id": 0,
+                            "lines": [
+                                {
+                                    "bbox": [
+                                        43,
+                                        162,
+                                        573,
+                                        601
+                                    ],
+                                    "spans": [
+                                        {
+                                            "bbox": [
+                                                43,
+                                                162,
+                                                573,
+                                                601
+                                            ],
+                                            "score": 0.98,
+                                            "html": "<table><tr><td>PARAMETER</td><td>RANGE</td><td>NOTES</td></tr><tr><td>Capacity (metric) (N)</td><td>100, 200,500, 1K,2K, 5K, 10K, 15K, 20K, 50K, 100K, 150K, 200K</td><td>With metric threads as standard</td></tr><tr><td>Capacity (lb)</td><td>25, 50,100, 250, 500, 1K, 2K, 3K, 4K, 5K, 7.5K, 10K, 15K, 20K, 30K, 50K</td><td>With UNF threads as standard</td></tr><tr><td>Allowable Maximum Load (%)</td><td>150 full scale</td><td>No effect on performance</td></tr><tr><td>Non-Linearity (%)</td><td>±0.5 FS max.</td><td></td></tr><tr><td>Hysteresis (%)</td><td>±0.3 FS max.</td><td></td></tr><tr><td>Repeatability (%)</td><td>±0.1 FS max.</td><td></td></tr><tr><td>Total Eror (%)</td><td>±0.8 FS max.</td><td>Non-linearity and hysteresis</td></tr><tr><td>Zero Balance (%)</td><td>2 FS max.</td><td></td></tr><tr><td>Zero Temperature Coefficient (%)</td><td>0.01 FS/C</td><td></td></tr><tr><td>Span Temperature Coefficient (%)</td><td>0.02 of load/°C</td><td></td></tr><tr><td>Compensated Temperature (C)</td><td>-15 to +70</td><td>Wider range available to order</td></tr><tr><td>Operating Temperature (°C)</td><td>-20 to +80</td><td>Wider range available to order</td></tr><tr><td>Output (mV/V)</td><td>2nominal (1 for 100N and 25lbf)</td><td>Amplified and digitised versions available to order.</td></tr><tr><td>IP Rating</td><td>IP64- Bonded Cover</td><td>Bonded cover is standard</td></tr><tr><td>Excitation (V)</td><td>5,10</td><td></td></tr><tr><td>Bridge Resistance (ohms)</td><td>350 nominal.-(100N - 500N) &amp; (25lbf -100lbf) 700 nominal - above 1kN &amp; 250lbf</td><td></td></tr></table>",
+                                            "type": "table",
+                                            "image_path": "9428aa117e36fdf30189c54bd48f9dec3cf9df3247a5daed490d9fe797a527f4.jpg"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "index": 1,
+                            "virtual_lines": [
+                                {
+                                    "bbox": [
+                                        43,
+                                        162,
+                                        573,
+                                        308.33333333333337
+                                    ],
+                                    "spans": [],
+                                    "index": 0
+                                },
+                                {
+                                    "bbox": [
+                                        43,
+                                        308.33333333333337,
+                                        573,
+                                        454.66666666666674
+                                    ],
+                                    "spans": [],
+                                    "index": 1
+                                },
+                                {
+                                    "bbox": [
+                                        43,
+                                        454.66666666666674,
+                                        573,
+                                        601.0000000000001
+                                    ],
+                                    "spans": [],
+                                    "index": 2
+                                }
+                            ]
+                        }
+                    ],
+                    "index": 1
+                }
+            ]
+        }
+    ],
+    "_backend": "pipeline",
+    "_version_name": "2.1.9"
+}

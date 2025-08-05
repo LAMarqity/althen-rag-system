@@ -1,13 +1,13 @@
 #!/bin/bash
 
-# Triple Parallel Batch Processing
-# Runs 3 instances of the batch script in parallel
+# Five Parallel Batch Processing
+# Runs 5 instances of the batch script in parallel
 
 cd /workspace/althen-rag-system
 
-echo "🚀 Starting TRIPLE PARALLEL batch processing..."
-echo "🔥 Running 3 parallel instances on RTX 4090"
-echo "📊 Up to 30 documents processing simultaneously (3 x 10)"
+echo "🚀 Starting FIVE PARALLEL batch processing..."
+echo "🔥 Running 5 parallel instances on RTX 4090"
+echo "📊 Up to 50 documents processing simultaneously (5 x 10)"
 echo "⚡ Each instance: process 10 → wait 1min → repeat"
 echo "Press Ctrl+C to stop ALL instances"
 echo ""
@@ -28,10 +28,18 @@ run_instance() {
         success_count=0
         failed_count=0
         
-        # Run batch with live progress tracking
-        python3 scripts/batch_process_pages.py 2>&1 | while IFS= read -r line; do
+        # Run batch with live progress tracking and error handling
+        (
+            python3 scripts/batch_process_pages.py 2>&1 || echo "BATCH_ERROR: Script failed"
+        ) | while IFS= read -r line; do
             # Log everything to detailed file
             echo "$line" >> logs/instance_${instance_id}_detailed.log
+            
+            # Handle batch errors
+            if echo "$line" | grep -q "BATCH_ERROR:"; then
+                echo "[Instance $instance_id] ❌ Batch script failed, will retry in 1 minute..."
+                break
+            fi
             
             # Show progress for page processing
             if echo "$line" | grep -q "Processing page.*:"; then
@@ -54,7 +62,7 @@ run_instance() {
     done
 }
 
-# Start 3 instances with 10-second delays to avoid conflicts
+# Start 5 instances with 10-second delays to avoid conflicts
 echo "🔸 Starting Instance 1..."
 run_instance 1 &
 
@@ -68,8 +76,18 @@ sleep 10
 echo "🔸 Starting Instance 3..."
 run_instance 3 &
 
+echo "⏳ Waiting 10 seconds before starting Instance 4..."
+sleep 10
+echo "🔸 Starting Instance 4..."
+run_instance 4 &
+
+echo "⏳ Waiting 10 seconds before starting Instance 5..."
+sleep 10
+echo "🔸 Starting Instance 5..."
+run_instance 5 &
+
 echo ""
-echo "✅ All 3 instances started!"
+echo "✅ All 5 instances started!"
 echo ""
 echo "📝 Monitor detailed logs with:"
 echo "   tail -f logs/instance_*_detailed.log"

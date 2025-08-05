@@ -1,0 +1,1048 @@
+{
+    "pdf_info": [
+        {
+            "preproc_blocks": [
+                {
+                    "type": "text",
+                    "bbox": [
+                        43,
+                        245,
+                        338,
+                        273
+                    ],
+                    "lines": [
+                        {
+                            "bbox": [
+                                41,
+                                244,
+                                338,
+                                261
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        41,
+                                        244,
+                                        338,
+                                        261
+                                    ],
+                                    "score": 1.0,
+                                    "content": "Load Button (ALBS3) is a stainless steel subminiature strain gauge",
+                                    "type": "text"
+                                }
+                            ],
+                            "index": 0
+                        },
+                        {
+                            "bbox": [
+                                42,
+                                260,
+                                326,
+                                274
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        42,
+                                        260,
+                                        326,
+                                        274
+                                    ],
+                                    "score": 1.0,
+                                    "content": "based transducer with compensated temperature performance.",
+                                    "type": "text"
+                                }
+                            ],
+                            "index": 1
+                        }
+                    ],
+                    "index": 0.5
+                },
+                {
+                    "type": "text",
+                    "bbox": [
+                        43,
+                        291,
+                        342,
+                        318
+                    ],
+                    "lines": [
+                        {
+                            "bbox": [
+                                43,
+                                291,
+                                342,
+                                304
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        43,
+                                        291,
+                                        342,
+                                        304
+                                    ],
+                                    "score": 1.0,
+                                    "content": "This type of load button provides measurements up to 1000 lb with",
+                                    "type": "text"
+                                }
+                            ],
+                            "index": 2
+                        },
+                        {
+                            "bbox": [
+                                42,
+                                304,
+                                235,
+                                319
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        42,
+                                        304,
+                                        94,
+                                        319
+                                    ],
+                                    "score": 1.0,
+                                    "content": "better than",
+                                    "type": "text"
+                                },
+                                {
+                                    "bbox": [
+                                        94,
+                                        306,
+                                        126,
+                                        317
+                                    ],
+                                    "score": 0.88,
+                                    "content": "\\pm 0 . 5 \\%",
+                                    "type": "inline_equation"
+                                },
+                                {
+                                    "bbox": [
+                                        126,
+                                        304,
+                                        235,
+                                        319
+                                    ],
+                                    "score": 1.0,
+                                    "content": "(full scale) non-linearity.",
+                                    "type": "text"
+                                }
+                            ],
+                            "index": 3
+                        }
+                    ],
+                    "index": 2.5
+                },
+                {
+                    "type": "table",
+                    "bbox": [
+                        42,
+                        379,
+                        545,
+                        775
+                    ],
+                    "blocks": [
+                        {
+                            "type": "table_caption",
+                            "bbox": [
+                                44,
+                                350,
+                                142,
+                                363
+                            ],
+                            "group_id": 0,
+                            "lines": [
+                                {
+                                    "bbox": [
+                                        60,
+                                        351,
+                                        142,
+                                        364
+                                    ],
+                                    "spans": [
+                                        {
+                                            "bbox": [
+                                                60,
+                                                351,
+                                                142,
+                                                364
+                                            ],
+                                            "score": 1.0,
+                                            "content": "SPECIFICATIONS",
+                                            "type": "text"
+                                        }
+                                    ],
+                                    "index": 4
+                                }
+                            ],
+                            "index": 4
+                        },
+                        {
+                            "type": "table_body",
+                            "bbox": [
+                                42,
+                                379,
+                                545,
+                                775
+                            ],
+                            "group_id": 0,
+                            "lines": [
+                                {
+                                    "bbox": [
+                                        42,
+                                        379,
+                                        545,
+                                        775
+                                    ],
+                                    "spans": [
+                                        {
+                                            "bbox": [
+                                                42,
+                                                379,
+                                                545,
+                                                775
+                                            ],
+                                            "score": 0.979,
+                                            "html": "<table><tr><td>PARAMETER</td><td>RANGE</td></tr><tr><td>Capacity (lbf)</td><td>100,200,500,1000</td></tr><tr><td>Rated Output (RO) (mV/V)</td><td>2 nominal</td></tr><tr><td>Safe Overload (%)</td><td>150 of RO</td></tr><tr><td>No Load Offset (Zero Balance) (%)</td><td>±2 of RO</td></tr><tr><td>Excitation (VDC or VAC)</td><td>5 recommended (10 max.)</td></tr><tr><td>Input lmpedance</td><td>350Qnominal</td></tr><tr><td>Non-Linearity (%)</td><td>±0.5 of RO</td></tr><tr><td>Hysteresis (%)</td><td>±0.5 of RO</td></tr><tr><td>Non-Repeatability (%)</td><td>±0.1 of RO</td></tr><tr><td>Temperature Shift Zero (%)</td><td>±0.01 of RO/° F (±0.018 of RO/°C)</td></tr><tr><td>Temperature Shift Span (%)</td><td>±0.02 of Load/° F (±0.036 of Load/C)</td></tr><tr><td>Compensated Temperature (° F)</td><td>+60 to + 160(+ 16 to + 71º℃)</td></tr><tr><td>Operating Temperature (° F)</td><td>-4 to + 176 (-20 to +80°℃)</td></tr><tr><td>Material</td><td>Stainless Steel</td></tr><tr><td>Deflection (in)</td><td>0.001 (0.025mm) nominal</td></tr><tr><td>IP Rating</td><td>IP64</td></tr><tr><td>Calibration Test Excitation (VDC)</td><td>5</td></tr><tr><td>Calibration (td.)</td><td>5 pt. compression</td></tr><tr><td></td><td></td></tr></table>",
+                                            "type": "table",
+                                            "image_path": "8c21ea12a003fb50547f4098b1f5454bc33557ff89cfc0fe40d8107fbe20287d.jpg"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "index": 6,
+                            "virtual_lines": [
+                                {
+                                    "bbox": [
+                                        42,
+                                        379,
+                                        545,
+                                        511.0
+                                    ],
+                                    "spans": [],
+                                    "index": 5
+                                },
+                                {
+                                    "bbox": [
+                                        42,
+                                        511.0,
+                                        545,
+                                        643.0
+                                    ],
+                                    "spans": [],
+                                    "index": 6
+                                },
+                                {
+                                    "bbox": [
+                                        42,
+                                        643.0,
+                                        545,
+                                        775.0
+                                    ],
+                                    "spans": [],
+                                    "index": 7
+                                }
+                            ]
+                        }
+                    ],
+                    "index": 5.0
+                }
+            ],
+            "page_idx": 0,
+            "page_size": [
+                595,
+                841
+            ],
+            "discarded_blocks": [
+                {
+                    "type": "discarded",
+                    "bbox": [
+                        27,
+                        26,
+                        570,
+                        64
+                    ],
+                    "lines": [
+                        {
+                            "bbox": [
+                                39,
+                                23,
+                                572,
+                                64
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        39,
+                                        38,
+                                        53,
+                                        51
+                                    ],
+                                    "score": 0.0,
+                                    "content": "",
+                                    "type": "text"
+                                },
+                                {
+                                    "bbox": [
+                                        74,
+                                        29,
+                                        132,
+                                        59
+                                    ],
+                                    "score": 1.0,
+                                    "content": "ALBS3Load Button",
+                                    "type": "text"
+                                },
+                                {
+                                    "bbox": [
+                                        452,
+                                        23,
+                                        572,
+                                        64
+                                    ],
+                                    "score": 0.876,
+                                    "content": "SALTHENS",
+                                    "type": "text"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "discarded",
+                    "bbox": [
+                        43,
+                        96,
+                        142,
+                        129
+                    ],
+                    "lines": [
+                        {
+                            "bbox": [
+                                51,
+                                97,
+                                134,
+                                119
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        51,
+                                        102,
+                                        67,
+                                        119
+                                    ],
+                                    "score": 1.0,
+                                    "content": "N",
+                                    "type": "text"
+                                },
+                                {
+                                    "bbox": [
+                                        81,
+                                        97,
+                                        134,
+                                        114
+                                    ],
+                                    "score": 1.0,
+                                    "content": "ALBS3",
+                                    "type": "text"
+                                }
+                            ]
+                        },
+                        {
+                            "bbox": [
+                                81,
+                                114,
+                                142,
+                                128
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        81,
+                                        114,
+                                        142,
+                                        128
+                                    ],
+                                    "score": 1.0,
+                                    "content": "Load Button",
+                                    "type": "text"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "discarded",
+                    "bbox": [
+                        522,
+                        806,
+                        557,
+                        816
+                    ],
+                    "lines": [
+                        {
+                            "bbox": [
+                                521,
+                                805,
+                                558,
+                                817
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        521,
+                                        805,
+                                        558,
+                                        817
+                                    ],
+                                    "score": 1.0,
+                                    "content": "Page 1 / 2",
+                                    "type": "text"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "discarded",
+                    "bbox": [
+                        569,
+                        716,
+                        577,
+                        758
+                    ],
+                    "lines": [
+                        {
+                            "bbox": [
+                                570,
+                                716,
+                                577,
+                                758
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        570,
+                                        716,
+                                        577,
+                                        758
+                                    ],
+                                    "score": 0.0,
+                                    "content": "",
+                                    "type": "text"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "discarded",
+                    "bbox": [
+                        202,
+                        137,
+                        498,
+                        208
+                    ],
+                    "lines": []
+                }
+            ],
+            "para_blocks": [
+                {
+                    "type": "text",
+                    "bbox": [
+                        43,
+                        245,
+                        338,
+                        273
+                    ],
+                    "lines": [
+                        {
+                            "bbox": [
+                                41,
+                                244,
+                                338,
+                                261
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        41,
+                                        244,
+                                        338,
+                                        261
+                                    ],
+                                    "score": 1.0,
+                                    "content": "Load Button (ALBS3) is a stainless steel subminiature strain gauge",
+                                    "type": "text"
+                                }
+                            ],
+                            "index": 0
+                        },
+                        {
+                            "bbox": [
+                                42,
+                                260,
+                                326,
+                                274
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        42,
+                                        260,
+                                        326,
+                                        274
+                                    ],
+                                    "score": 1.0,
+                                    "content": "based transducer with compensated temperature performance.",
+                                    "type": "text"
+                                }
+                            ],
+                            "index": 1
+                        }
+                    ],
+                    "index": 0.5,
+                    "bbox_fs": [
+                        41,
+                        244,
+                        338,
+                        274
+                    ]
+                },
+                {
+                    "type": "text",
+                    "bbox": [
+                        43,
+                        291,
+                        342,
+                        318
+                    ],
+                    "lines": [
+                        {
+                            "bbox": [
+                                43,
+                                291,
+                                342,
+                                304
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        43,
+                                        291,
+                                        342,
+                                        304
+                                    ],
+                                    "score": 1.0,
+                                    "content": "This type of load button provides measurements up to 1000 lb with",
+                                    "type": "text"
+                                }
+                            ],
+                            "index": 2
+                        },
+                        {
+                            "bbox": [
+                                42,
+                                304,
+                                235,
+                                319
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        42,
+                                        304,
+                                        94,
+                                        319
+                                    ],
+                                    "score": 1.0,
+                                    "content": "better than",
+                                    "type": "text"
+                                },
+                                {
+                                    "bbox": [
+                                        94,
+                                        306,
+                                        126,
+                                        317
+                                    ],
+                                    "score": 0.88,
+                                    "content": "\\pm 0 . 5 \\%",
+                                    "type": "inline_equation"
+                                },
+                                {
+                                    "bbox": [
+                                        126,
+                                        304,
+                                        235,
+                                        319
+                                    ],
+                                    "score": 1.0,
+                                    "content": "(full scale) non-linearity.",
+                                    "type": "text"
+                                }
+                            ],
+                            "index": 3
+                        }
+                    ],
+                    "index": 2.5,
+                    "bbox_fs": [
+                        42,
+                        291,
+                        342,
+                        319
+                    ]
+                },
+                {
+                    "type": "table",
+                    "bbox": [
+                        42,
+                        379,
+                        545,
+                        775
+                    ],
+                    "blocks": [
+                        {
+                            "type": "table_caption",
+                            "bbox": [
+                                44,
+                                350,
+                                142,
+                                363
+                            ],
+                            "group_id": 0,
+                            "lines": [
+                                {
+                                    "bbox": [
+                                        60,
+                                        351,
+                                        142,
+                                        364
+                                    ],
+                                    "spans": [
+                                        {
+                                            "bbox": [
+                                                60,
+                                                351,
+                                                142,
+                                                364
+                                            ],
+                                            "score": 1.0,
+                                            "content": "SPECIFICATIONS",
+                                            "type": "text"
+                                        }
+                                    ],
+                                    "index": 4
+                                }
+                            ],
+                            "index": 4
+                        },
+                        {
+                            "type": "table_body",
+                            "bbox": [
+                                42,
+                                379,
+                                545,
+                                775
+                            ],
+                            "group_id": 0,
+                            "lines": [
+                                {
+                                    "bbox": [
+                                        42,
+                                        379,
+                                        545,
+                                        775
+                                    ],
+                                    "spans": [
+                                        {
+                                            "bbox": [
+                                                42,
+                                                379,
+                                                545,
+                                                775
+                                            ],
+                                            "score": 0.979,
+                                            "html": "<table><tr><td>PARAMETER</td><td>RANGE</td></tr><tr><td>Capacity (lbf)</td><td>100,200,500,1000</td></tr><tr><td>Rated Output (RO) (mV/V)</td><td>2 nominal</td></tr><tr><td>Safe Overload (%)</td><td>150 of RO</td></tr><tr><td>No Load Offset (Zero Balance) (%)</td><td>±2 of RO</td></tr><tr><td>Excitation (VDC or VAC)</td><td>5 recommended (10 max.)</td></tr><tr><td>Input lmpedance</td><td>350Qnominal</td></tr><tr><td>Non-Linearity (%)</td><td>±0.5 of RO</td></tr><tr><td>Hysteresis (%)</td><td>±0.5 of RO</td></tr><tr><td>Non-Repeatability (%)</td><td>±0.1 of RO</td></tr><tr><td>Temperature Shift Zero (%)</td><td>±0.01 of RO/° F (±0.018 of RO/°C)</td></tr><tr><td>Temperature Shift Span (%)</td><td>±0.02 of Load/° F (±0.036 of Load/C)</td></tr><tr><td>Compensated Temperature (° F)</td><td>+60 to + 160(+ 16 to + 71º℃)</td></tr><tr><td>Operating Temperature (° F)</td><td>-4 to + 176 (-20 to +80°℃)</td></tr><tr><td>Material</td><td>Stainless Steel</td></tr><tr><td>Deflection (in)</td><td>0.001 (0.025mm) nominal</td></tr><tr><td>IP Rating</td><td>IP64</td></tr><tr><td>Calibration Test Excitation (VDC)</td><td>5</td></tr><tr><td>Calibration (td.)</td><td>5 pt. compression</td></tr><tr><td></td><td></td></tr></table>",
+                                            "type": "table",
+                                            "image_path": "8c21ea12a003fb50547f4098b1f5454bc33557ff89cfc0fe40d8107fbe20287d.jpg"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "index": 6,
+                            "virtual_lines": [
+                                {
+                                    "bbox": [
+                                        42,
+                                        379,
+                                        545,
+                                        511.0
+                                    ],
+                                    "spans": [],
+                                    "index": 5
+                                },
+                                {
+                                    "bbox": [
+                                        42,
+                                        511.0,
+                                        545,
+                                        643.0
+                                    ],
+                                    "spans": [],
+                                    "index": 6
+                                },
+                                {
+                                    "bbox": [
+                                        42,
+                                        643.0,
+                                        545,
+                                        775.0
+                                    ],
+                                    "spans": [],
+                                    "index": 7
+                                }
+                            ]
+                        }
+                    ],
+                    "index": 5.0
+                }
+            ]
+        },
+        {
+            "preproc_blocks": [
+                {
+                    "type": "image",
+                    "bbox": [
+                        63,
+                        179,
+                        553,
+                        405
+                    ],
+                    "blocks": [
+                        {
+                            "type": "image_body",
+                            "bbox": [
+                                63,
+                                179,
+                                553,
+                                405
+                            ],
+                            "group_id": 0,
+                            "lines": [
+                                {
+                                    "bbox": [
+                                        63,
+                                        179,
+                                        553,
+                                        405
+                                    ],
+                                    "spans": [
+                                        {
+                                            "bbox": [
+                                                63,
+                                                179,
+                                                553,
+                                                405
+                                            ],
+                                            "score": 0.907,
+                                            "type": "image",
+                                            "image_path": "94ad1cbb4ca5e81e7ca15d70fb0605caabe87b4080cb7dd44ff7dde29795f4fd.jpg"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "index": 1,
+                            "virtual_lines": [
+                                {
+                                    "bbox": [
+                                        63,
+                                        179,
+                                        553,
+                                        254.33333333333331
+                                    ],
+                                    "spans": [],
+                                    "index": 0
+                                },
+                                {
+                                    "bbox": [
+                                        63,
+                                        254.33333333333331,
+                                        553,
+                                        329.66666666666663
+                                    ],
+                                    "spans": [],
+                                    "index": 1
+                                },
+                                {
+                                    "bbox": [
+                                        63,
+                                        329.66666666666663,
+                                        553,
+                                        404.99999999999994
+                                    ],
+                                    "spans": [],
+                                    "index": 2
+                                }
+                            ]
+                        }
+                    ],
+                    "index": 1
+                }
+            ],
+            "page_idx": 1,
+            "page_size": [
+                595,
+                841
+            ],
+            "discarded_blocks": [
+                {
+                    "type": "discarded",
+                    "bbox": [
+                        26,
+                        26,
+                        572,
+                        64
+                    ],
+                    "lines": [
+                        {
+                            "bbox": [
+                                35,
+                                23,
+                                573,
+                                64
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        35,
+                                        34,
+                                        55,
+                                        56
+                                    ],
+                                    "score": 0.963,
+                                    "content": "A",
+                                    "type": "text"
+                                },
+                                {
+                                    "bbox": [
+                                        75,
+                                        30,
+                                        131,
+                                        59
+                                    ],
+                                    "score": 1.0,
+                                    "content": "ALBS3Load Button",
+                                    "type": "text"
+                                },
+                                {
+                                    "bbox": [
+                                        452,
+                                        23,
+                                        573,
+                                        64
+                                    ],
+                                    "score": 0.85,
+                                    "content": "SALTHEIN",
+                                    "type": "text"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "discarded",
+                    "bbox": [
+                        569,
+                        705,
+                        577,
+                        747
+                    ],
+                    "lines": [
+                        {
+                            "bbox": [
+                                569,
+                                705,
+                                577,
+                                748
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        569,
+                                        705,
+                                        577,
+                                        748
+                                    ],
+                                    "score": 0.0,
+                                    "content": "",
+                                    "type": "text"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "discarded",
+                    "bbox": [
+                        525,
+                        749,
+                        560,
+                        759
+                    ],
+                    "lines": [
+                        {
+                            "bbox": [
+                                524,
+                                748,
+                                562,
+                                760
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        524,
+                                        748,
+                                        562,
+                                        760
+                                    ],
+                                    "score": 1.0,
+                                    "content": "Page 2 / 2",
+                                    "type": "text"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "discarded",
+                    "bbox": [
+                        43,
+                        96,
+                        126,
+                        109
+                    ],
+                    "lines": [
+                        {
+                            "bbox": [
+                                61,
+                                97,
+                                126,
+                                109
+                            ],
+                            "spans": [
+                                {
+                                    "bbox": [
+                                        61,
+                                        97,
+                                        126,
+                                        109
+                                    ],
+                                    "score": 1.0,
+                                    "content": "DIMENSIONS",
+                                    "type": "text"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "discarded",
+                    "bbox": [
+                        25,
+                        775,
+                        573,
+                        841
+                    ],
+                    "lines": []
+                }
+            ],
+            "para_blocks": [
+                {
+                    "type": "image",
+                    "bbox": [
+                        63,
+                        179,
+                        553,
+                        405
+                    ],
+                    "blocks": [
+                        {
+                            "type": "image_body",
+                            "bbox": [
+                                63,
+                                179,
+                                553,
+                                405
+                            ],
+                            "group_id": 0,
+                            "lines": [
+                                {
+                                    "bbox": [
+                                        63,
+                                        179,
+                                        553,
+                                        405
+                                    ],
+                                    "spans": [
+                                        {
+                                            "bbox": [
+                                                63,
+                                                179,
+                                                553,
+                                                405
+                                            ],
+                                            "score": 0.907,
+                                            "type": "image",
+                                            "image_path": "94ad1cbb4ca5e81e7ca15d70fb0605caabe87b4080cb7dd44ff7dde29795f4fd.jpg"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "index": 1,
+                            "virtual_lines": [
+                                {
+                                    "bbox": [
+                                        63,
+                                        179,
+                                        553,
+                                        254.33333333333331
+                                    ],
+                                    "spans": [],
+                                    "index": 0
+                                },
+                                {
+                                    "bbox": [
+                                        63,
+                                        254.33333333333331,
+                                        553,
+                                        329.66666666666663
+                                    ],
+                                    "spans": [],
+                                    "index": 1
+                                },
+                                {
+                                    "bbox": [
+                                        63,
+                                        329.66666666666663,
+                                        553,
+                                        404.99999999999994
+                                    ],
+                                    "spans": [],
+                                    "index": 2
+                                }
+                            ]
+                        }
+                    ],
+                    "index": 1
+                }
+            ]
+        }
+    ],
+    "_backend": "pipeline",
+    "_version_name": "2.1.9"
+}
