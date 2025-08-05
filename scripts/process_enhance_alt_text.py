@@ -358,6 +358,12 @@ async def process_page_enhance_alt_text(page_id: int):
         page_url = page_data['url']
         logger.info(f"Processing page: {page_url}")
         
+        # Set status to processing to prevent parallel processing
+        supabase_client.table("new_pages_index").update({
+            "rag_ingestion_status": "processing"
+        }).eq("id", page_id).execute()
+        logger.info(f"Set page {page_id} status to 'processing'")
+        
         # ALWAYS get web content first
         web_content = scrape_web_content(page_url)
         web_section = ""
@@ -627,7 +633,8 @@ Source: {page_url}
         # Mark page and datasheets as processed
         page_update_data = {
             "rag_ingested": True,
-            "rag_ingested_at": "now()"
+            "rag_ingested_at": "now()",
+            "rag_ingestion_status": "completed"
         }
         if lightrag_track_id and lightrag_track_id != 'N/A':
             page_update_data["lightrag_track_id"] = lightrag_track_id
@@ -666,6 +673,17 @@ Source: {page_url}
     except Exception as e:
         logger.error(f"Error processing page {page_id}: {e}")
         traceback.print_exc()
+        
+        # Mark page as failed
+        try:
+            supabase_client = get_supabase_client()
+            supabase_client.table("new_pages_index").update({
+                "rag_ingestion_status": "failed"
+            }).eq("id", page_id).execute()
+            logger.info(f"Set page {page_id} status to 'failed'")
+        except Exception as update_error:
+            logger.error(f"Failed to update page status: {update_error}")
+        
         return {"success": False, "error": str(e)}
 
 if __name__ == "__main__":

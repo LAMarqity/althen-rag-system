@@ -30,7 +30,7 @@ async def get_unprocessed_pages(limit=5, subcategory=None, datasheet_count=None)
         # Build query for unprocessed pages
         query = supabase.table("new_pages_index")\
             .select("*")\
-            .or_("rag_ingested.eq.false,rag_ingested.is.null")
+            .or_("rag_ingestion_status.eq.not_started,rag_ingestion_status.is.null")
         
         # Add subcategory filter if specified
         if subcategory:
