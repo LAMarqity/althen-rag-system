@@ -54,13 +54,17 @@ run_instance() {
     done
 }
 
-# Start 3 instances in parallel
+# Start 3 instances with 10-second delays to avoid conflicts
 echo "🔸 Starting Instance 1..."
 run_instance 1 &
 
+echo "⏳ Waiting 10 seconds before starting Instance 2..."
+sleep 10
 echo "🔸 Starting Instance 2..."
 run_instance 2 &
 
+echo "⏳ Waiting 10 seconds before starting Instance 3..."
+sleep 10
 echo "🔸 Starting Instance 3..."
 run_instance 3 &
 
