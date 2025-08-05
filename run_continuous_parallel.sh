@@ -49,8 +49,8 @@ except Exception as e:
         
         echo "[Instance $instance_id] 📄 Processing page $page_id (#${page_counter})..."
         
-        # Run the existing working script
-        if python3 scripts/process_enhance_alt_text.py $page_id >> logs/instance_${instance_id}_continuous.log 2>&1; then
+        # Run the final processing script (WITHOUT LightRAG upload)
+        if python3 scripts/process_final_before_lightrag.py $page_id >> logs/instance_${instance_id}_continuous.log 2>&1; then
             echo "[Instance $instance_id] ✅ Page $page_id completed successfully"
         else
             echo "[Instance $instance_id] ❌ Page $page_id failed"
