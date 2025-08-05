@@ -160,7 +160,7 @@ async def check_processing_status(subcategory=None):
         
         if remaining > 0:
             # Estimate time
-            pages_per_batch = 3
+            pages_per_batch = 10
             minutes_per_batch = 5  # If running every 5 minutes
             estimated_batches = (remaining + pages_per_batch - 1) // pages_per_batch
             estimated_minutes = estimated_batches * minutes_per_batch
@@ -190,7 +190,7 @@ if __name__ == "__main__":
     # Configuration - Process all unprocessed pages
     TARGET_SUBCATEGORY = None  # Process all subcategories
     TARGET_DATASHEET_COUNT = None  # Process pages with any number of datasheets
-    BATCH_SIZE = 5
+    BATCH_SIZE = 10
     
     # Add timestamp separator
     logger.info("=" * 60)
