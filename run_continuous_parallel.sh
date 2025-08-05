@@ -21,137 +21,49 @@ run_continuous_instance() {
     local page_counter=1
     
     while true; do
-        echo "[Instance $instance_id] 🔍 Looking for next page to process..."
+        # Get a single unprocessed page ID from database
+        page_id=$(python3 -c "
+import sys
+sys.path.insert(0, '.')
+from scripts.raganything_api_service import get_supabase_client
+try:
+    supabase = get_supabase_client()
+    response = supabase.table('new_pages_index').select('id').or_('rag_ingestion_status.eq.not_started,rag_ingestion_status.is.null').limit(1).execute()
+    if response.data:
+        print(response.data[0]['id'])
+    else:
+        print('NO_PAGES')
+except Exception as e:
+    print('ERROR')
+")
         
-        # Run single page processing and capture output
-        result=$(python3 scripts/process_single_page.py 2>&1)
-        
-        # Check if we got a page to process
-        if echo "$result" | grep -q "No unprocessed pages found"; then
+        if [ "$page_id" = "NO_PAGES" ]; then
             echo "[Instance $instance_id] ⏸️  No pages available, waiting 30 seconds..."
             sleep 30
             continue
-        elif echo "$result" | grep -q "Processing page"; then
-            # Extract page ID from output
-            page_id=$(echo "$result" | grep -o "Processing page [0-9]*" | grep -o "[0-9]*")
-            echo "[Instance $instance_id] 📄 Processing page $page_id (#${page_counter})..."
-            
-            # Log detailed results
-            echo "=== Page $page_id - $(date) ===" >> logs/instance_${instance_id}_continuous.log
-            echo "$result" >> logs/instance_${instance_id}_continuous.log
-            echo "" >> logs/instance_${instance_id}_continuous.log
-            
-            # Check if successful
-            if echo "$result" | grep -q "SUCCESS!"; then
-                echo "[Instance $instance_id] ✅ Page $page_id completed successfully"
-            else
-                echo "[Instance $instance_id] ❌ Page $page_id failed"
-            fi
-            
-            page_counter=$((page_counter + 1))
-        else
-            echo "[Instance $instance_id] ⚠️  Unexpected result, waiting 10 seconds..."
+        elif [ "$page_id" = "ERROR" ]; then
+            echo "[Instance $instance_id] ❌ Database error, waiting 10 seconds..."
             sleep 10
+            continue
         fi
+        
+        echo "[Instance $instance_id] 📄 Processing page $page_id (#${page_counter})..."
+        
+        # Run the existing working script
+        if python3 scripts/process_enhance_alt_text.py $page_id >> logs/instance_${instance_id}_continuous.log 2>&1; then
+            echo "[Instance $instance_id] ✅ Page $page_id completed successfully"
+        else
+            echo "[Instance $instance_id] ❌ Page $page_id failed"
+        fi
+        
+        page_counter=$((page_counter + 1))
         
         # Small delay to prevent overwhelming the system
         sleep 2
     done
 }
 
-# Create single page processing script
-cat > scripts/process_single_page.py << 'EOF'
-#!/usr/bin/env python3
-"""
-Process a single page continuously - modified version of batch script
-"""
-import os
-import sys
-import asyncio
-from pathlib import Path
-from datetime import datetime
-import logging
-
-# Add project root to path
-project_root = Path(__file__).parent.parent
-sys.path.insert(0, str(project_root))
-
-from scripts.raganything_api_service import get_supabase_client, logger
-
-async def get_single_unprocessed_page():
-    """Get one unprocessed page and mark as processing immediately"""
-    try:
-        supabase = get_supabase_client()
-        
-        # Get one unprocessed page
-        query = supabase.table("new_pages_index")\
-            .select("*")\
-            .or_("rag_ingestion_status.eq.not_started,rag_ingestion_status.is.null")\
-            .limit(1)
-        
-        response = query.execute()
-        pages = response.data if response.data else []
-        
-        if not pages:
-            print("No unprocessed pages found")
-            return None
-            
-        page = pages[0]
-        
-        # Immediately mark as processing to prevent conflicts
-        supabase.table("new_pages_index").update({
-            "rag_ingestion_status": "processing"
-        }).eq("id", page['id']).execute()
-        
-        logger.info(f"Grabbed and marked page {page['id']} as processing")
-        return page
-        
-    except Exception as e:
-        logger.error(f"Error fetching unprocessed page: {e}")
-        return None
-
-async def process_single_page():
-    """Process a single page"""
-    from scripts.process_enhance_alt_text import process_page_enhance_alt_text
-    
-    # Get one page
-    page = await get_single_unprocessed_page()
-    
-    if not page:
-        return {"success": False, "error": "No pages available"}
-    
-    try:
-        print(f"Processing page {page['id']}: {page['url'][:50]}...")
-        result = await process_page_enhance_alt_text(page['id'])
-        
-        if result['success']:
-            print(f"✅ Successfully processed page {page['id']}")
-            print(f"   - Content length: {result.get('content_length', 0):,} chars")
-            print(f"   - Images uploaded: {result.get('images_uploaded', 0)}")
-            print(f"   - Datasheets: {result.get('datasheets_processed', 0)}")
-            return {"success": True, "page_id": page['id']}
-        else:
-            print(f"❌ Failed to process page {page['id']}: {result.get('error')}")
-            return {"success": False, "page_id": page['id'], "error": result.get('error')}
-            
-    except Exception as e:
-        print(f"Error processing page {page['id']}: {e}")
-        return {"success": False, "page_id": page['id'], "error": str(e)}
-
-if __name__ == "__main__":
-    # Configure logging
-    logging.basicConfig(level=logging.INFO)
-    
-    # Process one page
-    result = asyncio.run(process_single_page())
-    
-    if result["success"]:
-        print("SUCCESS!")
-    else:
-        print(f"FAILED: {result.get('error', 'Unknown error')}")
-EOF
-
-chmod +x scripts/process_single_page.py
+# No need to create additional scripts - we use the existing working one
 
 # Start 5 instances with 10-second delays to avoid initial conflicts
 echo "🔸 Starting Instance 1..."
