@@ -6,7 +6,7 @@
 cd /workspace/althen-rag-system
 
 echo "🚀 Starting batch processing loop..."
-echo "🔥 Processing 10 documents every 5 minutes on RTX 4090"
+echo "🔥 Processing 10 documents every 1 minute on RTX 4090"
 echo "📊 Reserving 10 pages at start, processing sequentially"
 echo "Press Ctrl+C to stop"
 echo ""
@@ -24,10 +24,10 @@ while true; do
     
     echo ""
     echo "✅ $(date): Batch complete"
-    echo "⏳ Waiting 5 minutes for next batch..."
+    echo "⏳ Waiting 1 minute for next batch..."
     echo "💡 Press Ctrl+C to stop"
     echo ""
     
-    # Wait 5 minutes (300 seconds)
-    sleep 300
+    # Wait 1 minute (60 seconds)
+    sleep 60
 done
